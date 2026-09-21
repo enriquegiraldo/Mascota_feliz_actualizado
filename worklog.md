@@ -170,3 +170,29 @@ Stage Summary:
 - Estado: panel interno pulido y con funcionalidades de producto. Filtro por especie, impresión de ficha, meta SEO/OG, skeleton disponible. Build 0/0. Todos los bugs de Fase 0 corregidos; navegación relacional y visualización (gráfico de peso, línea de tiempo) completas.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
 - Riesgos/pendientes: (1) robots noindex porque es panel interno; cuando se haga el sitio público (Fase 3) habrá que separar meta tags por contexto. (2) Skeleton definido pero no usado aún (para futura carga asíncrona con htmx en Fase 3). (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 7
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22, 06:12)
+Task: Estado estable → añadir patrón de la investigación Fase 1 (búsqueda global Cmd/Ctrl+K estilo Linear) + modo oscuro automático + bug fix de búsqueda case-sensitive. (El usuario sigue en Fase 2; NO se inicia Fase 3.)
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, chips de filtro, imprimir, SEO/OG). El usuario sigue en Fase 2 → no se toca Fase 3.
+- Feature: búsqueda global (Command Palette, patrón Linear de la investigación Fase 1).
+  - Página /Buscar (Razor Page) que devuelve JSON con resultados de Mascotas, Dueños y Veterinarios.
+  - Partial _CommandPalette.cshtml: dialog modal con input, lista de resultados (icono por tipo, título, subtítulo, tipo), pie con ayuda de teclado.
+  - JS command-palette.js: abre con Ctrl/Cmd+K o botón en navbar, fetch con debounce 200ms, navegación con ↑↓, Enter para abrir, Esc para cerrar, click para navegar. Degradación: si no hay JS, el botón se oculta.
+  - Botón "Buscar… (Ctrl K)" en el navbar con icono lupa y kbd.
+- Bug corregido: búsqueda case-sensitive. Los GetXPorFiltro usaban Contains() que en SQLite/EF Core 8 distingue mayúsculas. Cambiado a ToLower().Contains(filtro.ToLower()) en RepositorioMascota, RepositorioDueno, RepositorioVeterinario. Ahora "fir" encuentra "Firulais".
+- Bug corregido: BuscarModel no se asociaba a la página porque faltaba @model en Buscar.cshtml. Añadido @model MascotaFeliz.App.Frontend.Pages.BuscarModel. Sin esto, el handler OnGet no se ejecutaba y devolvía HTML vacío.
+- Bug corregido: JS del command palette usaba PascalCase (r.Tipo) pero el JSON de ASP.NET Core usa camelCase (r.tipo). Corregido a minúsculas.
+- Feature: modo oscuro automático con prefers-color-scheme. Variables CSS se redefinen en @media (prefers-color-scheme: dark): crema→#1a1d1a, arena→#222722, blanco→#1f241f, etc. Tarjetas, tablas, formularios, command palette y gráfico se adaptan. Verificado con agent-browser set media dark.
+- CSS: nuevos estilos .mf-nav-buscar*, .mf-cmdk* (dialog, fondo blur, panel, input, lista, items con iconos por tipo, scrollbar), bloque @media (prefers-color-scheme: dark) completo.
+- `dotnet build` → 0 errores, 0 warnings. Consola compila.
+- QA runtime: endpoint /Buscar?q=fir devuelve JSON con Firulais (application/json); /Buscar?q=juan devuelve Juan Pérez. Command palette: abre con Ctrl+K, escribe "fir", muestra 1 resultado (Firulais, Perro·Labrador, tipo MASCOTA); "mi" → 1 resultado. Dark mode: home/lista/detalles se adaptan con fondo oscuro y texto claro, paleta cálida preservada, sin scroll horizontal.
+- Capturas en /home/z/my-project/download/qa-ronda7/. VLM confirmó: command palette "tarjeta con icono verde, Firulais, Perro·Labrador, MASCOTA, profesional"; dark mode "fondo oscuro con texto claro, paleta cálida adaptada, sin scroll horizontal".
+
+Stage Summary:
+- Estado: panel interno con búsqueda global (Cmd+K), modo oscuro automático, búsqueda case-insensitive, y todas las features anteriores (CRUD de 5 entidades, navegación relacional, gráfico de peso, chips de filtro, imprimir, SEO/OG, toasts, accesibilidad). Build 0/0.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
+- Riesgos/pendientes: (1) Búsqueda no es accent-insensitive ("LOPEZ" no encuentra "López") — se podría añadir collation o normalización en Fase 3. (2) Command palette no busca en Historias/Visitas (solo Mascotas/Dueños/Veterinarios) — ampliable. (3) Modo oscuro es automático (no hay toggle manual) — pendiente Q2/Q5 si el usuario quiere control explícito. (4) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (5) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (6) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".

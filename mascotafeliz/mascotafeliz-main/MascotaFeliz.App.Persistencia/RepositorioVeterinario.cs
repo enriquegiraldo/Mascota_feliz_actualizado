@@ -48,8 +48,9 @@ namespace MascotaFeliz.App.Persistencia
 
         public IEnumerable<Veterinario> GetVeterinariosPorFiltro(string filtro)
         {
+            var f = filtro?.ToLower() ?? "";
             return _appContext.Veterinarios
-                .Where(v => v.Nombres.Contains(filtro) || v.Apellidos.Contains(filtro));
+                .Where(v => v.Nombres.ToLower().Contains(f) || v.Apellidos.ToLower().Contains(f));
         }
 
         public void DeleteVeterinario(int idVeterinario)

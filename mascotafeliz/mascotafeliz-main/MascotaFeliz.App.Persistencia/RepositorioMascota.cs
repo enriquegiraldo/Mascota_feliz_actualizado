@@ -60,10 +60,11 @@ namespace MascotaFeliz.App.Persistencia
 
         public IEnumerable<Mascota> GetMascotasPorFiltro(string filtro)
         {
+            var f = filtro?.ToLower() ?? "";
             return _appContext.Mascotas
                 .Include(m => m.Veterinario)
                 .Include(m => m.Dueno)
-                .Where(m => m.Nombre.Contains(filtro) || m.Raza.Contains(filtro) || m.Especie.Contains(filtro));
+                .Where(m => m.Nombre.ToLower().Contains(f) || m.Raza.ToLower().Contains(f) || m.Especie.ToLower().Contains(f));
         }
 
         public Mascota GetMascotaPorHistoriaId(int idHistoria)

@@ -1,0 +1,15 @@
+@* Command palette (Cmd/Ctrl+K) — buscador global *@
+<div class="mf-cmdk" id="mf-cmdk" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Búsqueda global">
+    <div class="mf-cmdk-fondo" data-mf-cmdk-cerrar></div>
+    <div class="mf-cmdk-panel" role="combobox" aria-expanded="true" aria-haspopup="listbox" aria-owns="mf-cmdk-lista">
+        <div class="mf-cmdk-input">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="mf-cmdk-query" placeholder="Buscar mascota, dueño o veterinario…" aria-label="Buscar" autocomplete="off" />
+            <kbd class="mf-cmdk-kbd" aria-hidden="true">ESC</kbd>
+        </div>
+        <ul class="mf-cmdk-lista" id="mf-cmdk-lista" role="listbox" aria-label="Resultados"></ul>
+        <div class="mf-cmdk-pie">
+            <span class="mf-muted">↑↓ navegar · ↵ abrir · esc cerrar</span>
+        </div>
+    </div>
+</div>
