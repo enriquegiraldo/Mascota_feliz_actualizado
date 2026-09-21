@@ -196,3 +196,24 @@ Stage Summary:
 - Estado: panel interno con búsqueda global (Cmd+K), modo oscuro automático, búsqueda case-insensitive, y todas las features anteriores (CRUD de 5 entidades, navegación relacional, gráfico de peso, chips de filtro, imprimir, SEO/OG, toasts, accesibilidad). Build 0/0.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
 - Riesgos/pendientes: (1) Búsqueda no es accent-insensitive ("LOPEZ" no encuentra "López") — se podría añadir collation o normalización en Fase 3. (2) Command palette no busca en Historias/Visitas (solo Mascotas/Dueños/Veterinarios) — ampliable. (3) Modo oscuro es automático (no hay toggle manual) — pendiente Q2/Q5 si el usuario quiere control explícito. (4) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (5) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (6) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 8
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22, 06:16)
+Task: Estado estable → exportar mascotas a CSV + ordenamiento por columnas + hero de mascota con avatar grande. (El usuario sigue en Fase 2; NO se inicia Fase 3.)
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, búsqueda global Cmd+K, modo oscuro, CRUD completo). El usuario sigue en Fase 2 → no se toca Fase 3.
+- Feature: exportar mascotas a CSV. Handler OnGetExportarCsv(q, especie) en ListaMascotasModel que aplica los mismos filtros y genera CSV con BOM UTF-8 (Id,Nombre,Especie,Raza,Color,Dueño,Veterinario). Escapa comas y comillas. Botón "CSV" con icono de descarga en el encabezado. Respuesta: text/csv; charset=utf-8 con nombre mascotas_yyyy-MM-dd.csv.
+- Feature: ordenamiento por columnas en ListaMascotas. BindProperty Orden (nombre-desc, especie, especie-desc, raza, raza-desc). Encabezados Nombre/Especie/Raza ahora son enlaces (asp-route-Orden) con flechas ▲/▼ que indican dirección. Switch en OnGet aplica OrderBy/OrderByDescending. Paginación mantiene Orden.
+- Pulido: hero de mascota en DetallesMascotas. Reemplazado el encabezado simple por un section.mf-hero-mascota con: avatar circular grande (72px, verde=perro/terracota=gato, SVG de la especie), badge especie·raza, nombre grande, subtítulo con ID y color. Botones de acción alineados a la derecha. Responsive (flex-wrap).
+- CSS: nuevos estilos .mf-th-ordenable/.mf-th-link/.mf-th-flecha (encabezados clicables con hover), .mf-hero-mascota/.mf-hero-mascota-contenido/.mf-hero-avatar* (hero con avatar grande).
+- `dotnet build` → 0 errores, 0 warnings. Consola compila.
+- QA runtime: CSV export HTTP 200 text/csv (298 bytes, 4 mascotas con datos: Firulais/Michi/Rocky/Susi + dueño y veterinario); orden especie-desc muestra Perro primero (Firulais); nombre-desc muestra Susi primero; DetallesMascotas de Michi (id=3) tiene mf-hero-avatar--gato + "Color: Negro".
+- Capturas en /home/z/my-project/download/qa-ronda8/. VLM confirmó: hero 1440px "avatar circular verde, Firulais, badge Perro·Labrador, botones Agregar visita/Imprimir/Editar, paleta cálida, sin scroll"; lista 1440px "encabezados Nombre/Especie/Raza clicables con flechas, botón CSV arriba, sin scroll".
+- CSV de ejemplo guardado en /home/z/my-project/download/qa-ronda8/mascotas_export.csv.
+
+Stage Summary:
+- Estado: panel interno con exportación de datos (CSV), ordenamiento de tablas, y hero visual de mascota. Todas las features anteriores (búsqueda global, modo oscuro, CRUD de 5 entidades, navegación relacional, gráfico de peso, chips de filtro, imprimir, SEO/OG, toasts, accesibilidad) intactas. Build 0/0.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
+- Riesgos/pendientes: (1) CSV solo exporta mascotas (no dueños/veterinarios) — ampliable. (2) Ordenamiento solo en ListaMascotas — ampliable a otras listas. (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".

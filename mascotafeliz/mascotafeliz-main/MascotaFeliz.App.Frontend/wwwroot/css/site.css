@@ -226,6 +226,19 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 .mf-nav-buscar-kbd { background: var(--mf-blanco); border: 1px solid var(--mf-gris-claro); border-radius: 4px; padding: .1rem .35rem; font-size: .72rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--mf-gris); }
 @media (max-width: 575px) { .mf-nav-buscar-texto, .mf-nav-buscar-kbd { display: none; } }
 
+/* ---- Encabezados de tabla ordenables ---- */
+.mf-th-ordenable { padding: 0 !important; }
+.mf-th-link { display: flex; align-items: center; gap: .25rem; padding: .75rem 1rem; color: var(--mf-verde-osc); text-decoration: none; font-weight: 700; }
+.mf-th-link:hover { background: rgba(74, 124, 89, .08); text-decoration: none; color: var(--mf-verde); }
+.mf-th-flecha { font-size: .75rem; opacity: .7; }
+
+/* ---- Hero de mascota (perfil) ---- */
+.mf-hero-mascota { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.5rem; }
+.mf-hero-mascota-contenido { display: flex; align-items: center; gap: 1rem; flex: 1 1 260px; }
+.mf-hero-avatar { width: 72px; height: 72px; flex: 0 0 auto; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; box-shadow: var(--mf-sombra); }
+.mf-hero-avatar--perro { background: var(--mf-verde); }
+.mf-hero-avatar--gato { background: var(--mf-terracota); }
+
 /* ---- Command palette ---- */
 .mf-cmdk { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: flex-start; justify-content: center; padding-top: 12vh; }
 .mf-cmdk[hidden] { display: none; }
