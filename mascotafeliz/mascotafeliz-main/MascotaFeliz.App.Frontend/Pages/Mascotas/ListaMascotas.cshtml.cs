@@ -13,9 +13,12 @@ namespace MascotaFeliz.App.Frontend.Pages
         private readonly IRepositorioMascota _repoMascota;
 
         public IEnumerable<Mascota> listaMascotas { get; set; }
+        public IEnumerable<string> Especies { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string Q { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string Especie { get; set; }
         [BindProperty(SupportsGet = true)]
         public int Pagina { get; set; } = 1;
         public int TotalPaginas { get; set; }
@@ -30,9 +33,16 @@ namespace MascotaFeliz.App.Frontend.Pages
 
         public void OnGet()
         {
+            Especies = _repoMascota.GetEspecies();
+
             var todo = string.IsNullOrWhiteSpace(Q)
                 ? _repoMascota.GetAllMascotas()
                 : _repoMascota.GetMascotasPorFiltro(Q);
+
+            if (!string.IsNullOrWhiteSpace(Especie))
+            {
+                todo = todo.Where(m => m.Especie == Especie);
+            }
 
             Total = todo.Count();
             TotalPaginas = Math.Max(1, (int)Math.Ceiling(Total / (double)TamanoPagina));
@@ -55,7 +65,7 @@ namespace MascotaFeliz.App.Frontend.Pages
             {
                 TempData["Error"] = "No se pudo eliminar la mascota. Intenta de nuevo.";
             }
-            return RedirectToPage("./ListaMascotas", new { Q, Pagina });
+            return RedirectToPage("./ListaMascotas", new { Q, Especie, Pagina });
         }
     }
 }

@@ -149,3 +149,24 @@ Stage Summary:
 - Estado: panel interno con navegación relacional completa. Desde el detalle de un dueño se ven y acceden a sus mascotas; desde el de un veterinario, sus pacientes; desde el perfil de mascota, el gráfico de peso y la línea de tiempo. Todas las entidades enlazadas bidireccionalmente. Build 0/0. Accesibilidad (migas, skip-link, focus-visible, aria) y microinteracciones (toasts, animaciones) intactas.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
 - Riesgos/pendientes: (1) El gráfico de peso es estático (SVG generado en servidor); en Fase 3 se podría hacer interactivo (hover/tooltip) con una librería ligera. (2) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (3) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (4) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 6
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22, 06:05)
+Task: Estado estable → añadir features de UX sin tocar Fase 3. Filtro por especie (chips) en ListaMascotas + botón imprimir ficha con estilos de impresión + meta Open Graph + skeleton de carga. (El usuario sigue en Fase 2; NO se inicia Fase 3.)
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, navegación relacional completa, gráfico de peso). El usuario sigue en Fase 2 → no se toca Fase 3.
+- Persistencia: añadido GetEspecies() a IRepositorioMascota/RepositorioMascota (Distinct + OrderBy) para alimentar los chips de filtro.
+- Feature: filtro por especie (chips) en ListaMascotas. Model con BindProperty Especie + Especies (lista para los chips). Vista con .mf-chips (Todas / Perro / Gato / ...) que enlazan con asp-route-Especie. Paginación mantiene el parámetro Especie. Botón "Limpiar" ahora aparece si hay Q o Especie.
+- Feature: botón "Imprimir ficha" en DetallesMascotas (icono impresora + window.print()). Clase .mf-no-print en botones de acción para ocultarlos al imprimir.
+- SEO/meta: añadido Open Graph (og:type, og:site_name, og:title, og:description, og:locale es_CO, og:image), Twitter Card, canonical (Context.Request.Path), robots noindex/nofollow (es panel interno, no público). ViewData["MetaDescripcion"] con fallback al mensaje por defecto.
+- CSS: nuevos estilos .mf-chips/.mf-chip/.mf-chip--activo (píldoras verde cuando activo), .mf-skeleton (shimmer animado para carga futura), y bloque @media print completo (oculta nav/footer/migas/buscador/chips/paginación, blanco y negro, sin sombras, break-inside avoid para fichas y timeline, @page margin 1.5cm).
+- `dotnet build` → 0 errores, 0 warnings. Consola compila.
+- QA runtime (todas 200): /Mascotas/ListaMascotas, /Mascotas/ListaMascotas?Especie=Perro, /Mascotas/ListaMascotas?Especie=Gato, /Mascotas/DetallesMascotas?mascotaId=1. Contenido verificado: chips "Todas/Perro/Gato" presentes (mf-chip--activo en la seleccionada); filtro Perro muestra Firulais+Susi+Rocky (Michi excluida); DetallesMascotas tiene botón "Imprimir" + window.print() + mf-no-print; home tiene og:type, og:site_name, og:title, og:description, og:locale, twitter:card, canonical, robots.
+- Capturas en /home/z/my-project/download/qa-ronda6/. VLM confirmó: lista 1440px "chips redondeados Todas/Gato/Perro sobre la tabla, columnas correctas, paleta cálida, sin scroll"; filtro Gato 390px "chip Gato activo (verde oscuro), solo Michi en la lista, Firulais/Susi/Rocky excluidos".
+
+Stage Summary:
+- Estado: panel interno pulido y con funcionalidades de producto. Filtro por especie, impresión de ficha, meta SEO/OG, skeleton disponible. Build 0/0. Todos los bugs de Fase 0 corregidos; navegación relacional y visualización (gráfico de peso, línea de tiempo) completas.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
+- Riesgos/pendientes: (1) robots noindex porque es panel interno; cuando se haga el sitio público (Fase 3) habrá que separar meta tags por contexto. (2) Skeleton definido pero no usado aún (para futura carga asíncrona con htmx en Fase 3). (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".

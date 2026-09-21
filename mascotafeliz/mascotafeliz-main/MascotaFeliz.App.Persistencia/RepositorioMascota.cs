@@ -90,6 +90,19 @@ namespace MascotaFeliz.App.Persistencia
                 .OrderBy(m => m.Nombre);
         }
 
+        /// <summary>
+        /// Devuelve la lista de especies distintas registradas (para los filtros).
+        /// </summary>
+        public IEnumerable<string> GetEspecies()
+        {
+            return _appContext.Mascotas
+                .Where(m => m.Especie != null && m.Especie != "")
+                .Select(m => m.Especie)
+                .Distinct()
+                .OrderBy(e => e)
+                .ToList();
+        }
+
         public void DeleteMascota(int idMascota)
         {
             var mascotaEncontrada = _appContext.Mascotas.Find(idMascota);

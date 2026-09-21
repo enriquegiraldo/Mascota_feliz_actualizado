@@ -4,7 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#4a7c59" />
-    <meta name="description" content="Clínica veterinaria Mascota Feliz: gestión de mascotas, dueños, veterinarios e historias clínicas." />
+    <meta name="description" content="@(ViewData["MetaDescripcion"] ?? "Clínica veterinaria Mascota Feliz: gestión de mascotas, dueños, veterinarios e historias clínicas.")" />
+    <meta name="author" content="Clínica Veterinaria Mascota Feliz" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mascota Feliz" />
+    <meta property="og:title" content="@(ViewData["Title"]) · Mascota Feliz" />
+    <meta property="og:description" content="@(ViewData["MetaDescripcion"] ?? "Clínica veterinaria Mascota Feliz: gestión de mascotas, dueños, veterinarios e historias clínicas.")" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:image" content="~/img/logo.svg" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="@(ViewData["Title"]) · Mascota Feliz" />
+    <meta name="twitter:description" content="@(ViewData["MetaDescripcion"] ?? "Clínica veterinaria Mascota Feliz: gestión de mascotas, dueños, veterinarios e historias clínicas.")" />
+    <link rel="canonical" href="@(Context.Request.Path)" />
     <link rel="icon" type="image/svg+xml" href="~/img/favicon.svg" />
     <title>@ViewData["Title"] · Mascota Feliz</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />

@@ -191,6 +191,34 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 .mf-grafico-titulo { display: flex; align-items: center; gap: .45rem; font-weight: 700; color: var(--mf-verde-osc); margin-bottom: .5rem; font-size: .95rem; }
 .mf-grafico-svg { width: 100%; height: auto; display: block; }
 
+/* ---- Chips de filtro ---- */
+.mf-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.mf-chip { display: inline-flex; align-items: center; padding: .35rem .85rem; border-radius: var(--mf-radio-pill); border: 1px solid var(--mf-gris-claro); background: var(--mf-blanco); color: var(--mf-gris); font-size: .85rem; font-weight: 600; text-decoration: none; transition: all var(--mf-transicion); min-height: 36px; }
+.mf-chip:hover { border-color: var(--mf-verde); color: var(--mf-verde-osc); text-decoration: none; background: var(--mf-verde-claro); }
+.mf-chip--activo { background: var(--mf-verde); border-color: var(--mf-verde); color: #fff; }
+.mf-chip--activo:hover { background: var(--mf-verde-osc); color: #fff; }
+
+/* ---- Skeleton de carga ---- */
+.mf-skeleton { background: linear-gradient(90deg, var(--mf-arena) 25%, var(--mf-gris-claro) 37%, var(--mf-arena) 63%); background-size: 400% 100%; animation: mf-shimmer 1.4s ease-in-out infinite; border-radius: var(--mf-radio-sm); }
+@keyframes mf-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+.mf-skeleton-line { height: 14px; margin: .5rem 0; }
+.mf-skeleton-line--w40 { width: 40%; }
+.mf-skeleton-line--w70 { width: 70%; }
+
+/* ---- Estilos de impresión ---- */
+@media print {
+  .mf-no-print, .mf-navbar, .mf-footer, .mf-migas, .mf-skip-link, .mf-buscador, .mf-chips, .mf-paginacion { display: none !important; }
+  .mf-app, body { background: #fff !important; color: #000 !important; }
+  .mf-ficha, .mf-card { box-shadow: none !important; border: 1px solid #ccc !important; break-inside: avoid; page-break-inside: avoid; }
+  .mf-timeline-item { break-inside: avoid; }
+  a { color: #000 !important; text-decoration: none !important; }
+  .mf-ficha-titulo { border-bottom: 2px solid #4a7c59 !important; }
+  .mf-fila dt { color: #555 !important; }
+  .mf-grafico { background: #fff !important; border: 1px solid #ccc !important; }
+  main { padding: 0 !important; }
+  @page { margin: 1.5cm; }
+}
+
 /* ---- Animación de entrada sutil (fade-up) ---- */
 @keyframes mf-fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .mf-ficha, .mf-card, .mf-tabla, .mf-vacio { animation: mf-fade-up 360ms ease-out both; }
