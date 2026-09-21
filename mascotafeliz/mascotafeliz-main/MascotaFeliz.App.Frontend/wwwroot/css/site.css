@@ -261,6 +261,8 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 .mf-cmdk-item-ico--mascota { background: var(--mf-verde); }
 .mf-cmdk-item-ico--dueño { background: var(--mf-terracota); }
 .mf-cmdk-item-ico--veterinario { background: var(--mf-gris); }
+.mf-cmdk-item-ico--historia { background: var(--mf-aviso); }
+.mf-cmdk-item-ico--visita { background: var(--mf-exito); }
 .mf-cmdk-item-cuerpo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .mf-cmdk-item-titulo { font-weight: 600; color: var(--mf-tinta); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mf-cmdk-item-sub { font-size: .8rem; color: var(--mf-gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

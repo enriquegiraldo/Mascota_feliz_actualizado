@@ -127,6 +127,18 @@ namespace MascotaFeliz.App.Pruebas
             Assert.Equal("Firulais", porRaza[0].Nombre);
         }
 
+        [Theory]
+        [InlineData("ÑIÑO")]     // mayúsculas con acento
+        [InlineData("nino")]     // sin acento
+        [InlineData("Niño")]      // mixto
+        public void GetMascotasPorFiltro_AccentInsensitive(string termino)
+        {
+            _repo.AddMascota(new Mascota { Nombre = "Niño", Especie = "Perro", Raza = "Mestizo" });
+            var resultados = _repo.GetMascotasPorFiltro(termino).ToList();
+            Assert.NotEmpty(resultados);
+            Assert.All(resultados, m => Assert.Contains("Niño", m.Nombre));
+        }
+
         [Fact]
         public void GetMascotasPorDueno_DevuelveSoloLasDeEseDueno()
         {

@@ -52,6 +52,21 @@ namespace MascotaFeliz.App.Persistencia
             return _appContext.VisitasPyP.Include(v => v.Historia);
         }
 
+        /// <summary>
+        /// Filtra visitas por estado de ánimo, recomendaciones o fecha (dd/MM/yyyy).
+        /// Búsqueda insensible a mayúsculas y acentos.
+        /// </summary>
+        public IEnumerable<VisitaPyP> GetVisitasPyPPorFiltro(string filtro)
+        {
+            var f = Normalizador.Normalizar(filtro);
+            return _appContext.VisitasPyP
+                .Include(v => v.Historia)
+                .AsEnumerable()
+                .Where(v => Normalizador.Normalizar(v.EstadoAnimo).Contains(f)
+                         || Normalizador.Normalizar(v.Recomendaciones).Contains(f)
+                         || v.FechaVisita.ToString("dd/MM/yyyy").Contains(f));
+        }
+
         public void DeleteVisitaPyP(int idVisitaPyP)
         {
             var visitaEncontrada = _appContext.VisitasPyP.Find(idVisitaPyP);

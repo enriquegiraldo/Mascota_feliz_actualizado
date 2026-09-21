@@ -48,9 +48,11 @@ namespace MascotaFeliz.App.Persistencia
 
         public IEnumerable<Dueno> GetDuenosPorFiltro(string filtro)
         {
-            var f = filtro?.ToLower() ?? "";
+            var f = Normalizador.Normalizar(filtro);
             return _appContext.Duenos
-                .Where(d => d.Nombres.ToLower().Contains(f) || d.Apellidos.ToLower().Contains(f));
+                .AsEnumerable()
+                .Where(d => Normalizador.Normalizar(d.Nombres).Contains(f)
+                         || Normalizador.Normalizar(d.Apellidos).Contains(f));
         }
 
         public void DeleteDueno(int idDueno)

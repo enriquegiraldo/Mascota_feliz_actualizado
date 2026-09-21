@@ -263,3 +263,26 @@ Stage Summary:
 - Estado: panel interno con suite de pruebas xUnit (29 tests) que cubre la lógica de persistencia añadida en rondas 2-4 (CRUD, relaciones, filtros case-insensitive, cascade). Build 0/0. Tests 29/29. Todas las features anteriores intactas.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
 - Riesgos/pendientes: (1) Las pruebas usan SQLite en memoria (DataSource=:memory:) — rápidas pero no prueban el archivo SQLite real de producción; en Fase 3 se podría añadir TestContainers o un fixture con archivo temporal. (2) No hay pruebas de integración de las páginas Razor (endpoints HTTP). (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 11
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22, 06:37)
+Task: Estado estable → aborda dos riesgos pendientes: búsqueda accent-insensitive (LOPEZ→López) y ampliar command palette a Historias/Visitas. (El usuario sigue en Fase 2; NO se inicia Fase 3.)
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, 49 tests pasan). El usuario sigue en Fase 2 → no se toca Fase 3.
+- Bug/usabilidad corregido: búsqueda accent-insensitive (riesgo (1) de rondas anteriores). Para una app es-CO es crítico: nombres como López, Martínez, Núñez, Gómez deben encontrarse sin acento. Creado Normalizador.cs en Persistencia (quita acentos vía NormalizationForm.FormD + descarta NonSpacingMark + ToLowerInvariant). Aplicado en RepositorioMascota, RepositorioDueno, RepositorioVeterinario. AsEnumerable() antes del Where para que EF Core no intente traducir el método C# a SQL (lo que causaba 13 fallos en la primera pasada de tests).
+- Feature: ampliado command palette (riesgo (2)). BuscarModel ahora busca también en Historias (por número o fecha dd/MM/yyyy) y VisitasPyP (por estado de ánimo, recomendaciones o fecha). Nuevo método GetVisitasPyPPorFiltro en IRepositorioVisitaPyP/RepositorioVisitaPyP. JS del command palette: nuevos iconos SVG para Historia (documento) y Visita (calendario). CSS: colores .mf-cmdk-item-ico--historia (amarillo) y --visita (verde éxito).
+- Pruebas añadidas (20 nuevas, total 49):
+  - NormalizadorPruebas (12 tests): Theory con 11 casos [InlineData] (López, LOPEZ, LÓPEZ, lópez, Ñúñez, MÉNDEZ, Gómez, Café, espacios, vacío, null) + idempotencia.
+  - RepositorioMascotaPruebas: GetMascotasPorFiltro_AccentInsensitive (Theory 3 casos: ÑIÑO, nino, Niño).
+  - RepositorioDuenoPruebas: GetDuenosPorFiltro_AccentInsensitive (Theory 5 casos: LOPEZ, lopez, López, LÓPEZ, lópez).
+- Bug encontrado por las pruebas: EF Core no puede traducir Normalizador.Normalizar() a SQL → InvalidOperationException. Corregido con AsEnumerable() para materializar antes del Where.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 49/49 pasan.
+- QA runtime: /Buscar?q=LOPEZ encuentra "Dr. Andrés López"; q=lopez mismo; q=gomez encuentra "María Gómez"; q=Activo encuentra visita con estado "Activo y alerta" (tipo Visita). Command palette con LOPEZ muestra 1 resultado Veterinario.
+- Capturas en /home/z/my-project/download/qa-ronda11/. VLM confirmó: command palette "resultado con icono, título 'Dr. Andrés López', tipo VETERINARIO en verde, profesional".
+
+Stage Summary:
+- Estado: panel interno con búsqueda totalmente insensible a mayúsculas y acentos (esencial para es-CO) y command palette ampliado a las 5 entidades. Suite de pruebas 49/49. Build 0/0. Todos los riesgos (1) y (2) de rondas anteriores resueltos.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
+- Riesgos/pendientes: (1) La normalización materializa en memoria (AsEnumerable) — aceptable para el volumen actual; en Fase 3 con más datos se podría usar collation de SQLite o índice FTS. (2) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (3) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (4) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".

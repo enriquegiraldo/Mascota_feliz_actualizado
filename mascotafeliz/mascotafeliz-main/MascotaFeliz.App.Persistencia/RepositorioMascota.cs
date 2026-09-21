@@ -60,11 +60,16 @@ namespace MascotaFeliz.App.Persistencia
 
         public IEnumerable<Mascota> GetMascotasPorFiltro(string filtro)
         {
-            var f = filtro?.ToLower() ?? "";
+            var f = Normalizador.Normalizar(filtro);
+            // AsEnumerable materializa antes de aplicar el Where con el método C#
+            // Normalizador (que EF Core no puede traducir a SQL).
             return _appContext.Mascotas
                 .Include(m => m.Veterinario)
                 .Include(m => m.Dueno)
-                .Where(m => m.Nombre.ToLower().Contains(f) || m.Raza.ToLower().Contains(f) || m.Especie.ToLower().Contains(f));
+                .AsEnumerable()
+                .Where(m => Normalizador.Normalizar(m.Nombre).Contains(f)
+                         || Normalizador.Normalizar(m.Raza).Contains(f)
+                         || Normalizador.Normalizar(m.Especie).Contains(f));
         }
 
         public Mascota GetMascotaPorHistoriaId(int idHistoria)

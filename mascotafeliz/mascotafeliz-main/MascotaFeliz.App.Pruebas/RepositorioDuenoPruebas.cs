@@ -65,6 +65,20 @@ namespace MascotaFeliz.App.Pruebas
             Assert.Equal("María", porApellido[0].Nombres);
         }
 
+        [Theory]
+        [InlineData("LOPEZ")]      // mayúsculas sin acento
+        [InlineData("lopez")]      // minúsculas sin acento
+        [InlineData("López")]      // con acento
+        [InlineData("LÓPEZ")]     // mayúsculas con acento
+        [InlineData("lópez")]      // mixto
+        public void GetDuenosPorFiltro_AccentInsensitive(string termino)
+        {
+            _repo.AddDueno(new Dueno { Nombres = "Ana", Apellidos = "López", Telefono = "3200000000" });
+            var resultados = _repo.GetDuenosPorFiltro(termino).ToList();
+            Assert.NotEmpty(resultados);
+            Assert.All(resultados, d => Assert.Contains("López", d.Apellidos));
+        }
+
         [Fact]
         public void DeleteDueno_Elimina()
         {
