@@ -40,15 +40,12 @@ namespace MascotaFeliz.App.Persistencia
                 mascotaEncontrada.Color = mascota.Color;
                 mascotaEncontrada.Especie = mascota.Especie;
                 mascotaEncontrada.Raza = mascota.Raza;
-                // Los vínculos con dueño y veterinario se actualizan desde el formulario
-                // (selectores). La historia clínica se preserva: nunca se sobrescribe a
-                // null desde la edición de la mascota (se gestiona desde su propia sección).
+                // Los tres vínculos (dueño, veterinario e historia) se actualizan
+                // desde el formulario mediante selectores. Si el usuario elige
+                // "sin asignar", el valor llega null y se desvincula correctamente.
                 mascotaEncontrada.VeterinarioId = mascota.VeterinarioId;
                 mascotaEncontrada.DuenoId = mascota.DuenoId;
-                if (mascota.HistoriaId.HasValue)
-                {
-                    mascotaEncontrada.HistoriaId = mascota.HistoriaId;
-                }
+                mascotaEncontrada.HistoriaId = mascota.HistoriaId;
                 _appContext.SaveChanges();
             }
             return mascotaEncontrada;

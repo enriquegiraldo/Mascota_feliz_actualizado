@@ -76,7 +76,7 @@ MascotaFelizGrupo5/
 │   │   ├── Duenos/                           ← CRUD Dueños (buscar, eliminar, paginar, validar)
 │   │   ├── Veterinarios/                     ← CRUD Veterinarios (buscar, eliminar, paginar, validar)
 │   │   ├── Mascotas/                         ← CRUD Mascotas (selectores dueño/vet, perfil con línea de tiempo)
-│   │   ├── Historias/                        ← Lista y detalle de historias clínicas (línea de tiempo de visitas)
+│   │   ├── Historias/                        ← Lista, detalle y editar historias clínicas
 │   │   ├── VisitasPyP/                       ← CRUD Visitas de PyP (signos vitales + recomendaciones)
 │   │   ├── Error.cshtml                      ← Página de errores (UseExceptionHandler)
 │   │   ├── NotFound.cshtml                   ← 404 con estilo
@@ -241,6 +241,8 @@ dotnet ef database update --project MascotaFeliz.App.Persistencia --startup-proj
 | `/Error`                                             | Página de errores (handler)|
 | `/Historias/ListaHistorias`                          | Listado de historias clínicas |
 | `/Historias/DetallesHistoria?historiaId=1`           | Detalle de historia + línea de tiempo |
+| `/Historias/EditarHistoria`                          | Crear historia clínica      |
+| `/Historias/EditarHistoria?historiaId=1`             | Editar / eliminar historia  |
 | `/VisitasPyP/ListaVisitasPyP`                        | Listado de visitas PyP     |
 | `/VisitasPyP/DetallesVisitaPyP?visitaPyPId=1`        | Detalle de una visita      |
 | `/VisitasPyP/EditarVisitaPyP?historiaId=1`           | Crear visita para una historia |

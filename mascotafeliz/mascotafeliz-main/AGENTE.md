@@ -13,10 +13,12 @@ Archivo de guía para que cualquier agente de IA (incluyendo TRAE) pueda contrib
    - **Frontend →** Razor Pages + DI. Depende de Dominio y Persistencia.
    - **Consola →** pruebas rápidas. Depende de Dominio y Persistencia.
 3. **NUNCA pongas lógica de negocios en el Frontend.** Eso pertenece a Persistencia (repositorios) o a una capa de Servicios si se agrega.
-4. **Nombres PascalCase** para clases, namespaces y propiedades.
-5. **Nombres camelCase** para variables locales y campos privados.
-6. **No realices commits** a menos que el usuario lo pida explícitamente.
-7. **No elimines páginas o entidades existentes** sin confirmar con el usuario.
+4. **Inyección de dependencias:** los repositorios se registran como `Scoped` en `Program.cs` y se inyectan por constructor en las páginas. **NO** uses `new Repositorio(new AppContext())` en el Frontend.
+5. **Política de borrado (AppContext.OnModelCreating):** todas las FK de Mascota (Dueno, Veterinario, Historia) son `Restrict` — no se puede borrar un registro referenciado. La FK Historia→VisitaPyP es `Cascade` (al borrar una historia se borran sus visitas). Cambiar esto requiere borrar `MascotaFeliz.db` y re-crear la base.
+6. **Nombres PascalCase** para clases, namespaces y propiedades.
+7. **Nombres camelCase** para variables locales y campos privados.
+8. **No realices commits** a menos que el usuario lo pida explícitamente.
+9. **No elimines páginas o entidades existentes** sin confirmar con el usuario.
 
 ---
 
@@ -125,13 +127,18 @@ Ejemplo: una `Mascota` tiene un `Dueno` (uno a muchos).
 
 | Qué buscas | Dónde está |
 |---|---|
-| Entidad `Dueno` | [Dueno.cs](file:///C:/Users/Santiago%20Sofia/Downloads/MascotaFelizGrupo5/MascotaFeliz.App.Dominio/Dueno.cs) |
-| CRUD Dueños (web) | [Pages/Duenos/](file:///C:/Users/Santiago%20Sofia/Downloads/MascotaFelizGrupo5/MascotaFeliz.App.Frontend/Pages/Duenos) |
-| Repositorio Mascota | [RepositorioMascota.cs](file:///C:/Users/Santiago%20Sofia/Downloads/MascotaFelizGrupo5/MascotaFeliz.App.Persistencia/RepositorioMascota.cs) |
-| Configuración EF / Relaciones | [AppContext.cs](file:///C:/Users/Santiago%20Sofia/Downloads/MascotaFelizGrupo5/MascotaFeliz.App.Persistencia/AppContext.cs) |
-| Layout / Navbar principal | [_Layout.cshtml](file:///C:/Users/Santiago%20Sofia/Downloads/MascotaFelizGrupo5/MascotaFeliz.App.Frontend/Pages/Shared/_Layout.cshtml) |
-| Punto de entrada / Seed Data | [Program.cs](file:///C:/Users/Santiago%20Sofia/Downloads/MascotaFelizGrupo5/MascotaFeliz.App.Frontend/Program.cs) |
-| _ViewImports (namespaces globales) | [_ViewImports.cshtml](file:///C:/Users/Santiago%20Sofia/Downloads/MascotaFelizGrupo5/MascotaFeliz.App.Frontend/Pages/_ViewImports.cshtml) |
+| Entidad `Dueno` | `MascotaFeliz.App.Dominio/Dueno.cs` |
+| CRUD Dueños (web) | `MascotaFeliz.App.Frontend/Pages/Duenos/` |
+| CRUD Veterinarios (web) | `MascotaFeliz.App.Frontend/Pages/Veterinarios/` |
+| CRUD Mascotas (web) | `MascotaFeliz.App.Frontend/Pages/Mascotas/` |
+| CRUD Historias (web) | `MascotaFeliz.App.Frontend/Pages/Historias/` |
+| CRUD Visitas PyP (web) | `MascotaFeliz.App.Frontend/Pages/VisitasPyP/` |
+| Repositorio Mascota | `MascotaFeliz.App.Persistencia/RepositorioMascota.cs` |
+| Configuración EF / Relaciones | `MascotaFeliz.App.Persistencia/AppContext.cs` |
+| Sistema de diseño (CSS/JS) | `MascotaFeliz.App.Frontend/wwwroot/css/site.css`, `wwwroot/js/site.js` |
+| Layout / Navbar principal | `MascotaFeliz.App.Frontend/Pages/Shared/_Layout.cshtml` |
+| Punto de entrada / Seed Data | `MascotaFeliz.App.Frontend/Program.cs` |
+| _ViewImports (namespaces globales) | `MascotaFeliz.App.Frontend/Pages/_ViewImports.cshtml` |
 
 ---
 

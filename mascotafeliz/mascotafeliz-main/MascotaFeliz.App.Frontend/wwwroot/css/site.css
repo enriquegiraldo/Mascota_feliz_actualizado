@@ -162,8 +162,20 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 .mf-timeline-item::before { content: ""; position: absolute; left: -1.22rem; top: .4rem; width: 12px; height: 12px; border-radius: 50%; background: var(--mf-verde); border: 2px solid var(--mf-blanco); box-shadow: 0 0 0 2px var(--mf-verde-claro); }
 
 /* ---- Toast ---- */
-.mf-toast { position: fixed; right: 1rem; bottom: 1rem; background: var(--mf-verde-osc); color: #fff; padding: .8rem 1.1rem; border-radius: var(--mf-radio); box-shadow: var(--mf-sombra-lg); font-weight: 600; z-index: 1080; transform: translateY(120%); transition: transform var(--mf-transicion); }
+.mf-toast { position: fixed; right: 1rem; bottom: 1rem; background: var(--mf-verde-osc); color: #fff; padding: .8rem 1.1rem; border-radius: var(--mf-radio); box-shadow: var(--mf-sombra-lg); font-weight: 600; z-index: 1080; transform: translateY(120%); transition: transform var(--mf-transicion); display: flex; align-items: center; gap: .5rem; max-width: min(420px, calc(100vw - 2rem)); }
 .mf-toast.mf-show { transform: translateY(0); }
+.mf-toast.mf-toast--error { background: var(--mf-peligro); }
+.mf-toast.mf-toast--aviso { background: var(--mf-aviso); }
+
+/* ---- Aviso inline (TempData["Error"]) ---- */
+.mf-aviso { border: 1px solid var(--mf-peligro); color: var(--mf-peligro); background: #fdeeef; border-radius: var(--mf-radio); padding: .8rem 1.1rem; margin-bottom: 1.25rem; font-weight: 600; display: flex; gap: .5rem; align-items: flex-start; }
+.mf-aviso svg { flex: 0 0 auto; margin-top: .1rem; }
+
+/* ---- Animación de entrada sutil (fade-up) ---- */
+@keyframes mf-fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.mf-ficha, .mf-card, .mf-tabla, .mf-vacio { animation: mf-fade-up 360ms ease-out both; }
+.mf-ficha:nth-child(2) { animation-delay: 60ms; }
+.mf-ficha:nth-child(3) { animation-delay: 120ms; }
 
 /* ---- Footer ---- */
 .mf-footer { background: var(--mf-verde-osc); color: rgba(255, 255, 255, .85); margin-top: 3rem; }

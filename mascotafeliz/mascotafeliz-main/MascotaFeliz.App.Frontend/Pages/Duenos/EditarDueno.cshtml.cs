@@ -45,10 +45,12 @@ namespace MascotaFeliz.App.Frontend.Pages
             if (dueno.Id > 0)
             {
                 _repoDueno.UpdateDueno(dueno);
+                TempData["Mensaje"] = "Dueño actualizado.";
             }
             else
             {
                 _repoDueno.AddDueno(dueno);
+                TempData["Mensaje"] = "Dueño creado.";
             }
 
             return RedirectToPage("./ListaDuenos");

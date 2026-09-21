@@ -102,3 +102,29 @@ Stage Summary:
 - Estado: panel interno completo y coherente — CRUD de las 5 entidades (Dueno, Veterinario, Mascota, Historia, VisitaPyP) con buscar/eliminar/paginar/validar, perfil de mascota con línea de tiempo, detalle de historia clínica, KPIs en el inicio. Todos los bugs de Fase 0 corregidos. UI cálida y accesible. Build 0/0.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS). Sin esas respuestas no se deben tomar decisiones de producto (alcance, versión de UI, identidad final, despliegue).
 - Riesgos/pendientes: (1) Borrado en cascada Mascota→Historia→VisitaPyP vigente; revisar con usuario si es la política deseada. (2) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (3) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (4) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 4
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22, 05:50)
+Task: Estado estable → corregir bugs pendientes que el usuario pidió explícitamente (cascade Mascota→Historia) + completar CRUD de Historia + selector de historia en EditarMascota + toasts de éxito. (El usuario sigue en Fase 2; NO se inicia Fase 3.)
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, CRUD de las 5 entidades, KPIs, accesibilidad). El usuario sigue en Fase 2 → no se toca Fase 3.
+- Bugs corregidos (ambos pedidos explícitos del usuario en Fase 0):
+  1. Cascade Mascota→Historia peligroso: cambiado a Restrict en AppContext.OnModelCreating. Antes, borrar una Historia BORRARÍA la Mascota asociada (EF Cascade en FK opcional). Ahora consistente con Dueno/Vet→Mascota (Restrict). Historia→VisitaPyP sigue Cascade. Requiere borrar MascotaFeliz.db (EnsureCreated no migra schema).
+  2. UpdateVisitaPyP no actualizaba HistoriaId (mismo patrón que el bug de mascota que el usuario reportó): al editar una visita y cambiar el selector de historia, el cambio se ignoraba. Corregido copiando HistoriaId.
+  3. UpdateMascota: ahora permite desvincular la historia (antes preservaba el valor viejo si llegaba null). El selector de EditarMascota tiene opción "sin historia".
+- Feature: EditarHistoria (crear/editar/eliminar) — completa el CRUD de Historia. Botones "+ Nueva historia" (ListaHistorias), "Editar" (tabla + DetallesHistoria). DeleteHistoria captura DbUpdateException si una mascota la referencia (cascade Restrict) y avisa vía TempData["Error"].
+- Feature: selector de Historia en EditarMascota (reemplaza el hidden). Opciones "Historia #N · fecha". Permite vincular/desvincular mascota↔historia desde el formulario. Modelo inyecta IRepositorioHistoria y carga HistoriasOpciones.
+- Feature: toasts de éxito (microinteracción). Todas las páginas de edición (Dueno, Veterinario, Mascota, Historia, VisitaPyP) setean TempData["Mensaje"] tras crear/actualizar. El layout inyecta un script que llama a MascotaFeliz.mostrarToast() en DOMContentLoaded. Verificado en runtime.
+- Pulido de estilo: animación mf-fade-up sutil de entrada (tarjetas, fichas, tablas, vacíos); respeta prefers-reduced-motion (animation:none !important global). Nuevos estilos .mf-aviso (inline con icono) y variantes de toast (--error, --aviso). Bloques de TempData["Error"] unificados con icono en las 4 listas (Duenos, Veterinarios, Mascotas, Historias).
+- `dotnet build` → 0 errores, 0 warnings. Consola compila.
+- QA runtime (todas 200): /Historias/EditarHistoria, /Historias/EditarHistoria?historiaId=1, /Historias/ListaHistorias, /Mascotas/EditarMascota?mascotaId=1. Contenido verificado: EditarMascota tiene selector "Historia clínica" con opciones Historia #1/#2/#3 + "Sin historia asignada"; EditarHistoria (editar) tiene "Eliminar historia" + "visita(s)"; EditarHistoria (crear) tiene "Fecha inicial" + "Guardar".
+- Flujo toast verificado con agent-browser: abrir /Duenos/EditarDueno?duenoId=1, cambiar teléfono, click en button[type=submit], esperar, eval .mf-toast → "Dueño actualizado.", URL redirige a ListaDuenos, teléfono "3009998888" aparece en la lista (PRG + persistencia OK).
+- Capturas en /home/z/my-project/download/qa-ronda4/ a 390px y 1440px. VLM confirmó: EditarMascota 390px "selector de Historia clínica + Dueño (Juan Pérez) + Veterinario (Dr. Andrés López), paleta cálida, sin scroll"; Toast 390px "toast verde 'Dueño actualizado.' en esquina inferior + lista de dueños visible".
+- Documentación: README.md (página EditarHistoria + URL), AGENTE.md (reglas DI + política de borrado + tabla de localización actualizada), docs/decisiones.md (rondas 3 y 4).
+
+Stage Summary:
+- Estado: panel interno completo y robusto. CRUD de las 5 entidades con todas las FK como selectores (Dueño/Veterinario/Historia en Mascota, Historia en VisitaPyP). Política de borrado segura (Restrict en FK de Mascota; Cascade solo Historia→VisitaPyP). Microinteracciones de feedback (toast de éxito, aviso de error inline, confirmación de borrado). Línea de tiempo de visitas funcional. Build 0/0. Bugs de Fase 0 + cascade + Update FK todos corregidos.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
+- Riesgos/pendientes: (1) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (2) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (3) El cambio de cascade requiere borrar la db para tomar efecto (EnsureCreated no migra); ya se hace en dev, pero en producción habría que crear migraciones formales. (4) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".

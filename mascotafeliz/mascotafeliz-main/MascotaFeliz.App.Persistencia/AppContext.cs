@@ -62,7 +62,7 @@ namespace MascotaFeliz.App.Persistencia
                 .HasOne(m => m.Historia)
                 .WithMany()
                 .HasForeignKey(m => m.HistoriaId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<VisitaPyP>()
                 .HasOne(v => v.Historia)

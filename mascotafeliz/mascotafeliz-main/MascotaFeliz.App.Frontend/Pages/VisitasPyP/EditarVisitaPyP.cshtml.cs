@@ -67,10 +67,12 @@ namespace MascotaFeliz.App.Frontend.Pages
             if (visitaPyP.Id > 0)
             {
                 _repoVisitaPyP.UpdateVisitaPyP(visitaPyP);
+                TempData["Mensaje"] = "Visita actualizada.";
             }
             else
             {
                 _repoVisitaPyP.AddVisitaPyP(visitaPyP);
+                TempData["Mensaje"] = "Visita registrada.";
             }
 
             return RedirectToPage("/Historias/DetallesHistoria", new { historiaId = visitaPyP.HistoriaId });

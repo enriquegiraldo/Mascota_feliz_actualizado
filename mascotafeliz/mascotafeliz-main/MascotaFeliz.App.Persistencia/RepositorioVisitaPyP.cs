@@ -40,6 +40,8 @@ namespace MascotaFeliz.App.Persistencia
                 visitaEncontrada.FrecuenciaCardiaca = visitaPyP.FrecuenciaCardiaca;
                 visitaEncontrada.EstadoAnimo = visitaPyP.EstadoAnimo;
                 visitaEncontrada.Recomendaciones = visitaPyP.Recomendaciones;
+                // La historia asociada se actualiza desde el formulario (selector).
+                visitaEncontrada.HistoriaId = visitaPyP.HistoriaId;
                 _appContext.SaveChanges();
             }
             return visitaEncontrada;

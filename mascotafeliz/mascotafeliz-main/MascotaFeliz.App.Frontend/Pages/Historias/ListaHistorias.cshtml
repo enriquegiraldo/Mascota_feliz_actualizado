@@ -10,13 +10,25 @@
         <h1>Historias clínicas</h1>
         <p class="mf-muted">Registros clínicos de los pacientes de la clínica.</p>
     </div>
+    <div class="mf-acciones">
+        <a class="btn btn-primary mf-btn-tactil" asp-page="./EditarHistoria">+ Nueva historia</a>
+    </div>
 </div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="mf-aviso" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>@TempData["Error"]</span>
+    </div>
+}
 
 @if (!Model.listaHistorias.Any())
 {
     <div class="mf-vacio">
         <svg class="mf-vacio-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         <p>Aún no hay historias clínicas registradas.</p>
+        <a class="btn btn-primary mf-btn-tactil" asp-page="./EditarHistoria">Crear la primera historia</a>
     </div>
 }
 else
@@ -53,7 +65,8 @@ else
                 <td><span class="mf-badge">@(historia.VisitasPyP?.Count ?? 0) visita(s)</span></td>
                 <td>
                     <div class="mf-tabla-acciones">
-                        <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesHistoria" asp-route-historiaId="@historia.Id">Ver detalle</a>
+                        <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesHistoria" asp-route-historiaId="@historia.Id">Detalle</a>
+                        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarHistoria" asp-route-historiaId="@historia.Id">Editar</a>
                     </div>
                 </td>
             </tr>

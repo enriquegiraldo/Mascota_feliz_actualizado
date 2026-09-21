@@ -38,3 +38,20 @@ El usuario sigue en Fase 2 esperando respuestas, así que **no se inició la Fas
 - **Borrado en cascada**: se mantiene la configuración existente (Mascota→Historia=Cascade, Historia→VisitaPyP=Cascade; Dueno/Vet→Mascota=Restrict). El Eliminar de dueño/vet avisa si hay mascotas asociadas (captura `DbUpdateException`). Queda revisar con el usuario si esa política es la deseada.
 - **Versiones**: NO se cambió .NET (sigue 9) ni EF Core (sigue 8.0.0) — pendiente Q3. Compila con 0 errores/0 warnings.
 - **QA**: verificado en runtime — `/Error` 200 (era 404), `EditarMascota?id=9999` 302 (era 500), búsqueda 200, contenido correcto (etiquetas, vínculos, footer, privacy). Capturas en `/home/z/my-project/download/qa-despues/` a 390px y 1440px; VLM confirma look profesional, paleta cálida, sin scroll horizontal.
+
+## Ronda 3 — Historia/VisitaPyP + KPIs + accesibilidad (cron, 2026-09-22)
+
+- Construidas páginas de Historia (Lista + Detalles) y VisitaPyP (Lista + Detalles + Editar con selector de historia). Sembradas 3 VisitasPyP. KPIs en el inicio. Skip-link + focus-visible.
+- AGENTE.md actualizado con la política de borrado y la tabla de localización.
+
+## Ronda 4 — Cascade fix + CRUD Historia completo + selector historia + toasts (cron, 2026-09-22)
+
+- **Bug corregido (pedido explícito del usuario: "revisa el borrado en cascada Mascota→Historia")**: cambiado `Mascota→Historia` de `Cascade` a `Restrict`. Antes, borrar una Historia BORRARÍA la Mascota asociada (pérdida de datos). Ahora es consistente con Dueno/Vet→Mascota (Restrict). Historia→VisitaPyP sigue Cascade (borrar historia borra sus visitas). Requiere borrar `MascotaFeliz.db` y re-crear.
+- **Bug corregido (mismo patrón que el de mascota)**: `UpdateVisitaPyP` no copiaba `HistoriaId`; al editar una visita y cambiar el selector de historia, el cambio se ignoraba. Ahora se actualiza.
+- **UpdateMascota**: ya permite desvincular la historia (selector con opción "sin historia"); antes preservaba el valor viejo si llegaba null.
+- **CRUD Historia completo**: nueva página `EditarHistoria` (crear/editar/eliminar con confirmación). Botones "+ Nueva historia" en ListaHistorias, "Editar" en la tabla y en DetallesHistoria. DeleteHistoria captura `DbUpdateException` (si una mascota la referencia) y avisa.
+- **Selector de Historia en EditarMascota**: reemplazado el hidden por un selector (opciones "Historia #N · fecha"). Así se vincula/desvincula mascota↔historia desde el formulario.
+- **Toasts de éxito (microinteracción)**: todas las páginas de edición setean `TempData["Mensaje"]` y el layout lo muestra como toast verde al cargar la página siguiente (PRG). Verificado en runtime (editar dueño → toast "Dueño actualizado." + teléfono actualizado en la lista).
+- **Pulido de estilo**: animación `mf-fade-up` sutil de entrada de tarjetas (respeta `prefers-reduced-motion`), estilos `.mf-aviso` (inline) y variantes de toast (`--error`, `--aviso`), bloques de error unificados con icono en las 4 listas.
+- `dotnet build` 0/0. QA runtime: rutas nuevas 200, contenido verificado (selector Historia #1/#2/#3, EditarHistoria con Eliminar), toast verificado con agent-browser, VLM confirma selector de historia + toast verde. Capturas en `/home/z/my-project/download/qa-ronda4/`.
+- AGENTE.md y README.md actualizados.

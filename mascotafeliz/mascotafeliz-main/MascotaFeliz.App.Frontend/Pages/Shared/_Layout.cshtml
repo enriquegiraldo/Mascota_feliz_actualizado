@@ -70,6 +70,16 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @if (TempData["Mensaje"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                if (window.MascotaFeliz && window.MascotaFeliz.mostrarToast) {
+                    window.MascotaFeliz.mostrarToast(@Json.Serialize(TempData["Mensaje"]));
+                }
+            });
+        </script>
+    }
 
     @RenderSection("Scripts", required: false)
 </body>

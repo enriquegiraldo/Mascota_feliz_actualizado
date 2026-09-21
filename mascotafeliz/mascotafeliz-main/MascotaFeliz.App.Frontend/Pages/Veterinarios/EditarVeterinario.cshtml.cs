@@ -45,10 +45,12 @@ namespace MascotaFeliz.App.Frontend.Pages
             if (veterinario.Id > 0)
             {
                 _repoVeterinario.UpdateVeterinario(veterinario);
+                TempData["Mensaje"] = "Veterinario actualizado.";
             }
             else
             {
                 _repoVeterinario.AddVeterinario(veterinario);
+                TempData["Mensaje"] = "Veterinario creado.";
             }
 
             return RedirectToPage("./ListaVeterinarios");
