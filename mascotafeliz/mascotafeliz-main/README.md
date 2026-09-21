@@ -91,6 +91,14 @@ MascotaFelizGrupo5/
 │   ├── Program.cs
 │   └── MascotaFeliz.App.Consola.csproj
 │
+├── MascotaFeliz.App.Pruebas/                 ← 🧪 Proyecto de Pruebas (xUnit)
+│   ├── ContextoPruebas.cs                   ← Helper SQLite en memoria
+│   ├── RepositorioMascotaPruebas.cs
+│   ├── RepositorioDuenoPruebas.cs
+│   ├── RepositorioVeterinarioPruebas.cs
+│   ├── RepositorioHistoriaVisitaPruebas.cs
+│   └── MascotaFeliz.App.Pruebas.csproj
+│
 └── README.md
 ```
 
@@ -259,8 +267,19 @@ dotnet ef database update --project MascotaFeliz.App.Persistencia --startup-proj
 
 1. Haz los cambios en una rama nueva.
 2. Asegúrate de que `dotnet build` compile sin errores.
-3. Verifica que las páginas CRUD funcionen correctamente.
-4. No elimines datos de ejemplo a menos que se indique.
+3. Ejecuta `dotnet test` para verificar que las pruebas xUnit pasen.
+4. Verifica que las páginas CRUD funcionen correctamente.
+5. No elimines datos de ejemplo a menos que se indique.
+
+### Pruebas (xUnit)
+
+El proyecto `MascotaFeliz.App.Pruebas` contiene pruebas unitarias de la capa de
+Persistencia usando SQLite en memoria (`DataSource=:memory:`). Cubren CRUD,
+relaciones, búsqueda case-insensitive y la política de borrado.
+
+```bash
+dotnet test
+```
 
 ---
 

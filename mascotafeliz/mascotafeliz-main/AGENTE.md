@@ -19,6 +19,7 @@ Archivo de guía para que cualquier agente de IA (incluyendo TRAE) pueda contrib
 7. **Nombres camelCase** para variables locales y campos privados.
 8. **No realices commits** a menos que el usuario lo pida explícitamente.
 9. **No elimines páginas o entidades existentes** sin confirmar con el usuario.
+10. **Pruebas xUnit:** si añades lógica nueva en Persistencia, incluye pruebas mínimas en `MascotaFeliz.App.Pruebas` (SQLite en memoria). Ejecuta `dotnet test` antes de entregar.
 
 ---
 
@@ -162,6 +163,9 @@ dotnet watch run --project MascotaFeliz.App.Frontend
 # Ejecutar proyecto consola
 dotnet run --project MascotaFeliz.App.Consola
 
+# Ejecutar pruebas (xUnit, SQLite en memoria)
+dotnet test
+
 # Limpiar bin/obj
 dotnet clean
 ```
@@ -184,11 +188,13 @@ dotnet clean
 ## ✅ Checklist antes de entregar cambios
 
 - [ ] `dotnet build` pasa con **0 errores y 0 warnings** nuevos.
+- [ ] `dotnet test` pasa con **0 pruebas fallidas**.
 - [ ] Todas las entidades nuevas tienen `Id` (PK) y propiedades en PascalCase.
 - [ ] Las relaciones están configuradas en `AppContext.OnModelCreating`.
 - [ ] Las páginas Razor usan el namespace correcto `MascotaFeliz.App.Frontend.Pages.*` (**Pages** plural).
 - [ ] El link a la nueva sección fue agregado en `Pages/Shared/_Layout.cshtml`.
 - [ ] No hay archivos `.db` viejos en el repo si no se desea conservar datos.
+- [ ] Si añadiste lógica en Persistencia, incluye pruebas en `MascotaFeliz.App.Pruebas`.
 
 ---
 

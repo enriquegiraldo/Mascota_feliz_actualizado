@@ -239,3 +239,27 @@ Stage Summary:
 - Estado: panel interno con arquitectura más limpia (ViewComponent DRY), visualización de datos (donut de distribución), y accesibilidad por teclado verificada. Todas las features anteriores intactas (búsqueda global, modo oscuro, CSV, ordenamiento, hero, gráfico de peso, CRUD de 5 entidades). Build 0/0.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
 - Riesgos/pendientes: (1) ViewComponent solo para tarjetas de mascotas — se podrían extraer más (badges, fichas). (2) Donut es estático (SVG en servidor) — en Fase 3 se podría hacer interactivo. (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 10
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22, 06:29)
+Task: Estado estable → cubrir gap explícito de los criterios de calidad del usuario: "Si añades lógica nueva en Persistencia/Servicios, incluye pruebas xUnit mínimas". Crear proyecto de pruebas. (El usuario sigue en Fase 2; NO se inicia Fase 3.)
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, ViewComponent, donut, CSV, búsqueda global, modo oscuro, CRUD completo). El usuario sigue en Fase 2 → no se toca Fase 3.
+- Gap detectado: el usuario exige "pruebas xUnit mínimas" para la lógica nueva de Persistencia. En 9 rondas añadí mucha lógica (GetMascotasPorDueno/Veterinario, GetEspecies, GetMascotaPorHistoriaId, búsqueda case-insensitive, UpdateMascota/UpdateVisitaPyP con FK, cascade Restrict) SIN pruebas.
+- Creado proyecto MascotaFeliz.App.Pruebas (xUnit) añadido a la solución.
+  - ContextoPruebas.cs: fábrica de AppContext con SQLite en memoria (DataSource=:memory:) — prueba comportamiento SQL real (FK, case-insensitivity, NOT NULL).
+  - Paquetes: xunit 2.9.0, xunit.runner.visualstudio 2.8.2, Microsoft.NET.Test.Sdk 17.11.1, Microsoft.EntityFrameworkCore.Sqlite 8.0.0.
+- RepositorioMascotaPruebas (12 tests): AddMascota, GetMascota (incluye relaciones), UpdateMascota (preserva relaciones + actualiza campos), UpdateMascota_PermiteDesvincularHistoriaConNull (ronda 4), UpdateMascota_PermiteDesvincularDuenoYVeterinario, GetMascotasPorFiltro_CaseInsensitive, GetMascotasPorFiltro_BuscaEnEspecieYRaza, GetMascotasPorDueno, GetMascotasPorVeterinario, GetEspecies (distintas + ordenadas), GetMascotaPorHistoriaId, DeleteMascota, GetAllMascotas.
+- RepositorioDuenoPruebas (6 tests): Add, Update, GetPorFiltro case-insensitive, GetPorFiltro por apellido, Delete, GetAll.
+- RepositorioVeterinarioPruebas (4 tests): Add, Update (tarjeta), GetPorFiltro case-insensitive, Delete.
+- RepositorioHistoriaVisitaPruebas (6 tests): GetHistoria (incluye VisitasPyP), AddHistoria, UpdateVisitaPyP_ActualizaHistoriaId (bug corregido en ronda 4), UpdateVisitaPyP_ActualizaSignosVitales, DeleteVisitaPyP, GetAllVisitasPyP.
+- Bugs encontrados por las pruebas: (1) DataAnnotations [Required] en Veterinario.Telefono hace la columna NOT NULL — el seed de pruebas no lo enviaba. Corregido añadiendo Telefono. (2) La prueba NoSobrescribeHistoriaConNull estaba desactualizada respecto a la decisión de la ronda 4 (UpdateMascota SÍ permite null). Actualizada a PermiteDesvincularHistoriaConNull.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 29/29 pasan.
+- QA: solución completa (Dominio, Persistencia, Frontend, Consola, Pruebas) compila y pasa todas las pruebas.
+
+Stage Summary:
+- Estado: panel interno con suite de pruebas xUnit (29 tests) que cubre la lógica de persistencia añadida en rondas 2-4 (CRUD, relaciones, filtros case-insensitive, cascade). Build 0/0. Tests 29/29. Todas las features anteriores intactas.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
+- Riesgos/pendientes: (1) Las pruebas usan SQLite en memoria (DataSource=:memory:) — rápidas pero no prueban el archivo SQLite real de producción; en Fase 3 se podría añadir TestContainers o un fixture con archivo temporal. (2) No hay pruebas de integración de las páginas Razor (endpoints HTTP). (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
