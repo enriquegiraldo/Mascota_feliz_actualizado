@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MascotaFeliz.App.Dominio;
@@ -8,11 +10,15 @@ namespace MascotaFeliz.App.Frontend.Pages
     public class DetallesVeterinariosModel : PageModel
     {
         private readonly IRepositorioVeterinario _repoVeterinario;
-        public Veterinario veterinario { get; set; }
+        private readonly IRepositorioMascota _repoMascota;
 
-        public DetallesVeterinariosModel(IRepositorioVeterinario repoVeterinario)
+        public Veterinario veterinario { get; set; }
+        public IEnumerable<Mascota> mascotas { get; set; }
+
+        public DetallesVeterinariosModel(IRepositorioVeterinario repoVeterinario, IRepositorioMascota repoMascota)
         {
             _repoVeterinario = repoVeterinario;
+            _repoMascota = repoMascota;
         }
 
         public IActionResult OnGet(int veterinarioId)
@@ -22,6 +28,7 @@ namespace MascotaFeliz.App.Frontend.Pages
             {
                 return RedirectToPage("/NotFound");
             }
+            mascotas = _repoMascota.GetMascotasPorVeterinario(veterinarioId).ToList();
             return Page();
         }
     }

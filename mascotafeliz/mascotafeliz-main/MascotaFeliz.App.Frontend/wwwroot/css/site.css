@@ -171,6 +171,26 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 .mf-aviso { border: 1px solid var(--mf-peligro); color: var(--mf-peligro); background: #fdeeef; border-radius: var(--mf-radio); padding: .8rem 1.1rem; margin-bottom: 1.25rem; font-weight: 600; display: flex; gap: .5rem; align-items: flex-start; }
 .mf-aviso svg { flex: 0 0 auto; margin-top: .1rem; }
 
+/* ---- Migas de pan ---- */
+.mf-migas { display: flex; align-items: center; gap: .5rem; font-size: .85rem; color: var(--mf-gris); margin-bottom: 1rem; flex-wrap: wrap; }
+.mf-migas a { color: var(--mf-gris); text-decoration: none; }
+.mf-migas a:hover { color: var(--mf-verde); text-decoration: underline; }
+.mf-migas span[aria-current] { color: var(--mf-tinta); font-weight: 600; }
+
+/* ---- Lista de mascotas (tarjetas) ---- */
+.mf-lista-mascotas { display: grid; gap: .6rem; }
+.mf-tarjeta-mascota { display: flex; align-items: center; gap: .85rem; padding: .85rem 1rem; text-decoration: none; color: inherit; }
+.mf-tarjeta-mascota:hover { text-decoration: none; }
+.mf-tarjeta-mascota-avatar { width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; }
+.mf-avatar-perro { background: var(--mf-verde); }
+.mf-avatar-gato { background: var(--mf-terracota); }
+.mf-tarjeta-mascota .mf-badge { margin-left: auto; }
+
+/* ---- Gráfico de peso ---- */
+.mf-grafico { background: var(--mf-arena); border: 1px solid var(--mf-gris-claro); border-radius: var(--mf-radio); padding: 1rem; margin: 1rem 0; }
+.mf-grafico-titulo { display: flex; align-items: center; gap: .45rem; font-weight: 700; color: var(--mf-verde-osc); margin-bottom: .5rem; font-size: .95rem; }
+.mf-grafico-svg { width: 100%; height: auto; display: block; }
+
 /* ---- Animación de entrada sutil (fade-up) ---- */
 @keyframes mf-fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .mf-ficha, .mf-card, .mf-tabla, .mf-vacio { animation: mf-fade-up 360ms ease-out both; }

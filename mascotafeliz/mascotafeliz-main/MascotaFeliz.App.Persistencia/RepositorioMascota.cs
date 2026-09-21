@@ -74,6 +74,22 @@ namespace MascotaFeliz.App.Persistencia
                 .FirstOrDefault(m => m.HistoriaId == idHistoria);
         }
 
+        public IEnumerable<Mascota> GetMascotasPorDueno(int idDueno)
+        {
+            return _appContext.Mascotas
+                .Include(m => m.Veterinario)
+                .Where(m => m.DuenoId == idDueno)
+                .OrderBy(m => m.Nombre);
+        }
+
+        public IEnumerable<Mascota> GetMascotasPorVeterinario(int idVeterinario)
+        {
+            return _appContext.Mascotas
+                .Include(m => m.Dueno)
+                .Where(m => m.VeterinarioId == idVeterinario)
+                .OrderBy(m => m.Nombre);
+        }
+
         public void DeleteMascota(int idMascota)
         {
             var mascotaEncontrada = _appContext.Mascotas.Find(idMascota);

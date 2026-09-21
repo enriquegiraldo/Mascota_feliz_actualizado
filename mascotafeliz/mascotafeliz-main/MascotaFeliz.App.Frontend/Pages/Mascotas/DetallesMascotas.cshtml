@@ -2,10 +2,35 @@
 @model MascotaFeliz.App.Frontend.Pages.DetallesMascotasModel
 @{
     ViewData["Title"] = Model.mascota.Nombre;
-    var visitas = Model.mascota.Historia?.VisitasPyP?
+    var visitasDesc = Model.mascota.Historia?.VisitasPyP?
         .OrderByDescending(v => v.FechaVisita).ToList();
     var cultura = new System.Globalization.CultureInfo("es-CO");
+
+    // Datos para el gráfico de peso (ordenados ascendentemente por fecha).
+    var visitasPeso = Model.mascota.Historia?.VisitasPyP?
+        .OrderBy(v => v.FechaVisita).ToList() ?? new List<MascotaFeliz.App.Dominio.VisitaPyP>();
+    var hayPeso = visitasPeso.Any();
+    double w = 320, h = 120, pad = 28;
+    var pesos = hayPeso ? visitasPeso.Select(v => (double)v.Peso).ToList() : new List<double>();
+    var minP = hayPeso ? pesos.Min() : 0; var maxP = hayPeso ? pesos.Max() : 1;
+    var rango = Math.Max(maxP - minP, 0.1);
+    var minPv = minP - rango * 0.15; var maxPv = maxP + rango * 0.15;
+    System.Func<double, double> x = i => pad + (hayPeso ? i / Math.Max(visitasPeso.Count - 1, 1) * (w - 2 * pad) : 0);
+    System.Func<double, double> y = pv => h - pad - (pv - minPv) / (maxPv - minPv) * (h - 2 * pad);
+    var puntos = visitasPeso.Select((v, i) => (X: x(i), Y: y((double)v.Peso), V: v)).ToList();
+    var path = hayPeso && visitasPeso.Count > 1
+        ? "M " + string.Join(" L ", puntos.Select(p => $"{p.X:F1},{p.Y:F1}"))
+        : "";
+    var area = hayPeso && visitasPeso.Count > 1
+        ? path + $" L {x(visitasPeso.Count - 1):F1},{h - pad:F1} L {x(0):F1},{h - pad:F1} Z"
+        : "";
 }
+
+<nav aria-label="Migas de pan" class="mf-migas">
+    <a asp-page="/Mascotas/ListaMascotas">Mascotas</a>
+    <span aria-hidden="true">›</span>
+    <span aria-current="page">@Model.mascota.Nombre</span>
+</nav>
 
 <div class="mf-encabezado">
     <div>
@@ -83,13 +108,42 @@
             <div class="mf-fila"><dt>Visitas registradas</dt><dd>@(Model.mascota.Historia.VisitasPyP?.Count ?? 0)</dd></div>
         </dl>
 
+        @if (hayPeso)
+        {
+            <div class="mf-grafico">
+                <div class="mf-grafico-titulo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 6"/></svg>
+                    <span>Evolución del peso (kg)</span>
+                </div>
+                <svg class="mf-grafico-svg" viewBox="0 0 @w @h" role="img" aria-label="Gráfico de evolución del peso">
+                    <line x1="@pad" y1="@(h-pad)" x2="@(w-pad)" y2="@(h-pad)" stroke="var(--mf-gris-claro)" stroke-width="1"/>
+                    <line x1="@pad" y1="@pad" x2="@pad" y2="@(h-pad)" stroke="var(--mf-gris-claro)" stroke-width="1"/>
+                    @if (hayPeso && visitasPeso.Count > 1)
+                    {
+                        <path d="@area" fill="rgba(74,124,89,.14)" stroke="none"/>
+                        <path d="@path" fill="none" stroke="var(--mf-verde)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    }
+                    @foreach (var p in puntos)
+                    {
+                        <circle cx="@p.X" cy="@p.Y" r="4" fill="var(--mf-verde)" stroke="var(--mf-blanco)" stroke-width="1.5" />
+                        @:<text x="@p.X" y="@(p.Y - 9)" text-anchor="middle" font-size="9" fill="var(--mf-gris)" font-weight="600">@p.V.Peso.ToString("0.0", cultura)</text>
+                        @:<text x="@p.X" y="@(h - pad + 14)" text-anchor="middle" font-size="8" fill="var(--mf-gris)">@p.V.FechaVisita.ToString("dd/MM/yy", cultura)</text>
+                    }
+                </svg>
+                @if (visitasPeso.Count < 2)
+                {
+                    <p class="mf-muted" style="font-size:.82rem;margin-top:.4rem;">Se necesitan al menos dos visitas para ver la tendencia.</p>
+                }
+            </div>
+        }
+
         <div class="mf-tabla-acciones" style="margin:.5rem 0 1.25rem;">
             <a class="btn btn-ghost mf-btn-tactil" asp-page="/Historias/DetallesHistoria" asp-route-historiaId="@Model.mascota.Historia.Id">Ver historia completa</a>
             <a class="btn btn-primary mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP" asp-route-historiaId="@Model.mascota.Historia.Id">+ Agregar visita</a>
         </div>
 
         <h3 style="margin-top:1.5rem;font-size:1.1rem;">Línea de tiempo de visitas PyP</h3>
-        @if (visitas == null || !visitas.Any())
+        @if (visitasDesc == null || !visitasDesc.Any())
         {
             <div class="mf-vacio" style="padding:1.5rem 1rem;">
                 <p>Aún no se han registrado visitas de promoción y prevención.</p>
@@ -99,7 +153,7 @@
         else
         {
             <div class="mf-timeline">
-            @foreach (var v in visitas)
+            @foreach (var v in visitasDesc)
             {
                 <div class="mf-timeline-item mf-card" style="padding:1rem;">
                     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;align-items:baseline;">
