@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://www.w3.org",
+    "name": "WCAG 2 Overview | Web Accessibility Initiative (WAI)",
+    "snippet": "WCAG 2.0 has 12 guidelines. WCAG 2.1 adds 1 guideline and 17 success criteria. They are introduced in What's New in WCAG 2.1. WCAG 2.2 adds 9 success criteria . Read more",
+    "host_name": "www.w3.org",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://testparty.ai",
+    "name": "What Are All 87 WCAG 2.2 Success Criteria?",
+    "snippet": "Dec 17, 2025 — WCAG 2.2 added 9 new criteria : Focus Not Obscured (Minimum and Enhanced), Focus Appearance, Dragging Movements, Target Size (Minimum), ... Read more",
+    "host_name": "testparty.ai",
+    "rank": 1,
+    "date": "Dec 17, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.adatitleiii.com",
+    "name": "W3C Adds Nine New Requirements In WCAG 2.2 - ADA Title III",
+    "snippet": "Dec 12, 2023 — Version 2.0 (issued on December 11, 2008) consists of 61 “success criteria” for digital accessibility. Version 2.1 (issued on June 5, 2018) ... Read more",
+    "host_name": "www.adatitleiii.com",
+    "rank": 2,
+    "date": "Dec 12, 2023",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.access-board.gov",
+    "name": "W3C WCAG 2.2 Now Available",
+    "snippet": "Nov 27, 2023 — WCAG 2.2 adds nine new Success Criteria to WCAG 2.1 (which added 17 Success Criteria to WCAG 2.0) and includes links to supporting documents ... Read more",
+    "host_name": "www.access-board.gov",
+    "rank": 3,
+    "date": "Nov 27, 2023",
+    "favicon": ""
+  },
+  {
+    "url": "https://tetralogical.com",
+    "name": "What's new in WCAG 2.2",
+    "snippet": "Oct 5, 2023 — ... requirement. Beyond this change, WCAG 2.2 introduces 9 new Success Criteria : 2.4.11 Focus Not Obscured (Minimum) (AA); 2.4.12 Focus Not ... Read more",
+    "host_name": "tetralogical.com",
+    "rank": 4,
+    "date": "Oct 5, 2023",
+    "favicon": ""
+  },
+  {
+    "url": "https://userway.org",
+    "name": "WCAG 2.2 Compliance ✅ What is it? | Principles & Guidelines",
+    "snippet": "The WCAG guidelines provide technical success criteria that help website owners make web content accessible to people with disabilities. This includes users who ... Read more",
+    "host_name": "userway.org",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

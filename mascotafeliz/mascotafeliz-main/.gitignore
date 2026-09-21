@@ -1,0 +1,21 @@
+# ===== .NET / C# =====
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+
+# ===== Base de datos SQLite =====
+*.db
+*.db-shm
+*.db-wal
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Sistema operativo =====
+Thumbs.db
+Desktop.ini
+.DS_Store

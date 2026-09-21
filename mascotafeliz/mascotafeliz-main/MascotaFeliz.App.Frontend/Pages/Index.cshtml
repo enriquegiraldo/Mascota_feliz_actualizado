@@ -1,0 +1,40 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Página de inicio";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Bienvenido a Mascota Feliz</h1>
+    <p class="lead">Sistema de gestión para la clínica veterinaria Mascota Feliz.</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Dueños</h5>
+                <p class="card-text">Gestione los propietarios de las mascotas.</p>
+                <a class="btn btn-primary" asp-page="/Duenos/ListaDuenos">Ver Dueños</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Veterinarios</h5>
+                <p class="card-text">Gestione el personal veterinario.</p>
+                <a class="btn btn-primary" asp-page="/Veterinarios/ListaVeterinarios">Ver Veterinarios</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Mascotas</h5>
+                <p class="card-text">Gestione las mascotas y sus historias clínicas.</p>
+                <a class="btn btn-primary" asp-page="/Mascotas/ListaMascotas">Ver Mascotas</a>
+            </div>
+        </div>
+    </div>
+</div>

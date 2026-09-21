@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://www.figma.com",
+    "name": "Command Palette UI Kit - Cmd+K Search, Quick Actions &",
+    "snippet": "This kit gives you everything you need to design and document a command palette , ready to drop into any design system.",
+    "host_name": "www.figma.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://open-design.ai",
+    "name": "Linear design system — palette, typography & tokens for",
+    "snippet": "Visual Theme & Atmosphere. Linear's website is a masterclass in dark-mode-first product design — a near-black canvas ( #08090a ) where content emerges from ... Read more",
+    "host_name": "open-design.ai",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lobehub.com",
+    "name": "linear-design-patterns | Skills Mark",
+    "snippet": "Jul 31, 2026 — Linear Design Patterns is a concise design-system blueprint for building keyboard-first, high-density, dark‑first web applications. Read more",
+    "host_name": "lobehub.com",
+    "rank": 2,
+    "date": "Jul 31, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://linear.app",
+    "name": "How we redesigned the Linear UI (part Ⅱ)",
+    "snippet": "Mar 28, 2024 — We've adjusted the sidebar, tabs, headers, and panels to reduce visual noise, maintain visual alignment, and increase the hierarchy and density ... Read more",
+    "host_name": "linear.app",
+    "rank": 3,
+    "date": "Mar 28, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://uxpatterns.dev",
+    "name": "Command Palette Pattern",
+    "snippet": "Command Palette pattern helps teams create a reliable way to find and run commands, destinations, and recent items from a single keyboard-first surface.",
+    "host_name": "uxpatterns.dev",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://solomon.io",
+    "name": "Designing Command Palettes | Sam Solomon",
+    "snippet": "Mar 21, 2024 — When developing a command palette , the starting point should be the same as keyboard shortcuts. You should start with how you'd expect the ... Read more",
+    "host_name": "solomon.io",
+    "rank": 5,
+    "date": "Mar 21, 2024",
+    "favicon": ""
+  }
+]

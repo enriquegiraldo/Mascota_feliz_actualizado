@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://blog.getbootstrap.com",
+    "name": "Bootstrap 5.3.0-alpha2",
+    "snippet": "Mar 24, 2023 — Form validation border-color and text color states now respond to dark mode , thanks to new Sass and CSS variables. Dropped recently added ... Read more",
+    "host_name": "blog.getbootstrap.com",
+    "rank": 0,
+    "date": "Mar 24, 2023",
+    "favicon": ""
+  },
+  {
+    "url": "https://getbootstrap.com",
+    "name": "Color modes · Bootstrap v5.3",
+    "snippet": "Bootstrap now supports color modes, starting with dark mode ! and CSS variables as needed. CSS variables are repeated as overrides for dark mode. Use these  ...",
+    "host_name": "getbootstrap.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com",
+    "name": "[dark mode] Several themes hardcode direct CSS",
+    "snippet": "Jun 10, 2026 — Bootstrap 5.3 implements dark mode by remapping CSS variables (e.g. --bs-body-color, --bs-alert-bg, --bs-btn-color) when ...",
+    "host_name": "github.com",
+    "rank": 2,
+    "date": "Jun 10, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.infoworld.com",
+    "name": "Bootstrap 5.3.0 emphasizes dark mode, custom colors",
+    "snippet": "Jun 1, 2023 — Dark mode styles are generated via a new color-mode() Sass mixin , allowing developers to write styles specific to a particular color mode. A new ... Read more",
+    "host_name": "www.infoworld.com",
+    "rank": 3,
+    "date": "Jun 1, 2023",
+    "favicon": ""
+  }
+]

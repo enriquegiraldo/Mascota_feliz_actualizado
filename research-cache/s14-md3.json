@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://m3.material.io",
+    "name": "Color - Material Design 3 - Create personal color schemes",
+    "snippet": "Dynamic color takes a single color from a user's wallpaper or in-app content and creates an accessible color scheme assigned to elements in the UI. Material 3 ...",
+    "host_name": "m3.material.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://m2.material.io",
+    "name": "The color system",
+    "snippet": "The Material Design color system can help you create a color theme that reflects your brand or style . Introducing dynamic color. Typography and iconography  ...",
+    "host_name": "m2.material.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.android.com",
+    "name": "Material Design 3 in Compose",
+    "snippet": "Dynamic color is the key part of Material You , in which an algorithm derives custom colors from a user's wallpaper to be applied to their apps and system UI. Read more",
+    "host_name": "developer.android.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com",
+    "name": "Material Color Utilities",
+    "snippet": "Color is a foundational part of the Material Design system , alongside typography and shape. In Material 3 , dynamic color shifts … dynamic color schemes",
+    "host_name": "github.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  }
+]

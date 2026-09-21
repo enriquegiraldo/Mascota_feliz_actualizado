@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://stripe.com",
+    "name": "Accessibility for online shops in Germany",
+    "snippet": "Nov 20, 2024 — Learn about digital accessibility , the EU's accessibility laws, how to make online shops more accessible, and accessibility advantages.",
+    "host_name": "stripe.com",
+    "rank": 0,
+    "date": "Nov 20, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://dribbble.com",
+    "name": "stripe form",
+    "snippet": "Explore thousands of high-quality stripe form images on Dribbble . Your resource to get inspired, discover and connect with designers worldwide.",
+    "host_name": "dribbble.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://designsystem.digital.gov",
+    "name": "Form | U.S. Web Design System (USWDS)",
+    "snippet": "A ccessibility g uidance. Don't control element order with CSS. Display form controls in the same order in the HTML as they appear on screen. Read more",
+    "host_name": "designsystem.digital.gov",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.stripe.com",
+    "name": "Design your app | Stripe Documentation",
+    "snippet": "Custom styling of UI elements is intentionally limited. This is to maintain platform consistency with core UI elements and to ensure a high accessibility bar. Read more",
+    "host_name": "docs.stripe.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.accessibility.com",
+    "name": "Accessibility of Stripe",
+    "snippet": "May 8, 2024 — Let's look at Stripe's website, mobile app, and subscriber emails to determine whether or not Stripe is accessible.",
+    "host_name": "www.accessibility.com",
+    "rank": 4,
+    "date": "May 8, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://open-design.ai",
+    "name": "Stripe design system — palette, typography & tokens for",
+    "snippet": "Design System Inspired by Stripe · 1. Visual Theme & Atmosphere · 2. Color Palette & Roles · 3. Typography Rules · 4. Component Stylings · 5. Layout Principles · 6. Read more",
+    "host_name": "open-design.ai",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

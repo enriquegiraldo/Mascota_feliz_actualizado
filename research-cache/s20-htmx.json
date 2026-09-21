@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://www.woodruff.dev",
+    "name": "Boosting Razor Pages UX: The htmx Upgrade You Need",
+    "snippet": "Apr 5, 2025 — Progressive Enhancement: Everything still works even if JavaScript is disabled. Example: Loading Articles Without Refresh Index.cshtml. It ...",
+    "host_name": "www.woodruff.dev",
+    "rank": 0,
+    "date": "Apr 5, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.bensampica.com",
+    "name": "A Complete Guide to HTMX + .NET Minimal APIs",
+    "snippet": "Nov 13, 2024 — HTMX borrows the term progressive enhancement to describe enriching the user experience and providing greater interactivity for web applications ...",
+    "host_name": "www.bensampica.com",
+    "rank": 1,
+    "date": "Nov 13, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.to",
+    "name": "Adding Interactivity to ASP.NET Razor Pages with HTMX",
+    "snippet": "Apr 6, 2026 — By leveraging standard HTML attributes, you can add AJAX, CSS Transitions, WebSockets, and Server-Sent Events directly into your markup. A ...",
+    "host_name": "dev.to",
+    "rank": 2,
+    "date": "Apr 6, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://htmx-workshop.com",
+    "name": "Workshop Introduction — Modern UX with htmx + ASP.NET Core Razor",
+    "snippet": "Welcome to Modern UX Without JavaScript Madness: htmx + ASP.NET Core Razor Pages. This workshop is designed for ASP.NET Core developers who want to build ...",
+    "host_name": "htmx-workshop.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.marcusoft.net",
+    "name": "HTMX on .NET Minimal API with Razor Slices",
+    "snippet": "Feb 21, 2025 — Lightweight Razor-based templates for ASP.NET Core without MVC, Razor Pages, or Blazor, optimized for high-performance, unbuffered rendering ...",
+    "host_name": "www.marcusoft.net",
+    "rank": 4,
+    "date": "Feb 21, 2025",
+    "favicon": ""
+  }
+]

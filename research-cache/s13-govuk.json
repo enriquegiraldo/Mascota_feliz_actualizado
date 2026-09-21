@@ -1,0 +1,29 @@
+[
+  {
+    "url": "https://design-system.service.gov.uk",
+    "name": "Accessibility strategy",
+    "snippet": "This accessibility strategy outlines the current principles and work needed to improve the accessibility of the GOV . UK Design System . Read more",
+    "host_name": "design-system.service.gov.uk",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://accessibility.blog.gov.uk",
+    "name": "A new accessibility strategy for the GOV.UK Design System",
+    "snippet": "Jan 6, 2023 — A design system that aligns with WCAG 2.2 as quickly as possible will make it easier for teams to update their services to meet WCAG 2.2. A new ... Read more",
+    "host_name": "accessibility.blog.gov.uk",
+    "rank": 1,
+    "date": "Jan 6, 2023",
+    "favicon": ""
+  },
+  {
+    "url": "https://digitalgovernmenthub.org",
+    "name": "GOV.UK Design System",
+    "snippet": "It includes a library of reusable, accessible components (like buttons, forms, and navigation), detailed design patterns for common service tasks, and guidance",
+    "host_name": "digitalgovernmenthub.org",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  }
+]

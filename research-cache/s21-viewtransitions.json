@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://developer.mozilla.org",
+    "name": "View Transition API - MDN Web Docs",
+    "snippet": "Jun 19, 2026 — The View Transition API provides a mechanism for easily creating animated transitions between different website and element views.",
+    "host_name": "developer.mozilla.org",
+    "rank": 0,
+    "date": "Jun 19, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.chrome.com",
+    "name": "Smooth transitions with the View Transition API",
+    "snippet": "Apr 14, 2024 — The View Transition API lets you add transitions between views of a website. Requires Chrome 111 or greater . The transitions are powered by CSS ...",
+    "host_name": "developer.chrome.com",
+    "rank": 1,
+    "date": "Apr 14, 2024",
+    "favicon": ""
+  },
+  {
+    "url": "https://piccalil.li",
+    "name": "Some practical examples of view transitions to elevate your UI",
+    "snippet": "Nov 6, 2025 — View Transition API is a powerful way to create animated transitions between two states. You can navigate between pages, or modify the DOM, or ...",
+    "host_name": "piccalil.li",
+    "rank": 2,
+    "date": "Nov 6, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://css-tricks.com",
+    "name": "Cross-Document View Transitions: The Gotchas Nobody",
+    "snippet": "May 18, 2026 — If Page A has @ view - transition { navigation : auto; } but Page B doesn't, you get no transition. This is actually useful – it means your 404 ... Read more",
+    "host_name": "css-tricks.com",
+    "rank": 3,
+    "date": "May 18, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://rebeccamdeprey.com",
+    "name": "View Transitions in React, Next.js, and Multi-Page Apps",
+    "snippet": "Dec 28, 2025 — The View Transition API is a browser feature that captures two snapshots of your UI : it uses CSS to animate between them.",
+    "host_name": "rebeccamdeprey.com",
+    "rank": 4,
+    "date": "Dec 28, 2025",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.debugbear.com",
+    "name": "View Transition API: Single Page Apps Without a Framework",
+    "snippet": "Jan 25, 2026 — In CSS , your view transitions code is ignored by browsers that do not support the View Transition API .",
+    "host_name": "www.debugbear.com",
+    "rank": 5,
+    "date": "Jan 25, 2026",
+    "favicon": ""
+  }
+]
