@@ -37,41 +37,5 @@
 </div>
 
 <div class="mf-ficha">
-    <div class="mf-ficha-titulo">
-        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="4" cy="8" r="2"/><circle cx="18" cy="16" r="2"/><circle cx="4" cy="16" r="2"/><path d="M9 10c0 3 2 5 3 7 1-2 3-4 3-7"/></svg>
-        <h2 style="margin:0;">Pacientes atendidos (@Model.mascotas.Count())</h2>
-    </div>
-
-    @if (!Model.mascotas.Any())
-    {
-        <div class="mf-vacio" style="padding:1.5rem 1rem;">
-            <p>Este veterinario aún no tiene pacientes asignados.</p>
-            <a class="btn btn-primary mf-btn-tactil" asp-page="/Mascotas/EditarMascota">Registrar una mascota</a>
-        </div>
-    }
-    else
-    {
-        <div class="mf-lista-mascotas">
-        @foreach (var m in Model.mascotas)
-        {
-            <a class="mf-card mf-card--clickable mf-tarjeta-mascota" asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@m.Id">
-                <span class="mf-tarjeta-mascota-avatar mf-avatar-@(m.Especie == "Gato" ? "gato" : "perro")" aria-hidden="true">
-                    @if (m.Especie == "Gato")
-                    {
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8C8 8 6 11 6 14v6h12v-6c0-3-2-6-6-6zM6 4l3 4-2 1-3-3zM18 4l2 2-3 3-2-1z"/></svg>
-                    }
-                    else
-                    {
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10c0-3 2-5 5-5 1 0 2 1 3 1s2-1 3-1c3 0 5 2 5 5v3h-3v6H7v-6H4z"/></svg>
-                    }
-                </span>
-                <span style="flex:1;min-width:0;">
-                    <strong>@m.Nombre</strong>
-                    <div class="mf-muted" style="font-size:.82rem;">@m.Especie · @m.Raza · Dueño: @(m.Dueno != null ? $"{m.Dueno.Nombres} {m.Dueno.Apellidos}" : "—")</div>
-                </span>
-                <span class="mf-badge" aria-hidden="true">Ver ›</span>
-            </a>
-        }
-        </div>
-    }
+    <vc:tarjetas-mascotas mascotas="@Model.mascotas" titulo="Pacientes atendidos" mostrar-dueno="true" />
 </div>

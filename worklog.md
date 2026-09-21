@@ -217,3 +217,25 @@ Stage Summary:
 - Estado: panel interno con exportación de datos (CSV), ordenamiento de tablas, y hero visual de mascota. Todas las features anteriores (búsqueda global, modo oscuro, CRUD de 5 entidades, navegación relacional, gráfico de peso, chips de filtro, imprimir, SEO/OG, toasts, accesibilidad) intactas. Build 0/0.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
 - Riesgos/pendientes: (1) CSV solo exporta mascotas (no dueños/veterinarios) — ampliable. (2) Ordenamiento solo en ListaMascotas — ampliable a otras listas. (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 9
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22, 06:25)
+Task: Estado estable → ViewComponent (DRY) + donut chart de distribución por especie + auditoría de accesibilidad por teclado. (El usuario sigue en Fase 2; NO se inicia Fase 3.)
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, CSV, ordenamiento, hero, búsqueda global, modo oscuro). El usuario sigue en Fase 2 → no se toca Fase 3.
+- Refactor: ViewComponent TarjetasMascotasViewComponent (DRY entre DetallesDuenos y DetallesVeterinarios). Parameter mascotas + titulo + mostrarDueno (bool). Renderiza tarjetas con avatar especie + nombre + especie·raza (+ dueño si mostrarDueno). Default.cshtml en Pages/Shared/Components/TarjetasMascotas/. DetallesDuenos y DetallesVeterinarios ahora usan <vc:tarjetas-mascotas .../> (de ~40 líneas inline a 1). Añadido @addTagHelper *, MascotaFeliz.App.Frontend en _ViewImports (sin esto el tag no se procesaba).
+- Feature: donut chart de distribución por especie en el home. IndexModel calcula DistribucionEspecies (GroupBy + OrderByDescending). La vista genera SVG donut con arcos (path A) por especie, colores [#4a7c59, #d97757, ...], centro con total, leyenda con puntos de color + especie + cuenta + porcentaje. Hover muestra <title> con detalle.
+- Bug corregido: porcentajes del donut mostraban ".ToString("0")%" literal. Razor no evalúa método dentro de @() cuando va seguido de .ToString(). Solución: variable local var pct = (a.Porcentaje * 100).ToString("0"); @pct%.
+- Bug corregido: variables CSS en atributos SVG (stroke="var(--mf-blanco)") no se resolvían → donut desvanecido. Cambiado a hex directos (#ffffff, #355c43, #6b7280).
+- Auditoría accesibilidad por teclado: verificado con agent-browser. Tab salta a: skip-link "Saltar al contenido" → logo → Inicio → Mascotas → ... → botón Buscar. Foco visible (outline verde 3px) en cada elemento. Navegación lógica y completa.
+- CSS: nuevos estilos .mf-leyenda-item/.mf-leyenda-punto/.mf-leyenda-valor.
+- `dotnet build` → 0 errores, 0 warnings. Consola compila.
+- QA runtime: DetallesDuenos muestra Firulais + Rocky (2 tarjetas vía VC); DetallesVeterinarios (vet 2) muestra Susi + Rocky con "Dueño:" (mostrarDueno=true); home donut muestra "Distribución por especie" con Perro 3·75% y Gato 1·25% y 4 en el centro.
+- Capturas en /home/z/my-project/download/qa-ronda9/. VLM confirmó: donut "segmentos verde #4a7c59 y terracota #d97757, leyenda Perro 3·75% y Gato 1·25%, número 4 en el centro".
+
+Stage Summary:
+- Estado: panel interno con arquitectura más limpia (ViewComponent DRY), visualización de datos (donut de distribución), y accesibilidad por teclado verificada. Todas las features anteriores intactas (búsqueda global, modo oscuro, CSV, ordenamiento, hero, gráfico de peso, CRUD de 5 entidades). Build 0/0.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
+- Riesgos/pendientes: (1) ViewComponent solo para tarjetas de mascotas — se podrían extraer más (badges, fichas). (2) Donut es estático (SVG en servidor) — en Fase 3 se podría hacer interactivo. (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (5) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
