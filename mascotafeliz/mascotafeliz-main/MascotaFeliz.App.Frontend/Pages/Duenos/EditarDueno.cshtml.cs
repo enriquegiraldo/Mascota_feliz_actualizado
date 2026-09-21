@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MascotaFeliz.App.Dominio;
@@ -12,47 +8,50 @@ namespace MascotaFeliz.App.Frontend.Pages
     public class EditarDuenoModel : PageModel
     {
         private readonly IRepositorioDueno _repoDueno;
+
         [BindProperty]
         public Dueno dueno { get; set; }
 
-        public EditarDuenoModel()
+        public EditarDuenoModel(IRepositorioDueno repoDueno)
         {
-            this._repoDueno = new RepositorioDueno(new Persistencia.AppContext());
+            _repoDueno = repoDueno;
         }
 
-    public IActionResult OnGet(int? duenoId)
+        public IActionResult OnGet(int? duenoId)
         {
             if (duenoId.HasValue)
             {
                 dueno = _repoDueno.GetDueno(duenoId.Value);
-        }
-        else
-        {
-            dueno =new Dueno();
-        }
-        if (dueno == null)
-        {
-            return RedirectToPage("./NotFound");
-        } 
-        else
-            return Page();
-    }
+            }
+            else
+            {
+                dueno = new Dueno();
+            }
 
-    public IActionResult OnPost ()
-    {
-        if (!ModelState.IsValid)
-        {
+            if (dueno == null)
+            {
+                return RedirectToPage("/NotFound");
+            }
             return Page();
-        } 
-        if (dueno.Id > 0)
-        {
-            dueno = _repoDueno.UpdateDueno(dueno);
         }
-        else
+
+        public IActionResult OnPost()
         {
-            _repoDueno.AddDueno(dueno);
-        } 
-        return Page();
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            if (dueno.Id > 0)
+            {
+                _repoDueno.UpdateDueno(dueno);
+            }
+            else
+            {
+                _repoDueno.AddDueno(dueno);
+            }
+
+            return RedirectToPage("./ListaDuenos");
         }
     }
-}     
+}

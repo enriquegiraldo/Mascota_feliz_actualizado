@@ -21,11 +21,14 @@ Sistema de gestión para la clínica veterinaria **Mascota Feliz**, desarrollado
 
 ## 🛠️ Tecnologías
 
-- **.NET 9.0** (SDK `9.0.315`)
+- **.NET 9.0** (SDK `9.0.318`)
 - **ASP.NET Core Razor Pages** (Frontend)
-- **Entity Framework Core 9.0** (ORM)
+- **Entity Framework Core 8.0** (ORM) sobre SQLite
 - **SQLite** (Base de datos embebida, sin instalación)
-- **Bootstrap 4.6** (UI)
+- **Bootstrap 4.6** (UI base por CDN) + **tema propio** en `wwwroot/css/site.css` (tokens, modo cálido, componentes)
+- **jQuery Validate** (validación en cliente) y **JS ligero** propio en `wwwroot/js/site.js`
+
+> Nota de versiones: .NET 9 es STS (fin de soporte 10-nov-2026). Como parte de la Fase 2 se evalúa migrar a **.NET 10 LTS** y alinear EF Core. Ver `docs/decisiones.md`.
 
 ---
 
@@ -68,10 +71,18 @@ MascotaFelizGrupo5/
 │   │   ├── _ViewStart.cshtml
 │   │   ├── _ViewImports.cshtml
 │   │   ├── Shared/
-│   │   │   └── _Layout.cshtml                ← Layout principal (menú, navbar)
-│   │   ├── Duenos/                           ← CRUD Dueños
-│   │   ├── Veterinarios/                     ← CRUD Veterinarios
-│   │   └── Mascotas/                         ← CRUD Mascotas
+│   │   │   ├── _Layout.cshtml                ← Layout principal (menú, navbar, footer pegado)
+│   │   │   └── _ValidationScriptsPartial.cshtml
+│   │   ├── Duenos/                           ← CRUD Dueños (buscar, eliminar, paginar, validar)
+│   │   ├── Veterinarios/                     ← CRUD Veterinarios (buscar, eliminar, paginar, validar)
+│   │   ├── Mascotas/                         ← CRUD Mascotas (selectores dueño/vet, perfil con línea de tiempo)
+│   │   ├── Error.cshtml                      ← Página de errores (UseExceptionHandler)
+│   │   ├── NotFound.cshtml                   ← 404 con estilo
+│   │   └── Privacy.cshtml                    ← Política de privacidad (es-CO)
+│   ├── wwwroot/                              ← 🎨 Recursos estáticos propios (NUEVO)
+│   │   ├── css/site.css                      ← Tokens + tema "Cálida clínica"
+│   │   ├── js/site.js                        ← Confirmar borrado, toasts, nav activa
+│   │   └── img/logo.svg, favicon.svg         ← Identidad propia (SVG, licencia libre)
 │   └── MascotaFeliz.App.Frontend.csproj
 │
 ├── MascotaFeliz.App.Consola/                 ← 💻 Proyecto de Consola (pruebas)
@@ -223,7 +234,8 @@ dotnet ef database update --project MascotaFeliz.App.Persistencia --startup-proj
 | `/Mascotas/DetallesMascotas?mascotaId=1`             | Detalles de una mascota    |
 | `/Mascotas/EditarMascota`                            | Crear/Editar mascota       |
 | `/Privacy`                                           | Política de privacidad     |
-| `/NotFound`                                          | Página 404                 |
+| `/NotFound`                                          | Página 404 con estilo      |
+| `/Error`                                             | Página de errores (handler)|
 
 > Por defecto el servidor escucha en **HTTP (5000)**. Para HTTPS (5001):
 >

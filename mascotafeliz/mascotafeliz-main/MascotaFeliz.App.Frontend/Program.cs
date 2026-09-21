@@ -7,11 +7,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
+// DbContext de la aplicación (SQLite embebido).
 builder.Services.AddDbContext<AppContext>(options =>
     options.UseSqlite("Data Source=MascotaFeliz.db"));
 
+// Repositorios (Scoped: una instancia por petición HTTP).
+builder.Services.AddScoped<IRepositorioDueno, RepositorioDueno>();
+builder.Services.AddScoped<IRepositorioVeterinario, RepositorioVeterinario>();
+builder.Services.AddScoped<IRepositorioMascota, RepositorioMascota>();
+builder.Services.AddScoped<IRepositorioHistoria, RepositorioHistoria>();
+builder.Services.AddScoped<IRepositorioVisitaPyP, RepositorioVisitaPyP>();
+
 var app = builder.Build();
 
+// Datos de ejemplo idempotentes (solo se insertan si la tabla está vacía).
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

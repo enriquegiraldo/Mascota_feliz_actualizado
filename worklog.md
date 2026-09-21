@@ -45,3 +45,29 @@ Stage Summary:
 - docs/investigacion-ui.md entregado en /home/z/my-project/mascotafeliz/mascotafeliz-main/docs/.
 - docs/decisiones.md creado con decisiones Fase 0–1 y pendientes de Fase 2.
 - Listo para presentar Fase 2 (propuesta + 6 preguntas) y detenerse.
+
+---
+Task ID: 2
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview)
+Task: Evaluar estado, hacer QA con agent-browser, priorizar fixes de bugs/QA, mejorar estilo y añadir features mínimas. (El usuario sigue en Fase 2 esperando respuestas: NO se inicia la Fase 3/rediseño.)
+
+Work Log:
+- Releído worklog.md: confirmado estado (Fase 0 diagnosticada, Fase 1 entregada, Fase 2 propuesta + 6 preguntas pendiente de respuesta).
+- QA base: el Bash tool mata los procesos en background al terminar cada comando (verificado con `sleep 600 &`), así que la app no persiste entre llamadas. Se resolvió haciendo QA en un único comando (arrancar app → capturas → matar app).
+- Remediación de bugs confirmados de Fase 0 (sin tocar el rediseño de Fase 3):
+  - DI: registrados los 5 repositorios (Scoped) en Program.cs; las 9 páginas ahora inyectan por constructor (fin de `new Repositorio(new AppContext())`).
+  - Bug UpdateMascota: EditarMascota ahora envía DuenoId/VeterinarioId (selectores) y HistoriaId (hidden); UpdateMascota nunca sobrescribe HistoriaId con null. Ya no se pierden vínculos al editar.
+  - DetallesMascotas: etiquetas correctas (Nombre/Especie/Raza/Color) + secciones Dueño, Veterinario e Historia clínica con línea de tiempo de visitas PyP. GetMascota ahora incluye Historia.VisitasPyP.
+  - Rutas: RedirectToPage("./NotFound") → "/NotFound" (absoluto) en 6 páginas; creada Pages/Error.cshtml para UseExceptionHandler("/Error").
+  - Restos de plantilla: "Privacy" → "Política de Privacidad"; pie → "Mascota Feliz · Clínica veterinaria".
+- Estilo (detalles, no rediseño): creada wwwroot con css/site.css (tokens verde salvia+terracota+crema, tipografía fluida, radios, sombras, footer pegado), js/site.js (confirmar borrado, toasts, nav activa), img/logo.svg y favicon.svg (huella, SVG propio). _Layout rediseñado con favicon, meta SEO, footer pegado. Bootstrap 4.6 se mantiene como base (no se cambia de versión sin confirmar Q2).
+- Features mínimas (remedian huecos de Fase 0): buscador en vivo en las 3 listas (usa GetXPorFiltro), botón Eliminar con confirmación + toast, estados vacíos, paginación (8/pág), validación DataAnnotations en entidades + cliente (jQuery Validate) + servidor, selectores Dueño/Veterinario en EditarMascota, patrón PRG.
+- `dotnet build` → 0 errores, 0 warnings. Proyecto Consola sigue compilando.
+- QA runtime: /Error 200 (era 404), /Mascotas/EditarMascota?mascotaId=9999 302 (era 500), /NotFound 200, /Privacy 200, búsqueda ?Q=sus 200. Contenido verificado: DetallesMascotas muestra Nombre/Especie/Raza/Color + Juan(vínculo dueño) + Historia N/Fecha inicial/Visitas; EditarMascota tiene selectores DuenoId/VeterinarioId + hidden HistoriaId; footer y privacy corregidos.
+- Capturas en /home/z/my-project/download/qa-despues/ a 390px y 1440px. VLM confirmó: home 390px "profesional, cálida, logo de huella, sin scroll horizontal"; detalles 1440px "tres secciones correctas, etiquetas en español correctas, sin scroll".
+- README.md y docs/decisiones.md actualizados con los cambios.
+
+Stage Summary:
+- Estado: app estable, todos los bugs de Fase 0 corregidos, UI con identidad propia cálida y funcionalidad mínima completa (CRUD con buscar/eliminar/paginar/validar). El usuario sigue en Fase 2 esperando respuestas a las 6 preguntas.
+- Próximo paso recomendado: esperar las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, dashboard, sitio público, Historia/Visitas PyP/Citas). Mientras tanto, no avanzar en Fase 3.
+- Riesgos/pendientes: (1) la semilla no crea VisitasPyP, así que la línea de tiempo muestra estado vacío (correcto, pero conviene sembrar 1-2 visitas de ejemplo en Fase 3). (2) Borrado en cascada Mascota→Historia→VisitaPyP vigente; revisar con usuario si es la política deseada. (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) El Bash tool mata procesos en background entre llamadas; para QA futuro usar el patrón "un comando = arrancar+probar+matar".

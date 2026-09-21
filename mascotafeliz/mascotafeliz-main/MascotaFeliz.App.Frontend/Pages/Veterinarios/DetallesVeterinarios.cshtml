@@ -1,25 +1,26 @@
-﻿@page
+@page
 @model MascotaFeliz.App.Frontend.Pages.DetallesVeterinariosModel
 @{
+    ViewData["Title"] = "Detalles del veterinario";
 }
-<h1> Detalles del Veterinario </h1>
-<div>
-   Id: @Model.veterinario.Id
+
+<div class="mf-encabezado">
+    <div>
+        <h1>Detalles del veterinario</h1>
+        <p class="mf-muted">Datos del profesional.</p>
+    </div>
+    <div class="mf-acciones">
+        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVeterinario" asp-route-veterinarioId="@Model.veterinario.Id">Editar</a>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaVeterinarios">← Volver</a>
+    </div>
 </div>
-<div>
-   Nombre: @Model.veterinario.Nombres
+
+<div class="mf-ficha">
+    <dl>
+        <div class="mf-fila"><dt>Nombre completo</dt><dd>@Model.veterinario.Nombres @Model.veterinario.Apellidos</dd></div>
+        <div class="mf-fila"><dt>Tarjeta profesional</dt><dd><span class="mf-badge">@Model.veterinario.TarjetaProfesional</span></dd></div>
+        <div class="mf-fila"><dt>Teléfono</dt><dd>@(string.IsNullOrWhiteSpace(Model.veterinario.Telefono) ? "—" : Model.veterinario.Telefono)</dd></div>
+        <div class="mf-fila"><dt>Dirección</dt><dd>@(string.IsNullOrWhiteSpace(Model.veterinario.Direccion) ? "—" : Model.veterinario.Direccion)</dd></div>
+        <div class="mf-fila"><dt>Identificador</dt><dd>#@Model.veterinario.Id</dd></div>
+    </dl>
 </div>
-<div>
-   Apellido: @Model.veterinario.Apellidos
-</div>
-<div>
-   Direccion: @Model.veterinario.Direccion
-</div>
-<div>
-   Telefono: @Model.veterinario.Telefono
-</div>
-<div>
-   TarjetaProfesional: @Model.veterinario.TarjetaProfesional
-                                                              
-</div>
-<a asp-page="./ListaVeterinarios" class="btn-default"> Lista de Veterinarios </a>

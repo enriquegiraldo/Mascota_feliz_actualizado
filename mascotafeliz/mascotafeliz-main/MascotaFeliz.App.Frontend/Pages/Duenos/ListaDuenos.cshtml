@@ -1,32 +1,107 @@
-﻿@page
+@page
 @model MascotaFeliz.App.Frontend.Pages.ListaDuenosModel
 @{
+    ViewData["Title"] = "Dueños";
 }
 
-<h1>Listado de Propietarios</h1>
-<table class="table">
-    @foreach (var dueno in Model.listaDuenos)
-    {
-        <tr>
-            
-            <td>@dueno.Id</td>
-            <td>@dueno.Nombres</td>
-            <td>@dueno.Apellidos</td>
-            
-            <td>
-                <a class = "btn btn-primary table-btn" asp-page="./DetallesDuenos" asp-route-duenoId="@dueno.Id">
-                Detalle Dueno
-                </a>
-            </td>
-            <td>
-                <a class="btn btn-primary table-btn" asp-page="./EditarDueno" asp-route-duenoId="@dueno.Id">
-                    Editar Dueno
-                </a>
-            </td>
-            
-        </tr>
-    }
-</table>
-<a class = "btn btn-primary table-btn" asp-page="./EditarDueno" class="btn-default">Adicionar Dueño</a>
+<div class="mf-encabezado">
+    <div>
+        <h1>Dueños</h1>
+        <p class="mf-muted">Responsables de las mascotas registradas en la clínica.</p>
+    </div>
+    <div class="mf-acciones">
+        <a class="btn btn-primary mf-btn-tactil" asp-page="./EditarDueno">+ Nuevo dueño</a>
+    </div>
+</div>
 
-  
+@if (TempData["Error"] != null)
+{
+    <div class="mf-ficha" style="border-color:#e03131;color:#e03131;background:#fdeeef;" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
+<form method="get" class="mf-buscador" role="search">
+    <div class="mf-input-busqueda">
+        <span class="mf-ico-lupa" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="search" name="Q" value="@Model.Q" placeholder="Buscar por nombre o apellido…" aria-label="Buscar dueños" />
+    </div>
+    <button type="submit" class="btn btn-outline-primary mf-btn-tactil">Buscar</button>
+    @if (!string.IsNullOrWhiteSpace(Model.Q))
+    {
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaDuenos">Limpiar</a>
+    }
+</form>
+
+@if (!Model.listaDuenos.Any())
+{
+    <div class="mf-vacio">
+        <svg class="mf-vacio-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <p>No hay dueños que coincidan con la búsqueda.</p>
+        <a class="btn btn-primary mf-btn-tactil" asp-page="./EditarDueno">Registrar el primer dueño</a>
+    </div>
+}
+else
+{
+    <div style="overflow-x:auto;">
+    <table class="mf-tabla">
+        <thead>
+            <tr>
+                <th>Nombre completo</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Dirección</th>
+                <th><span class="mf-sr-only">Acciones</span></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var dueno in Model.listaDuenos)
+        {
+            <tr>
+                <td>
+                    <strong>@dueno.Nombres @dueno.Apellidos</strong>
+                    <div class="mf-muted" style="font-size:.8rem;">#@dueno.Id</div>
+                </td>
+                <td>@dueno.Telefono</td>
+                <td>@(string.IsNullOrWhiteSpace(dueno.Correo) ? "—" : dueno.Correo)</td>
+                <td>@(string.IsNullOrWhiteSpace(dueno.Direccion) ? "—" : dueno.Direccion)</td>
+                <td>
+                    <div class="mf-tabla-acciones">
+                        <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesDuenos" asp-route-duenoId="@dueno.Id">Detalle</a>
+                        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarDueno" asp-route-duenoId="@dueno.Id">Editar</a>
+                        <form method="post" asp-page-handler="Eliminar" asp-route-duenoId="@dueno.Id"
+                              data-mf-borrar="true" data-nombre="el dueño @dueno.Nombres @dueno.Apellidos">
+                            <button type="submit" class="btn btn-danger mf-btn-tactil" aria-label="Eliminar dueño">Eliminar</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    </div>
+
+    <nav class="mf-paginacion" aria-label="Paginación" style="justify-content:space-between;">
+        <span class="mf-muted" style="border:none;background:none;">@Model.Total registro(s) · pág. @Model.Pagina de @Model.TotalPaginas</span>
+        <span style="display:flex;gap:.35rem;">
+            @if (Model.Pagina > 1)
+            {
+                <a asp-page="./ListaDuenos" asp-route-Q="@Model.Q" asp-route-Pagina="@(Model.Pagina - 1)">‹ Anterior</a>
+            }
+            else
+            {
+                <span class="mf-deshab">‹ Anterior</span>
+            }
+            @if (Model.Pagina < Model.TotalPaginas)
+            {
+                <a asp-page="./ListaDuenos" asp-route-Q="@Model.Q" asp-route-Pagina="@(Model.Pagina + 1)">Siguiente ›</a>
+            }
+            else
+            {
+                <span class="mf-deshab">Siguiente ›</span>
+            }
+        </span>
+    </nav>
+}

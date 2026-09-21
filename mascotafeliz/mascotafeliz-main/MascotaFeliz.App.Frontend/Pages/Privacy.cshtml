@@ -1,9 +1,28 @@
 @page
 @model PrivacyModel
 @{
-    ViewData["Title"] = "Privacy";
+    ViewData["Title"] = "Política de Privacidad";
 }
 
-<h1>Política de Privacidad</h1>
-<p>Esta es la política de privacidad de Mascota Feliz.</p>
-<p>La información de los dueños, veterinarios y mascotas se maneja de forma confidencial.</p>
+<div class="mf-ficha" style="max-width:760px;">
+    <h1>Política de Privacidad</h1>
+    <p class="mf-muted">Última actualización: @DateTime.Now.ToString("d 'de' MMMM 'de' yyyy")</p>
+
+    <p>En <strong>Mascota Feliz</strong> protegemos los datos de dueños, veterinarios y mascotas. Esta política explica qué información tratamos y para qué.</p>
+
+    <h2 style="margin-top:1.5rem;">1. Datos que tratamos</h2>
+    <p>Datos de contacto de los dueños (nombres, apellidos, dirección, teléfono y correo), información del personal veterinario (incluida la tarjeta profesional) y la información clínica de las mascotas (historia y visitas de promoción y prevención).</p>
+
+    <h2>2. Finalidad</h2>
+    <p>Los datos se usan exclusivamente para la prestación de los servicios de la clínica: atención veterinaria, gestión de citas, historial clínico y comunicación con el dueño.</p>
+
+    <h2>3. Confidencialidad</h2>
+    <p>La información clínica es confidencial y solo accede a ella el personal autorizado de la clínica. No compartimos datos con terceros con fines comerciales.</p>
+
+    <h2>4. Tus derechos</h2>
+    <p>Como titular de los datos puedes ejercer los derechos de acceso, rectificación y supresión escribiendo a la clínica. Esta es una política de ejemplo para un proyecto académico.</p>
+
+    <div style="margin-top:1.5rem;">
+        <a asp-page="/Index" class="btn btn-ghost mf-btn-tactil">Volver al inicio</a>
+    </div>
+</div>

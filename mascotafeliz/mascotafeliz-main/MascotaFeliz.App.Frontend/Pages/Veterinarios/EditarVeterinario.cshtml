@@ -1,27 +1,53 @@
 @page
 @model MascotaFeliz.App.Frontend.Pages.EditarVeterinarioModel
 @{
-    int duenoId = Model.veterinario.Id;
+    ViewData["Title"] = Model.veterinario.Id > 0 ? "Editar veterinario" : "Nuevo veterinario";
 }
-<h2>Agregar o editar Veterinarios</h2>
 
-<form method="post" >
+<div class="mf-encabezado">
+    <div>
+        <h1>@(Model.veterinario.Id > 0 ? "Editar veterinario" : "Nuevo veterinario")</h1>
+        <p class="mf-muted">Datos del profesional veterinario.</p>
+    </div>
+    <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaVeterinarios">← Volver</a>
+</div>
+
+<form method="post" class="mf-ficha mf-form">
+    <input type="hidden" asp-for="veterinario.Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
     <div class="form-group">
-        <input type="hidden" asp-for = "veterinario.Id" />
         <label asp-for="veterinario.Nombres"></label>
-        <input asp-for="veterinario.Nombres" class="form-control">
+        <input asp-for="veterinario.Nombres" class="form-control" autocomplete="given-name" />
+        <span asp-validation-for="veterinario.Nombres" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="veterinario.Apellidos"></label>
-        <input asp-for="veterinario.Apellidos" class="form-control">
-        <label asp-for="veterinario.Direccion"></label>
-        <input asp-for="veterinario.Direccion" class="form-control">
-        <label asp-for="veterinario.Telefono"></label>
-        <input asp-for="veterinario.Telefono" class="form-control">
+        <input asp-for="veterinario.Apellidos" class="form-control" autocomplete="family-name" />
+        <span asp-validation-for="veterinario.Apellidos" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="veterinario.TarjetaProfesional"></label>
-        <input asp-for="veterinario.TarjetaProfesional" class="form-control">
+        <input asp-for="veterinario.TarjetaProfesional" class="form-control" placeholder="TP0001" />
+        <span asp-validation-for="veterinario.TarjetaProfesional" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="veterinario.Telefono"></label>
+        <input asp-for="veterinario.Telefono" class="form-control" inputmode="tel" autocomplete="tel" placeholder="300 123 4567" />
+        <span asp-validation-for="veterinario.Telefono" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="veterinario.Direccion"></label>
+        <input asp-for="veterinario.Direccion" class="form-control" autocomplete="street-address" />
+        <span asp-validation-for="veterinario.Direccion" class="text-danger"></span>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Grabar</button>
-
+    <div class="mf-tabla-acciones" style="margin-top:1rem;">
+        <button type="submit" class="btn btn-primary mf-btn-tactil">Guardar</button>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaVeterinarios">Cancelar</a>
     </div>
 </form>
 
-<a asp-page="./ListaVeterinarios" class="btn-default">Lista de Veterinarios </a>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

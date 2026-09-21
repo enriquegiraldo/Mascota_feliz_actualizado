@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MascotaFeliz.App.Dominio;
@@ -14,9 +10,9 @@ namespace MascotaFeliz.App.Frontend.Pages
         private readonly IRepositorioMascota _repoMascota;
         public Mascota mascota { get; set; }
 
-        public DetallesMascotasModel()
+        public DetallesMascotasModel(IRepositorioMascota repoMascota)
         {
-            this._repoMascota = new RepositorioMascota(new Persistencia.AppContext());
+            _repoMascota = repoMascota;
         }
 
         public IActionResult OnGet(int mascotaId)
@@ -24,12 +20,9 @@ namespace MascotaFeliz.App.Frontend.Pages
             mascota = _repoMascota.GetMascota(mascotaId);
             if (mascota == null)
             {
-                return RedirectToPage("./NotFound");
+                return RedirectToPage("/NotFound");
             }
-            else
-            {
-                return Page();
-            }
+            return Page();
         }
     }
 }

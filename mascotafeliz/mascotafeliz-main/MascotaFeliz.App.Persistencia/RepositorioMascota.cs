@@ -26,6 +26,8 @@ namespace MascotaFeliz.App.Persistencia
             return _appContext.Mascotas
                 .Include(m => m.Veterinario)
                 .Include(m => m.Dueno)
+                .Include(m => m.Historia)
+                    .ThenInclude(h => h.VisitasPyP)
                 .FirstOrDefault(m => m.Id == idMascota);
         }
 
@@ -38,9 +40,15 @@ namespace MascotaFeliz.App.Persistencia
                 mascotaEncontrada.Color = mascota.Color;
                 mascotaEncontrada.Especie = mascota.Especie;
                 mascotaEncontrada.Raza = mascota.Raza;
+                // Los vínculos con dueño y veterinario se actualizan desde el formulario
+                // (selectores). La historia clínica se preserva: nunca se sobrescribe a
+                // null desde la edición de la mascota (se gestiona desde su propia sección).
                 mascotaEncontrada.VeterinarioId = mascota.VeterinarioId;
                 mascotaEncontrada.DuenoId = mascota.DuenoId;
-                mascotaEncontrada.HistoriaId = mascota.HistoriaId;
+                if (mascota.HistoriaId.HasValue)
+                {
+                    mascotaEncontrada.HistoriaId = mascota.HistoriaId;
+                }
                 _appContext.SaveChanges();
             }
             return mascotaEncontrada;

@@ -1,25 +1,26 @@
-﻿@page
+@page
 @model MascotaFeliz.App.Frontend.Pages.DetallesDuenosModel
 @{
+    ViewData["Title"] = "Detalles del dueño";
 }
-<h1> Detalles del Dueño </h1>
-<div>
-   Id: @Model.dueno.Id
+
+<div class="mf-encabezado">
+    <div>
+        <h1>Detalles del dueño</h1>
+        <p class="mf-muted">Información de contacto del responsable.</p>
+    </div>
+    <div class="mf-acciones">
+        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarDueno" asp-route-duenoId="@Model.dueno.Id">Editar</a>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaDuenos">← Volver</a>
+    </div>
 </div>
-<div>
-   Nombre: @Model.dueno.Nombres
+
+<div class="mf-ficha">
+    <dl>
+        <div class="mf-fila"><dt>Nombre completo</dt><dd>@Model.dueno.Nombres @Model.dueno.Apellidos</dd></div>
+        <div class="mf-fila"><dt>Teléfono</dt><dd>@(string.IsNullOrWhiteSpace(Model.dueno.Telefono) ? "—" : Model.dueno.Telefono)</dd></div>
+        <div class="mf-fila"><dt>Correo</dt><dd>@(string.IsNullOrWhiteSpace(Model.dueno.Correo) ? "—" : Model.dueno.Correo)</dd></div>
+        <div class="mf-fila"><dt>Dirección</dt><dd>@(string.IsNullOrWhiteSpace(Model.dueno.Direccion) ? "—" : Model.dueno.Direccion)</dd></div>
+        <div class="mf-fila"><dt>Identificador</dt><dd>#@Model.dueno.Id</dd></div>
+    </dl>
 </div>
-<div>
-   Apellido: @Model.dueno.Apellidos
-</div>
-<div>
-   Direccion: @Model.dueno.Direccion
-</div>
-<div>
-   Telefono: @Model.dueno.Telefono
-</div>
-<div>
-   Correo: @Model.dueno.Correo
-                                                              
-</div>
-<a asp-page="./ListaDuenos" class="btn-default"> Lista de Dueños </a>

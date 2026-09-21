@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MascotaFeliz.App.Dominio;
@@ -12,16 +11,51 @@ namespace MascotaFeliz.App.Frontend.Pages
     public class ListaMascotasModel : PageModel
     {
         private readonly IRepositorioMascota _repoMascota;
+
         public IEnumerable<Mascota> listaMascotas { get; set; }
 
-        public ListaMascotasModel()
+        [BindProperty(SupportsGet = true)]
+        public string Q { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int Pagina { get; set; } = 1;
+        public int TotalPaginas { get; set; }
+        public int Total { get; set; }
+
+        private const int TamanoPagina = 8;
+
+        public ListaMascotasModel(IRepositorioMascota repoMascota)
         {
-            this._repoMascota = new RepositorioMascota(new Persistencia.AppContext());
+            _repoMascota = repoMascota;
         }
 
         public void OnGet()
         {
-            listaMascotas = _repoMascota.GetAllMascotas();
+            var todo = string.IsNullOrWhiteSpace(Q)
+                ? _repoMascota.GetAllMascotas()
+                : _repoMascota.GetMascotasPorFiltro(Q);
+
+            Total = todo.Count();
+            TotalPaginas = Math.Max(1, (int)Math.Ceiling(Total / (double)TamanoPagina));
+            if (Pagina < 1) { Pagina = 1; }
+            if (Pagina > TotalPaginas) { Pagina = TotalPaginas; }
+
+            listaMascotas = todo
+                .OrderBy(m => m.Nombre)
+                .Skip((Pagina - 1) * TamanoPagina)
+                .Take(TamanoPagina);
+        }
+
+        public IActionResult OnPostEliminar(int mascotaId)
+        {
+            try
+            {
+                _repoMascota.DeleteMascota(mascotaId);
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+            {
+                TempData["Error"] = "No se pudo eliminar la mascota. Intenta de nuevo.";
+            }
+            return RedirectToPage("./ListaMascotas", new { Q, Pagina });
         }
     }
 }

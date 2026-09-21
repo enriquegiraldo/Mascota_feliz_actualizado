@@ -1,55 +1,69 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-CO">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MascotaFeliz</title>
+    <meta name="theme-color" content="#4a7c59" />
+    <meta name="description" content="Clínica veterinaria Mascota Feliz: gestión de mascotas, dueños, veterinarios e historias clínicas." />
+    <link rel="icon" type="image/svg+xml" href="~/img/favicon.svg" />
+    <title>@ViewData["Title"] · Mascota Feliz</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+<div class="mf-app">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Mascota Feliz</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm mf-navbar" aria-label="Navegación principal">
+            <div class="container mf-contenedor">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <img src="~/img/logo.svg" alt="" class="mf-logo" aria-hidden="true" />
+                    Mascota Feliz
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Abrir menú de navegación">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Inicio</a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Duenos/ListaDuenos">Dueños</a>
+                            <a class="nav-link" asp-area="" asp-page="/Mascotas/ListaMascotas">Mascotas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Veterinarios/ListaVeterinarios">Veterinarios</a>
+                            <a class="nav-link" asp-area="" asp-page="/Duenos/ListaDuenos">Dueños</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Mascotas/ListaMascotas">Mascotas</a>
+                            <a class="nav-link" asp-area="" asp-page="/Veterinarios/ListaVeterinarios">Veterinarios</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted mt-5">
-        <div class="container py-3">
-            &copy; @DateTime.Now.Year - MascotaFeliz.App.Frontend
+    <main role="main" class="mf-seccion">
+        <div class="mf-contenedor">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="mf-footer">
+        <div class="mf-contenedor mf-footer-contenido">
+            <span class="mf-footer-marca">
+                <img src="~/img/logo.svg" alt="" width="24" height="24" aria-hidden="true" />
+                Mascota Feliz · Clínica veterinaria
+            </span>
+            <span>&copy; @DateTime.Now.Year · Hecho con cariño para quienes cuidan mascotas.</span>
         </div>
     </footer>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
-
 </body>
 </html>

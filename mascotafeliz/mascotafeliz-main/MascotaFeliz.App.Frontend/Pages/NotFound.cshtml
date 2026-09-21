@@ -4,6 +4,14 @@
     ViewData["Title"] = "No encontrado";
 }
 
-<h1>Recurso no encontrado</h1>
-<p>El recurso que estás buscando no existe o fue eliminado.</p>
-<p><a asp-page="/Index" class="btn btn-primary">Volver al inicio</a></p>
+<div class="mf-ficha" style="max-width:620px;margin:2rem auto;text-align:center;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#4a7c59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:1rem;" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <h1>404 · Recurso no encontrado</h1>
+    <p class="mf-muted">Lo que buscas no existe, fue eliminado o la dirección no es correcta.</p>
+    <div style="margin-top:1.25rem;">
+        <a asp-page="/Index" class="btn btn-primary mf-btn-tactil">Volver al inicio</a>
+    </div>
+</div>

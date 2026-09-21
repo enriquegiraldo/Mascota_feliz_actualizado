@@ -1,22 +1,115 @@
-﻿@page
+@page
 @model MascotaFeliz.App.Frontend.Pages.DetallesMascotasModel
 @{
+    ViewData["Title"] = Model.mascota.Nombre;
+    var visitas = Model.mascota.Historia?.VisitasPyP?
+        .OrderByDescending(v => v.FechaVisita).ToList();
+    var cultura = new System.Globalization.CultureInfo("es-CO");
 }
-<h1> Detalles de la Mascota </h1>
-<div>
-   Id: @Model.mascota.Id
-</div>
-<div>
-   Nombre: @Model.mascota.Nombre
-</div>
-<div>
-   Apellido: @Model.mascota.Color
-</div>
-<div>
-   Direccion: @Model.mascota.Especie
-</div>
-<div>
-   Telefono: @Model.mascota.Raza
+
+<div class="mf-encabezado">
+    <div>
+        <span class="mf-badge">@(Model.mascota.Especie ?? "Mascota")</span>
+        <h1 style="margin-top:.4rem;">@Model.mascota.Nombre</h1>
+        <p class="mf-muted">Perfil del paciente · #@Model.mascota.Id</p>
+    </div>
+    <div class="mf-acciones">
+        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarMascota" asp-route-mascotaId="@Model.mascota.Id">Editar</a>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaMascotas">← Volver</a>
+    </div>
 </div>
 
-<a asp-page="./ListaMascotas" class="btn-default"> Lista de Mascotas </a>
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <h2 style="margin:0;">Datos de la mascota</h2>
+    </div>
+    <dl>
+        <div class="mf-fila"><dt>Nombre</dt><dd>@Model.mascota.Nombre</dd></div>
+        <div class="mf-fila"><dt>Especie</dt><dd>@Model.mascota.Especie</dd></div>
+        <div class="mf-fila"><dt>Raza</dt><dd>@Model.mascota.Raza</dd></div>
+        <div class="mf-fila"><dt>Color</dt><dd>@Model.mascota.Color</dd></div>
+    </dl>
+</div>
+
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <h2 style="margin:0;">Dueño y veterinario</h2>
+    </div>
+    <dl>
+        <div class="mf-fila">
+            <dt>Dueño</dt>
+            <dd>
+                @if (Model.mascota.Dueno != null)
+                {
+                    <a asp-page="/Duenos/DetallesDuenos" asp-route-duenoId="@Model.mascota.Dueno.Id">@Model.mascota.Dueno.Nombres @Model.mascota.Dueno.Apellidos</a>
+                }
+                else { <span class="mf-muted">Sin dueño asignado</span> }
+            </dd>
+        </div>
+        <div class="mf-fila">
+            <dt>Veterinario</dt>
+            <dd>
+                @if (Model.mascota.Veterinario != null)
+                {
+                    <a asp-page="/Veterinarios/DetallesVeterinarios" asp-route-veterinarioId="@Model.mascota.Veterinario.Id">@Model.mascota.Veterinario.Nombres @Model.mascota.Veterinario.Apellidos</a>
+                }
+                else { <span class="mf-muted">Sin veterinario asignado</span> }
+            </dd>
+        </div>
+    </dl>
+</div>
+
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        <h2 style="margin:0;">Historia clínica</h2>
+    </div>
+
+    @if (Model.mascota.Historia == null)
+    {
+        <p class="mf-muted">Esta mascota aún no tiene historia clínica.</p>
+    }
+    else
+    {
+        <dl>
+            <div class="mf-fila"><dt>Historia N.°</dt><dd>#@Model.mascota.Historia.Id</dd></div>
+            <div class="mf-fila"><dt>Fecha inicial</dt><dd>@Model.mascota.Historia.FechaInicial.ToString("d 'de' MMMM 'de' yyyy", cultura)</dd></div>
+            <div class="mf-fila"><dt>Visitas registradas</dt><dd>@(Model.mascota.Historia.VisitasPyP?.Count ?? 0)</dd></div>
+        </dl>
+
+        <h3 style="margin-top:1.5rem;font-size:1.1rem;">Línea de tiempo de visitas PyP</h3>
+        @if (visitas == null || !visitas.Any())
+        {
+            <p class="mf-muted">Aún no se han registrado visitas de promoción y prevención.</p>
+        }
+        else
+        {
+            <div class="mf-timeline">
+            @foreach (var v in visitas)
+            {
+                <div class="mf-timeline-item mf-card" style="padding:1rem;">
+                    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;align-items:baseline;">
+                        <strong>@v.FechaVisita.ToString("d 'de' MMMM 'de' yyyy", cultura)</strong>
+                        <span class="mf-badge mf-badge--terracota">#@v.Id</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem 1rem;margin-top:.6rem;">
+                        <span class="mf-muted" style="font-size:.82rem;">Temperatura</span><span>@v.Temperatura.ToString("0.0", cultura) °C</span>
+                        <span class="mf-muted" style="font-size:.82rem;">Peso</span><span>@v.Peso.ToString("0.0", cultura) kg</span>
+                        <span class="mf-muted" style="font-size:.82rem;">F. respiratoria</span><span>@v.FrecuenciaRespiratoria.ToString("0", cultura) /min</span>
+                        <span class="mf-muted" style="font-size:.82rem;">F. cardiaca</span><span>@v.FrecuenciaCardiaca.ToString("0", cultura) /min</span>
+                        <span class="mf-muted" style="font-size:.82rem;">Estado de ánimo</span><span>@(string.IsNullOrWhiteSpace(v.EstadoAnimo) ? "—" : v.EstadoAnimo)</span>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(v.Recomendaciones))
+                    {
+                        <p style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--mf-arena);">
+                            <span class="mf-muted" style="font-size:.82rem;">Recomendaciones: </span>@v.Recomendaciones
+                        </p>
+                    }
+                </div>
+            }
+            </div>
+        }
+    }
+</div>

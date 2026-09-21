@@ -1,27 +1,53 @@
 @page
 @model MascotaFeliz.App.Frontend.Pages.EditarDuenoModel
 @{
-    int duenoId = Model.dueno.Id;
+    ViewData["Title"] = Model.dueno.Id > 0 ? "Editar dueño" : "Nuevo dueño";
 }
-<h2>Agregar o editar Dueños</h2>
 
-<form method="post" >
+<div class="mf-encabezado">
+    <div>
+        <h1>@(Model.dueno.Id > 0 ? "Editar dueño" : "Nuevo dueño")</h1>
+        <p class="mf-muted">Datos de contacto del responsable de una mascota.</p>
+    </div>
+    <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaDuenos">← Volver</a>
+</div>
+
+<form method="post" class="mf-ficha mf-form">
+    <input type="hidden" asp-for="dueno.Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
     <div class="form-group">
-        <input type="hidden" asp-for = "dueno.Id" />
         <label asp-for="dueno.Nombres"></label>
-        <input asp-for="dueno.Nombres" class="form-control">
+        <input asp-for="dueno.Nombres" class="form-control" autocomplete="given-name" />
+        <span asp-validation-for="dueno.Nombres" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="dueno.Apellidos"></label>
-        <input asp-for="dueno.Apellidos" class="form-control">
-        <label asp-for="dueno.Direccion"></label>
-        <input asp-for="dueno.Direccion" class="form-control">
+        <input asp-for="dueno.Apellidos" class="form-control" autocomplete="family-name" />
+        <span asp-validation-for="dueno.Apellidos" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="dueno.Telefono"></label>
-        <input asp-for="dueno.Telefono" class="form-control">
+        <input asp-for="dueno.Telefono" class="form-control" inputmode="tel" autocomplete="tel" placeholder="300 123 4567" />
+        <span asp-validation-for="dueno.Telefono" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="dueno.Correo"></label>
-        <input asp-for="dueno.Correo" class="form-control">
+        <input asp-for="dueno.Correo" class="form-control" inputmode="email" autocomplete="email" placeholder="nombre@correo.com" />
+        <span asp-validation-for="dueno.Correo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="dueno.Direccion"></label>
+        <input asp-for="dueno.Direccion" class="form-control" autocomplete="street-address" />
+        <span asp-validation-for="dueno.Direccion" class="text-danger"></span>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Grabar</button>
-
+    <div class="mf-tabla-acciones" style="margin-top:1rem;">
+        <button type="submit" class="btn btn-primary mf-btn-tactil">Guardar</button>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaDuenos">Cancelar</a>
     </div>
 </form>
 
-<a asp-page="./ListaDuenos" class="btn-default">Lista de Dueños </a>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
