@@ -69,6 +69,14 @@ namespace MascotaFeliz.App.Persistencia
                 .Where(m => m.Nombre.Contains(filtro) || m.Raza.Contains(filtro) || m.Especie.Contains(filtro));
         }
 
+        public Mascota GetMascotaPorHistoriaId(int idHistoria)
+        {
+            return _appContext.Mascotas
+                .Include(m => m.Dueno)
+                .Include(m => m.Veterinario)
+                .FirstOrDefault(m => m.HistoriaId == idHistoria);
+        }
+
         public void DeleteMascota(int idMascota)
         {
             var mascotaEncontrada = _appContext.Mascotas.Find(idMascota);

@@ -10,6 +10,7 @@ namespace MascotaFeliz.App.Persistencia
         Mascota UpdateMascota(Mascota mascota);
         IEnumerable<Mascota> GetAllMascotas();
         IEnumerable<Mascota> GetMascotasPorFiltro(string filtro);
+        Mascota GetMascotaPorHistoriaId(int idHistoria);
         void DeleteMascota(int idMascota);
     }
 }

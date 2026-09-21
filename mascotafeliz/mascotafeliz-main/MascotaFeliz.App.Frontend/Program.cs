@@ -65,6 +65,45 @@ using (var scope = app.Services.CreateScope())
         );
     }
 
+    if (!context.VisitasPyP.Any())
+    {
+        context.VisitasPyP.AddRange(
+            new VisitaPyP
+            {
+                HistoriaId = 1,
+                FechaVisita = new DateTime(2023, 1, 15),
+                Temperatura = 38.5f,
+                Peso = 28.0f,
+                FrecuenciaRespiratoria = 22,
+                FrecuenciaCardiaca = 110,
+                EstadoAnimo = "Activo y alerta",
+                Recomendaciones = "Refuerzo de vacunas en 30 días. Dieta balanceada para perro adulto."
+            },
+            new VisitaPyP
+            {
+                HistoriaId = 1,
+                FechaVisita = new DateTime(2023, 6, 10),
+                Temperatura = 38.2f,
+                Peso = 29.5f,
+                FrecuenciaRespiratoria = 20,
+                FrecuenciaCardiaca = 105,
+                EstadoAnimo = "Tranquilo",
+                Recomendaciones = "Control de peso adecuado. Desparasitación trimestral."
+            },
+            new VisitaPyP
+            {
+                HistoriaId = 3,
+                FechaVisita = new DateTime(2023, 5, 10),
+                Temperatura = 38.8f,
+                Peso = 4.2f,
+                FrecuenciaRespiratoria = 28,
+                FrecuenciaCardiaca = 160,
+                EstadoAnimo = "Receloso",
+                Recomendaciones = "Esterilización recomendada. Revisión dental en 6 meses."
+            }
+        );
+    }
+
     context.SaveChanges();
 }
 

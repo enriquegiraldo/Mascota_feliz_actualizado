@@ -98,7 +98,8 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 
 /* Tarjetas del inicio */
 .mf-inicio-grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
-@media (min-width: 768px) { .mf-inicio-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 560px) { .mf-inicio-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 992px) { .mf-inicio-grid { grid-template-columns: repeat(4, 1fr); } }
 
 /* ---- Tablas ---- */
 .mf-tabla { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--mf-blanco); border: 1px solid var(--mf-gris-claro); border-radius: var(--mf-radio); overflow: hidden; box-shadow: var(--mf-sombra-sm); }
@@ -182,3 +183,34 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---- Accesibilidad ---- */
+/* Foco visible y consistente en cualquier elemento interactiva. */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--mf-verde);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Skip-link: oculto hasta que recibe foco por teclado. */
+.mf-skip-link {
+  position: absolute; left: 1rem; top: -3rem; z-index: 2000;
+  background: var(--mf-verde-osc); color: #fff; padding: .6rem 1rem;
+  border-radius: var(--mf-radio-sm); font-weight: 700; text-decoration: none;
+  transition: top var(--mf-transicion);
+}
+.mf-skip-link:focus { top: 1rem; }
+
+/* ---- Formulario de visita en dos columnas en pantallas medianas ---- */
+@media (min-width: 576px) {
+  .mf-form .mf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem; }
+}
+.mf-form textarea.form-control { min-height: 90px; resize: vertical; }
+
+/* ---- KPI del inicio ---- */
+.mf-kpi { display: flex; align-items: center; gap: .9rem; }
+.mf-kpi-numero { font-size: 2rem; font-weight: 800; color: var(--mf-verde-osc); line-height: 1; }
+.mf-kpi-ico { width: 44px; height: 44px; flex: 0 0 auto; background: var(--mf-verde-claro); border-radius: var(--mf-radio); display: inline-flex; align-items: center; justify-content: center; color: var(--mf-verde); }
+.mf-kpi-ico--terracota { background: #fbe9e0; color: var(--mf-terracota-os); }
+.mf-kpi-ico--gris { background: var(--mf-gris-claro); color: var(--mf-gris); }
+

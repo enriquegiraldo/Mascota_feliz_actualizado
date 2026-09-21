@@ -14,6 +14,10 @@
         <p class="mf-muted">Perfil del paciente · #@Model.mascota.Id</p>
     </div>
     <div class="mf-acciones">
+        @if (Model.mascota.HistoriaId.HasValue)
+        {
+            <a class="btn btn-primary mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP" asp-route-historiaId="@Model.mascota.HistoriaId">+ Agregar visita</a>
+        }
         <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarMascota" asp-route-mascotaId="@Model.mascota.Id">Editar</a>
         <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaMascotas">← Volver</a>
     </div>
@@ -79,10 +83,18 @@
             <div class="mf-fila"><dt>Visitas registradas</dt><dd>@(Model.mascota.Historia.VisitasPyP?.Count ?? 0)</dd></div>
         </dl>
 
+        <div class="mf-tabla-acciones" style="margin:.5rem 0 1.25rem;">
+            <a class="btn btn-ghost mf-btn-tactil" asp-page="/Historias/DetallesHistoria" asp-route-historiaId="@Model.mascota.Historia.Id">Ver historia completa</a>
+            <a class="btn btn-primary mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP" asp-route-historiaId="@Model.mascota.Historia.Id">+ Agregar visita</a>
+        </div>
+
         <h3 style="margin-top:1.5rem;font-size:1.1rem;">Línea de tiempo de visitas PyP</h3>
         @if (visitas == null || !visitas.Any())
         {
-            <p class="mf-muted">Aún no se han registrado visitas de promoción y prevención.</p>
+            <div class="mf-vacio" style="padding:1.5rem 1rem;">
+                <p>Aún no se han registrado visitas de promoción y prevención.</p>
+                <a class="btn btn-primary mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP" asp-route-historiaId="@Model.mascota.Historia.Id">Registrar la primera visita</a>
+            </div>
         }
         else
         {
@@ -107,6 +119,9 @@
                             <span class="mf-muted" style="font-size:.82rem;">Recomendaciones: </span>@v.Recomendaciones
                         </p>
                     }
+                    <div class="mf-tabla-acciones" style="margin-top:.5rem;">
+                        <a class="btn btn-ghost mf-btn-tactil" asp-page="/VisitasPyP/DetallesVisitaPyP" asp-route-visitaPyPId="@v.Id">Ver detalle</a>
+                    </div>
                 </div>
             }
             </div>

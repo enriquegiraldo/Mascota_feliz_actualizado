@@ -1,0 +1,35 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.DetallesVisitaPyPModel
+@{
+    ViewData["Title"] = "Visita PyP #" + Model.visitaPyP.Id;
+    var cultura = new System.Globalization.CultureInfo("es-CO");
+}
+
+<div class="mf-encabezado">
+    <div>
+        <span class="mf-badge mf-badge--terracota">Visita #@Model.visitaPyP.Id</span>
+        <h1 style="margin-top:.4rem;">Visita de PyP</h1>
+        <p class="mf-muted">@Model.visitaPyP.FechaVisita.ToString("d 'de' MMMM 'de' yyyy", cultura)</p>
+    </div>
+    <div class="mf-acciones">
+        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVisitaPyP" asp-route-visitaPyPId="@Model.visitaPyP.Id">Editar</a>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="/Historias/DetallesHistoria" asp-route-historiaId="@Model.visitaPyP.HistoriaId">← Historia</a>
+    </div>
+</div>
+
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <h2 style="margin:0;">Signos vitales</h2>
+    </div>
+    <dl>
+        <div class="mf-fila"><dt>Fecha de la visita</dt><dd>@Model.visitaPyP.FechaVisita.ToString("d 'de' MMMM 'de' yyyy", cultura)</dd></div>
+        <div class="mf-fila"><dt>Temperatura</dt><dd>@Model.visitaPyP.Temperatura.ToString("0.0", cultura) °C</dd></div>
+        <div class="mf-fila"><dt>Peso</dt><dd>@Model.visitaPyP.Peso.ToString("0.0", cultura) kg</dd></div>
+        <div class="mf-fila"><dt>Frecuencia respiratoria</dt><dd>@Model.visitaPyP.FrecuenciaRespiratoria.ToString("0", cultura) respiraciones/min</dd></div>
+        <div class="mf-fila"><dt>Frecuencia cardiaca</dt><dd>@Model.visitaPyP.FrecuenciaCardiaca.ToString("0", cultura) latidos/min</dd></div>
+        <div class="mf-fila"><dt>Estado de ánimo</dt><dd>@(string.IsNullOrWhiteSpace(Model.visitaPyP.EstadoAnimo) ? "—" : Model.visitaPyP.EstadoAnimo)</dd></div>
+        <div class="mf-fila"><dt>Recomendaciones</dt><dd>@(string.IsNullOrWhiteSpace(Model.visitaPyP.Recomendaciones) ? "—" : Model.visitaPyP.Recomendaciones)</dd></div>
+        <div class="mf-fila"><dt>Historia clínica</dt><dd><a asp-page="/Historias/DetallesHistoria" asp-route-historiaId="@Model.visitaPyP.HistoriaId">#@Model.visitaPyP.HistoriaId</a></dd></div>
+    </dl>
+</div>

@@ -71,3 +71,34 @@ Stage Summary:
 - Estado: app estable, todos los bugs de Fase 0 corregidos, UI con identidad propia cálida y funcionalidad mínima completa (CRUD con buscar/eliminar/paginar/validar). El usuario sigue en Fase 2 esperando respuestas a las 6 preguntas.
 - Próximo paso recomendado: esperar las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, dashboard, sitio público, Historia/Visitas PyP/Citas). Mientras tanto, no avanzar en Fase 3.
 - Riesgos/pendientes: (1) la semilla no crea VisitasPyP, así que la línea de tiempo muestra estado vacío (correcto, pero conviene sembrar 1-2 visitas de ejemplo en Fase 3). (2) Borrado en cascada Mascota→Historia→VisitaPyP vigente; revisar con usuario si es la política deseada. (3) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (4) El Bash tool mata procesos en background entre llamadas; para QA futuro usar el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 3
+Agent: Z.ai Code (orquestador) — ronda de QA automática (cron webDevReview, 2026-09-22)
+Task: Estado estable → añadir features (el usuario sigue en Fase 2; NO se inicia Fase 3/rediseño). Construir las páginas de Historia y VisitaPyP (gap explícito de Fase 0: "son el corazón clínico"), sembrar VisitasPyP, pulir accesibilidad y añadir KPIs en el inicio.
+
+Work Log:
+- Releído worklog.md: estado estable (build 0/0, bugs Fase 0 corregidos, UI con identidad cálida). El usuario sigue en Fase 2 esperando las 6 preguntas → NO se toca Fase 3 (rediseño, sitio público, Citas, .NET 10, Bootstrap 5.3).
+- Decisión de alcance de esta ronda: completar el gap de Fase 0 que el usuario pidió explícitamente — "Historia y VisitaPyP no tienen ninguna página (son el corazón clínico)". Es remediación, no Fase 3.
+- Persistencia: añadido GetMascotaPorHistoriaId a IRepositorioMascota/RepositorioMascota (lookup historia→mascota para las vistas).
+- Seed data: añadidas 3 VisitasPyP en Program.cs (2 para Firulais/historia 1, 1 para Michi/historia 3) con signos vitales realistas y recomendaciones. Ahora la línea de tiempo de DetallesMascotas muestra datos.
+- Nuevas páginas Historia:
+  - Pages/Historias/ListaHistorias: lista historias con su mascota asociada, fecha inicial y # visitas (paginado 8/pág).
+  - Pages/Historias/DetallesHistoria: paciente + línea de tiempo de visitas PyP + botón "Agregar visita".
+- Nuevas páginas VisitaPyP:
+  - Pages/VisitasPyP/ListaVisitasPyP: lista de visitas con búsqueda (fecha/estado/recomendación) y paginación.
+  - Pages/VisitasPyP/DetallesVisitaPyP: ficha completa de una visita.
+  - Pages/VisitasPyP/EditarVisitaPyP: crear/editar con selector de Historia, signos vitales en grid 2 columnas, recomendaciones (textarea), validación DataAnnotations, eliminar visita. Acepta ?historiaId= para preseleccionar (desde el perfil de mascota).
+- Enlaces: DetallesMascotas ahora tiene "+ Agregar visita" y "Ver historia completa" cuando la mascota tiene historia; el timeline enlaza a DetallesVisitaPyP por visita. Layout: añadidos "Historias" y "Visitas" al menú.
+- Inicio (panel) mejorado con KPIs: IndexModel inyecta los 4 repos y expone conteos; Index.cshtml muestra 4 tarjetas KPI (Mascotas/Dueños/Veterinarios/Visitas) con iconos + sección "Accesos rápidos".
+- Accesibilidad: skip-link "Saltar al contenido" + main con id="contenido-principal"; focus-visible consistente (outline verde 3px) en CSS; aria-label en buscadores y nav.
+- CSS: nuevo grid de 2 columnas para signos vitales (.mf-grid-2), estilos .mf-kpi*, grid del inicio auto-fit (1→2→4 columnas), textarea redimensionable.
+- `dotnet build` → 0 errores, 0 warnings. Consola compila.
+- QA runtime (todas 200): /Historias/ListaHistorias, /Historias/DetallesHistoria?historiaId=1, /VisitasPyP/ListaVisitasPyP, /VisitasPyP/EditarVisitaPyP?historiaId=1, /VisitasPyP/DetallesVisitaPyP?visitaPyPId=1, /Mascotas/DetallesMascotas?mascotaId=1. Contenido verificado: DetallesMascotas muestra "Refuerzo de vacunas", "Control de peso", "Activo y alerta", "Tranquilo" (semilla); ListaHistorias muestra Firulais/Michi + "visita(s)"; EditarVisitaPyP tiene selector "Historia #1" + "Signos vitales".
+- Capturas en /home/z/my-project/download/qa-ronda3/ a 390px y 1440px. VLM confirmó: home 1440px "4 KPIs (4/3/3/3) + accesos rápidos + paleta cálida + sin scroll horizontal"; DetallesHistoria 1440px "paciente completo (Firulais, Juan Pérez, Dr. Andrés López) + línea de tiempo con signos vitales y recomendaciones + profesional + sin scroll".
+- README.md actualizado (nuevas páginas en estructura + tabla de URLs + seed data).
+
+Stage Summary:
+- Estado: panel interno completo y coherente — CRUD de las 5 entidades (Dueno, Veterinario, Mascota, Historia, VisitaPyP) con buscar/eliminar/paginar/validar, perfil de mascota con línea de tiempo, detalle de historia clínica, KPIs en el inicio. Todos los bugs de Fase 0 corregidos. UI cálida y accesible. Build 0/0.
+- Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS). Sin esas respuestas no se deben tomar decisiones de producto (alcance, versión de UI, identidad final, despliegue).
+- Riesgos/pendientes: (1) Borrado en cascada Mascota→Historia→VisitaPyP vigente; revisar con usuario si es la política deseada. (2) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (3) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (4) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".

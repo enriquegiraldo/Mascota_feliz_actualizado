@@ -1,0 +1,92 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.DetallesHistoriaModel
+@{
+    ViewData["Title"] = "Historia clínica #" + Model.historia.Id;
+    var visitas = Model.historia.VisitasPyP?
+        .OrderByDescending(v => v.FechaVisita).ToList();
+    var cultura = new System.Globalization.CultureInfo("es-CO");
+}
+
+<div class="mf-encabezado">
+    <div>
+        <span class="mf-badge">Historia #@Model.historia.Id</span>
+        <h1 style="margin-top:.4rem;">Historia clínica</h1>
+        <p class="mf-muted">Fecha inicial: @Model.historia.FechaInicial.ToString("d 'de' MMMM 'de' yyyy", cultura)</p>
+    </div>
+    <div class="mf-acciones">
+        @if (Model.mascota != null)
+        {
+            <a class="btn btn-primary mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP" asp-route-historiaId="@Model.historia.Id">+ Agregar visita</a>
+        }
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaHistorias">← Volver</a>
+    </div>
+</div>
+
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="4" cy="8" r="2"/><circle cx="18" cy="16" r="2"/><circle cx="4" cy="16" r="2"/><path d="M9 10c0 3 2 5 3 7 1-2 3-4 3-7"/></svg>
+        <h2 style="margin:0;">Paciente</h2>
+    </div>
+    @if (Model.mascota != null)
+    {
+        <dl>
+            <div class="mf-fila"><dt>Mascota</dt><dd><a asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@Model.mascota.Id">@Model.mascota.Nombre</a></dd></div>
+            <div class="mf-fila"><dt>Especie / Raza</dt><dd>@Model.mascota.Especie · @Model.mascota.Raza</dd></div>
+            <div class="mf-fila"><dt>Dueño</dt><dd>@(Model.mascota.Dueno != null ? $"{Model.mascota.Dueno.Nombres} {Model.mascota.Dueno.Apellidos}" : "—")</dd></div>
+            <div class="mf-fila"><dt>Veterinario</dt><dd>@(Model.mascota.Veterinario != null ? $"{Model.mascota.Veterinario.Nombres} {Model.mascota.Veterinario.Apellidos}" : "—")</dd></div>
+        </dl>
+    }
+    else
+    {
+        <p class="mf-muted">Esta historia no tiene una mascota asociada.</p>
+    }
+</div>
+
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <h2 style="margin:0;">Línea de tiempo de visitas PyP</h2>
+    </div>
+
+    @if (visitas == null || !visitas.Any())
+    {
+        <div class="mf-vacio" style="padding:2rem 1rem;">
+            <p>Aún no hay visitas registradas en esta historia.</p>
+            @if (Model.mascota != null)
+            {
+                <a class="btn btn-primary mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP" asp-route-historiaId="@Model.historia.Id">Registrar la primera visita</a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="mf-timeline">
+        @foreach (var v in visitas)
+        {
+            <div class="mf-timeline-item mf-card" style="padding:1rem;">
+                <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;align-items:baseline;">
+                    <strong>@v.FechaVisita.ToString("d 'de' MMMM 'de' yyyy", cultura)</strong>
+                    <span class="mf-badge mf-badge--terracota">#@v.Id</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem 1rem;margin-top:.6rem;">
+                    <span class="mf-muted" style="font-size:.82rem;">Temperatura</span><span>@v.Temperatura.ToString("0.0", cultura) °C</span>
+                    <span class="mf-muted" style="font-size:.82rem;">Peso</span><span>@v.Peso.ToString("0.0", cultura) kg</span>
+                    <span class="mf-muted" style="font-size:.82rem;">F. respiratoria</span><span>@v.FrecuenciaRespiratoria.ToString("0", cultura) /min</span>
+                    <span class="mf-muted" style="font-size:.82rem;">F. cardiaca</span><span>@v.FrecuenciaCardiaca.ToString("0", cultura) /min</span>
+                    <span class="mf-muted" style="font-size:.82rem;">Estado de ánimo</span><span>@(string.IsNullOrWhiteSpace(v.EstadoAnimo) ? "—" : v.EstadoAnimo)</span>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(v.Recomendaciones))
+                {
+                    <p style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--mf-arena);">
+                        <span class="mf-muted" style="font-size:.82rem;">Recomendaciones: </span>@v.Recomendaciones
+                    </p>
+                }
+                <div class="mf-tabla-acciones" style="margin-top:.6rem;">
+                    <a class="btn btn-ghost mf-btn-tactil" asp-page="/VisitasPyP/DetallesVisitaPyP" asp-route-visitaPyPId="@v.Id">Ver detalle</a>
+                    <a class="btn btn-outline-primary mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP" asp-route-visitaPyPId="@v.Id">Editar</a>
+                </div>
+            </div>
+        }
+        </div>
+    }
+</div>

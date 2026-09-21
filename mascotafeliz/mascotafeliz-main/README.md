@@ -76,6 +76,8 @@ MascotaFelizGrupo5/
 │   │   ├── Duenos/                           ← CRUD Dueños (buscar, eliminar, paginar, validar)
 │   │   ├── Veterinarios/                     ← CRUD Veterinarios (buscar, eliminar, paginar, validar)
 │   │   ├── Mascotas/                         ← CRUD Mascotas (selectores dueño/vet, perfil con línea de tiempo)
+│   │   ├── Historias/                        ← Lista y detalle de historias clínicas (línea de tiempo de visitas)
+│   │   ├── VisitasPyP/                       ← CRUD Visitas de PyP (signos vitales + recomendaciones)
 │   │   ├── Error.cshtml                      ← Página de errores (UseExceptionHandler)
 │   │   ├── NotFound.cshtml                   ← 404 con estilo
 │   │   └── Privacy.cshtml                    ← Política de privacidad (es-CO)
@@ -202,6 +204,7 @@ Al iniciar la aplicación por primera vez, se insertan automáticamente registro
 - 3 **Veterinarios** (Dr. Andrés, Dra. Laura, Dr. Jaime)
 - 3 **Historias Clínicas**
 - 4 **Mascotas** (Firulais, Susi, Michi, Rocky)
+- 3 **Visitas PyP** (2 para Firulais, 1 para Michi) con signos vitales y recomendaciones
 
 > Para reiniciar la base de datos, **borra** el archivo `MascotaFeliz.db` y vuelve a ejecutar la app.
 
@@ -236,6 +239,11 @@ dotnet ef database update --project MascotaFeliz.App.Persistencia --startup-proj
 | `/Privacy`                                           | Política de privacidad     |
 | `/NotFound`                                          | Página 404 con estilo      |
 | `/Error`                                             | Página de errores (handler)|
+| `/Historias/ListaHistorias`                          | Listado de historias clínicas |
+| `/Historias/DetallesHistoria?historiaId=1`           | Detalle de historia + línea de tiempo |
+| `/VisitasPyP/ListaVisitasPyP`                        | Listado de visitas PyP     |
+| `/VisitasPyP/DetallesVisitaPyP?visitaPyPId=1`        | Detalle de una visita      |
+| `/VisitasPyP/EditarVisitaPyP?historiaId=1`           | Crear visita para una historia |
 
 > Por defecto el servidor escucha en **HTTP (5000)**. Para HTTPS (5001):
 >

@@ -12,6 +12,7 @@
 </head>
 <body>
 <div class="mf-app">
+    <a href="#contenido-principal" class="mf-skip-link">Saltar al contenido</a>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm mf-navbar" aria-label="Navegación principal">
             <div class="container mf-contenedor">
@@ -37,13 +38,19 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-page="/Veterinarios/ListaVeterinarios">Veterinarios</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Historias/ListaHistorias">Historias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/VisitasPyP/ListaVisitasPyP">Visitas</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main role="main" class="mf-seccion">
+    <main role="main" id="contenido-principal" class="mf-seccion">
         <div class="mf-contenedor">
             @RenderBody()
         </div>

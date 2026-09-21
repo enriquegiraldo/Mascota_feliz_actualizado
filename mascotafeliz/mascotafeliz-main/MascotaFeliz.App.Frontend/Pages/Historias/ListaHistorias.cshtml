@@ -1,0 +1,86 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.ListaHistoriasModel
+@{
+    ViewData["Title"] = "Historias clínicas";
+    var cultura = new System.Globalization.CultureInfo("es-CO");
+}
+
+<div class="mf-encabezado">
+    <div>
+        <h1>Historias clínicas</h1>
+        <p class="mf-muted">Registros clínicos de los pacientes de la clínica.</p>
+    </div>
+</div>
+
+@if (!Model.listaHistorias.Any())
+{
+    <div class="mf-vacio">
+        <svg class="mf-vacio-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p>Aún no hay historias clínicas registradas.</p>
+    </div>
+}
+else
+{
+    <div style="overflow-x:auto;">
+    <table class="mf-tabla">
+        <thead>
+            <tr>
+                <th>Historia</th>
+                <th>Mascota</th>
+                <th>Fecha inicial</th>
+                <th>Visitas</th>
+                <th><span class="mf-sr-only">Acciones</span></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var historia in Model.listaHistorias)
+        {
+            var mascota = Model.MascotaPorHistoria.ContainsKey(historia.Id) ? Model.MascotaPorHistoria[historia.Id] : null;
+            <tr>
+                <td><strong>#@historia.Id</strong></td>
+                <td>
+                    @if (mascota != null)
+                    {
+                        <a asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@mascota.Id">@mascota.Nombre</a>
+                        <div class="mf-muted" style="font-size:.8rem;">@mascota.Especie · @mascota.Raza</div>
+                    }
+                    else
+                    {
+                        <span class="mf-muted">Sin mascota asociada</span>
+                    }
+                </td>
+                <td>@historia.FechaInicial.ToString("d 'de' MMMM 'de' yyyy", cultura)</td>
+                <td><span class="mf-badge">@(historia.VisitasPyP?.Count ?? 0) visita(s)</span></td>
+                <td>
+                    <div class="mf-tabla-acciones">
+                        <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesHistoria" asp-route-historiaId="@historia.Id">Ver detalle</a>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    </div>
+
+    <nav class="mf-paginacion" aria-label="Paginación" style="justify-content:space-between;">
+        <span class="mf-muted" style="border:none;background:none;">@Model.Total registro(s) · pág. @Model.Pagina de @Model.TotalPaginas</span>
+        <span style="display:flex;gap:.35rem;">
+            @if (Model.Pagina > 1)
+            {
+                <a asp-page="./ListaHistorias" asp-route-Pagina="@(Model.Pagina - 1)">‹ Anterior</a>
+            }
+            else
+            {
+                <span class="mf-deshab">‹ Anterior</span>
+            }
+            @if (Model.Pagina < Model.TotalPaginas)
+            {
+                <a asp-page="./ListaHistorias" asp-route-Pagina="@(Model.Pagina + 1)">Siguiente ›</a>
+            }
+            else
+            {
+                <span class="mf-deshab">Siguiente ›</span>
+            }
+        </span>
+    </nav>
+}
