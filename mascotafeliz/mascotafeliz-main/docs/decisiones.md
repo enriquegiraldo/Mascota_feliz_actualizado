@@ -24,6 +24,39 @@
 - Identidad (logo/colores/nombre; elección de dirección visual).
 - Despliegue (¿se publica? afecta SQLite, HTTPS, almacenamiento de fotos).
 
+---
+
+# FASE 2 — CERRADA (decisiones confirmadas por Giraldo, 2026-09-22)
+
+Las decisiones anteriores quedan resueltas así:
+
+1. **Alcance:** sitio público (dueños) + panel interno (clínica).
+2. **Interfaz:** **Bootstrap 5** con tema propio (no SPA/Blazor). Se reemplaza el CDN de Bootstrap 4.6 actual.
+3. **Versión de .NET:** migrar los 4 proyectos a **.NET 10 (LTS)** y alinear EF Core a la versión 10.x correspondiente (hoy 8.0.0 sobre net9.0).
+4. **Funcionalidades a construir ya:**
+   - **Citas online** (entidad `Cita`: Id, FechaHora, MascotaId, VeterinarioId, Motivo, Estado [Pendiente/Confirmada/Cancelada/Atendida]). Vista pública (dueño solicita) + vista panel (clínica gestiona).
+   - **Fotos de mascota** (una foto principal por Mascota, `FotoUrl`; subida desde `EditarMascota` con redimensionado).
+   - **Recordatorios de vacunas** (primero visual: tarjeta "vacunas próximas a vencer" en Inicio, calculado desde `VisitaPyP`/`Historia`). El envío por email queda como mejora posterior — preguntar antes.
+   - **Login con roles:** ASP.NET Core Identity, roles `Admin`, `Veterinario`, `Recepción`. Sitio público sin login; panel interno protegido con `[Authorize(Roles=...)]`. Semilla de un usuario Admin inicial.
+5. **Identidad visual:** descartar la paleta "Cálida clínica" y el logo de huella. Proponer **2–3 direcciones nuevas** en la Fase 3 (paleta, tipografía, tono) para que Giraldo elija.
+6. **Despliegue:** sí, a producción pronto, en **Azure** (Azure for Students o GitHub Student Developer Pack).
+
+## Arquitectura de despliegue (Azure)
+
+- **Cómputo:** Azure App Service (Linux, .NET 10), un slot de producción.
+- **Base de datos:** migrar SQLite → **Azure SQL Database (Basic)** (preferida por ser la ruta más directa con EF Core en Azure). Cambio de proveedor en `AppContext` (`UseSqlite` → `UseSqlServer`) + migración EF limpia (`dotnet ef migrations add`). Ya no `EnsureCreated` en producción.
+- **Fotos de mascota:** Azure Blob Storage (contenedor `mascotas-fotos`), nunca el disco de App Service. En dev: Azurite o carpeta `wwwroot/uploads` tras `.gitignore`.
+- **Secretos:** connection strings y claves de Storage en configuración de App Service (o Key Vault si hay tiempo), nunca en `appsettings.json` versionado.
+- **CI/CD:** GitHub Actions → build, test, `dotnet publish`, deploy a App Service.
+
+## Fuera de alcance (parqueado)
+
+- **Memorial digital / sección de recordatorio cuando fallece la mascota:** se decidió que es un producto aparte. **No construir.** Si aparece en el código o conversación, ignorar salvo instrucción explícita.
+
+## Nota operativa
+
+- Antes de escribir código de infraestructura (migración .NET 10, SQL Server, Blob Storage, Identity), confirmar el plan con Giraldo.
+
 ## Remediación de Fase 0 (ronda de QA automática, 2026-09-22)
 
 El usuario sigue en Fase 2 esperando respuestas, así que **no se inició la Fase 3 (rediseño)**. Se ejecutó la remediación de los bugs confirmados en Fase 0 sobre la UI existente, más detalles de estilo y features mínimas. Decisiones tomadas (lo pequeño):

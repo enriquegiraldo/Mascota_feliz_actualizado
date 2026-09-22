@@ -286,3 +286,23 @@ Stage Summary:
 - Estado: panel interno con búsqueda totalmente insensible a mayúsculas y acentos (esencial para es-CO) y command palette ampliado a las 5 entidades. Suite de pruebas 49/49. Build 0/0. Todos los riesgos (1) y (2) de rondas anteriores resueltos.
 - Próximo paso recomendado: seguir esperando las 6 respuestas del usuario (o "continúa") para arrancar la Fase 3 (sistema de diseño completo, sitio público, Citas, auth/roles, migración a .NET 10 LTS, Bootstrap 5.3). Sin esas respuestas no se toman decisiones de producto.
 - Riesgos/pendientes: (1) La normalización materializa en memoria (AsEnumerable) — aceptable para el volumen actual; en Fase 3 con más datos se podría usar collation de SQLite o índice FTS. (2) Versiones .NET 9 STS / EF Core 8.0.0 sin alinear — pendiente Q3. (3) No hay entidad Cita ni sitio público ni auth — pendiente Q1/Q4. (4) El Bash tool mata procesos en background entre llamadas; QA futuro sigue el patrón "un comando = arrancar+probar+matar".
+
+---
+Task ID: 12
+Agent: Z.ai Code (orquestador) — Fase 2 CERRADA + plan Fase 3
+Task: Registrar decisiones de Giraldo (Fase 2 cerrada) y presentar plan de Fase 3 antes de escribir código de infraestructura.
+
+Work Log:
+- Decisiones de Fase 2 registradas en docs/decisiones.md (sección "FASE 2 — CERRADA"):
+  1. Alcance: sitio público + panel interno.
+  2. UI: Bootstrap 5 con tema propio.
+  3. .NET 10 LTS + EF Core 10.x (alinear desde 8.0.0).
+  4. Funcionalidades: Citas, Fotos, Recordatorios visuales, Identity con roles.
+  5. Identidad: descartar "Cálida clínica" + logo huella; proponer 2-3 direcciones nuevas.
+  6. Despliegue: Azure (App Service + Azure SQL + Blob Storage + GitHub Actions).
+- Fuera de alcance (parqueado): memorial digital / recordatorio de mascota fallecida — no construir, ignorar si aparece.
+- Plan de Fase 3 preparado para confirmación de Giraldo (migración .NET 10 → SQL Server → Bootstrap 5 → 3 direcciones visuales → Cita → Foto → Recordatorio → Identity).
+- Pregunta clave a Giraldo: ¿tiene suscripción Azure activa (Azure for Students vía correo SENA, o GitHub Student Pack)?
+
+Stage Summary:
+- Fase 2 cerrada. docs/decisiones.md actualizado. Pendiente: confirmación de Giraldo sobre (a) el plan de infraestructura y (b) la suscripción Azure, antes de empezar la Fase 3.1 (migración .NET 10).
