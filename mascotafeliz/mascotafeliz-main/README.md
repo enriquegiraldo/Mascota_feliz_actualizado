@@ -23,12 +23,12 @@ Sistema de gestión para la clínica veterinaria **Mascota Feliz**, desarrollado
 
 - **.NET 10.0 LTS** (SDK `10.0.401`) — migrado desde .NET 9 STS.
 - **ASP.NET Core Razor Pages** (Frontend)
-- **Entity Framework Core 10.0.12** (ORM) sobre SQLite (en proceso de migración a Azure SQL).
-- **SQLite** (Base de datos embebida para dev; producción será Azure SQL Database).
-- **Bootstrap 5.3** (UI base por CDN) + **tema propio** en `wwwroot/css/site.css` (en proceso de reemplazo desde Bootstrap 4.6).
+- **Entity Framework Core 10.0.12** (ORM) sobre **SQL Server** (LocalDB en dev, Azure SQL en prod).
+- **SQL Server LocalDB** (dev, Windows) / **Azure SQL Database** (prod).
+- **Bootstrap 5.3** (UI base por CDN) + **tema propio "Verde Cálido"** en `wwwroot/css/site.css` (esmeralda + ámbar, Inter + Fraunces).
 - **jQuery Validate** (validación en cliente) y **JS ligero** propio en `wwwroot/js/site.js`, `wwwroot/js/command-palette.js`.
 
-> **Fase 3 en curso:** migración a .NET 10 completada. Pendiente: cambio a Bootstrap 5 + nueva identidad visual, migración SQLite→Azure SQL, Blob Storage para fotos, ASP.NET Core Identity con roles, entidad Cita. Ver `docs/decisiones.md` y `docs/propuesta-visual.md`.
+> **Fase 3 en curso:** 3.1 (.NET 10) y 3.2 (Bootstrap 5 + tema) completadas. 3.3 (SQL Server) completada. Pendiente: 3.4 (Citas), 3.5 (Fotos/Storage), 3.6 (Recordatorios), 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD). Ver `docs/decisiones.md`.
 
 ---
 
@@ -190,18 +190,31 @@ El contenido listo para deploy queda en la carpeta `publish/`.
 
 ## 🗄️ Base de Datos
 
-El proyecto usa **SQLite**, por lo que no requiere instalar ningún motor de base de datos. Todo se guarda en un archivo local.
+El proyecto usa **SQL Server** (LocalDB en desarrollo, Azure SQL Database en producción). La migración EF Core se aplica automáticamente al iniciar (`Database.Migrate()` en `Program.cs`).
 
-### Ubicación
+### Entornos
 
-`MascotaFeliz.App.Frontend/MascotaFeliz.db` (se crea automáticamente al iniciar).
+| Entorno | Motor | Connection string |
+|---------|-------|-------------------|
+| Desarrollo (Windows) | SQL Server LocalDB | `appsettings.Development.json` — `Server=(localdb)\MSSQLLocalDB;Database=MascotaFelizDev;...` |
+| Producción (Azure) | Azure SQL Database (Basic) | Configuración de App Service (no en appsettings versionado) |
+
+### Migraciones
+
+La migración inicial está en `MascotaFeliz.App.Persistencia/Migraciones/`. Para crear una nueva:
+
+```bash
+dotnet ef migrations add <Nombre> --project MascotaFeliz.App.Persistencia --startup-project MascotaFeliz.App.Frontend --output-dir Migraciones
+dotnet ef database update --project MascotaFeliz.App.Persistencia --startup-project MascotaFeliz.App.Frontend
+```
 
 ### Cadena de conexión
 
-Está configurada en `Program.cs`:
+Se lee de la configuración (`ConnectionStrings:MascotaFeliz`) en `Program.cs`:
 
 ```csharp
-optionsBuilder.UseSqlite("Data Source=MascotaFeliz.db");
+builder.Services.AddDbContext<AppContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MascotaFeliz")));
 ```
 
 ### Datos de ejemplo (Seed Data)

@@ -358,3 +358,25 @@ Stage Summary:
 - Estado: tema "Verde Cálido" aplicado sobre Bootstrap 5.3 con modo claro/oscuro nativo. Logo estetoscopio. Build 0/0, 49/49 pruebas. App corre en .NET 10.
 - Próximo paso: 3.3 (SQLite → SQL Server). Como Giraldo confirmó Azure propia suscripción, procedo con el cambio de proveedor EF Core y la migración. Después 3.4 (Cita), 3.5 (Fotos/Storage), 3.6 (Recordatorios), 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD).
 - Riesgos/pendientes: (1) El cambio a SQL Server (3.3) requiere regenerar migración EF y adaptar pruebas (SQLite en memoria → SQL Server LocalDB o SQLServer in-memory). (2) Las tipografías se cargan de Google Fonts CDN — en producción se podría autohospedar con fontsource para privacidad/rendimiento. (3) Bootstrap 5.3 por CDN — se podría bundle local en Fase 3 final. (4) Memorial digital sigue parqueado (no construir).
+
+---
+Task ID: 15
+Agent: Z.ai Code (orquestador) — Fase 3.3 (SQLite → SQL Server)
+Task: Migrar proveedor de base de datos de SQLite a SQL Server (LocalDB en dev, Azure SQL en prod). Generar migración EF limpia, adaptar Program.cs y appsettings.
+
+Work Log:
+- Giraldo confirmó: LocalDB en Windows para dev (no Docker), migración EF limpia, connection string prod → Azure SQL.
+- Paquetes añadidos: Microsoft.EntityFrameworkCore.SqlServer 10.0.12 a Persistencia y Frontend. dotnet-ef 10.0.12 instalado como herramienta global.
+- AppContext.OnConfiguring: UseSqlite → UseSqlServer (LocalDB fallback).
+- Program.cs: AddDbContext(UseSqlServer) leyendo ConnectionStrings:MascotaFeliz de configuración. EnsureCreated → Migrate() (aplica migraciones EF pendientes, crea la BD si no existe).
+- appsettings.json/Development.json: connection string LocalDB (Server=(localdb)\MSSQLLocalDB;Database=MascotaFelizDev;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True).
+- appsettings.Production.json creado: connection string vacío (se inyecta desde configuración de App Service en Azure, nunca versionado).
+- Migración EF generada: 20260922035413_Inicial (5 DbSets: Duenos, Veterinarios, Mascotas, Historias, VisitasPyP) + AppContextModelSnapshot. Verificada para SQL Server (no SQLite) — CreateTable, SqlServer en el designer/snapshot.
+- Pruebas (ContextoPruebas): se mantiene SQLite en memoria para pruebas unitarias (rápido, multiplataforma, preserva FK/case-sensitivity). Documentado que en el Windows de Giraldo se puede cambiar a LocalDB si se quiere probar el proveedor real.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 49/49 pasan.
+- Smoke test runtime: la app arranca e intenta Migrate() contra LocalDB — en este entorno Linux falla con "LocalDB is not supported on this platform" (esperado; en Windows de Giraldo funcionará). El proveedor EF Core SqlServer está correctamente configurado.
+
+Stage Summary:
+- Estado: proveedor de BD migrado a SQL Server. Migración EF inicial generada. Pruebas 49/49. Build 0/0. App lista para correr en Windows con LocalDB; en producción apuntará a Azure SQL.
+- Próximo paso: 3.4 (entidad Cita — Dominio→Persistencia→Frontend). Después 3.5 (Fotos/Storage), 3.6 (Recordatorios), 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD).
+- Riesgos/pendientes: (1) En el entorno Linux de QA no puedo probar runtime con LocalDB (no hay SQL Server); las pruebas unitarias sí pasan. Giraldo debe verificar en su Windows que la app arranca y Migrate() crea la BD. (2) La migración inicial se generó con el modelo actual (5 entidades) — cuando se añada Cita (3.4) se creará una nueva migración incremental. (3) SQLite eliminado de Persistencia/Frontend pero mantenido en Pruebas (documentado). (4) Memorial digital sigue parqueado (no construir).

@@ -7,9 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
-// DbContext de la aplicación (SQLite embebido).
+// DbContext de la aplicación (SQL Server: LocalDB en dev, Azure SQL en prod).
+// El connection string se lee de la configuración (appsettings o variables de entorno en Azure).
 builder.Services.AddDbContext<AppContext>(options =>
-    options.UseSqlite("Data Source=MascotaFeliz.db"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MascotaFeliz")
+        ?? "Server=(localdb)\\MSSQLLocalDB;Database=MascotaFelizDev;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"));
 
 // Repositorios (Scoped: una instancia por petición HTTP).
 builder.Services.AddScoped<IRepositorioDueno, RepositorioDueno>();
@@ -25,7 +27,8 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppContext>();
-    context.Database.EnsureCreated();
+    // Aplica migraciones pendientes (crea la BD si no existe). En prod, Azure SQL.
+    context.Database.Migrate();
 
     if (!context.Duenos.Any())
     {

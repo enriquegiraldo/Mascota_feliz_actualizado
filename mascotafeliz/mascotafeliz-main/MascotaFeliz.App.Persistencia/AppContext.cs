@@ -23,7 +23,9 @@ namespace MascotaFeliz.App.Persistencia
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Data Source=MascotaFeliz.db");
+                // Fallback para dev/consola si no se configura vía DI.
+                // LocalDB (Windows) — ver appsettings para el connection string real.
+                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MascotaFelizDev;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
             }
         }
 
