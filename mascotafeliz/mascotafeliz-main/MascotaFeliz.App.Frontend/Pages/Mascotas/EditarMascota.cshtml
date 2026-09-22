@@ -16,28 +16,28 @@
     <input type="hidden" asp-for="mascota.Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="mascota.Nombre"></label>
         <input asp-for="mascota.Nombre" class="form-control" />
         <span asp-validation-for="mascota.Nombre" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="mascota.Especie"></label>
         <input asp-for="mascota.Especie" class="form-control" placeholder="Perro, Gato, Conejo…" />
         <span asp-validation-for="mascota.Especie" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="mascota.Raza"></label>
         <input asp-for="mascota.Raza" class="form-control" placeholder="Labrador, Siamés…" />
         <span asp-validation-for="mascota.Raza" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="mascota.Color"></label>
         <input asp-for="mascota.Color" class="form-control" placeholder="Café, Blanco, Negro…" />
         <span asp-validation-for="mascota.Color" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="mascota.DuenoId">Dueño</label>
         <select asp-for="mascota.DuenoId" class="form-control" asp-items="Model.DuenosOpciones">
             <option value="">— Sin dueño asignado —</option>
@@ -45,7 +45,7 @@
         <span asp-validation-for="mascota.DuenoId" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="mascota.VeterinarioId">Veterinario</label>
         <select asp-for="mascota.VeterinarioId" class="form-control" asp-items="Model.VeterinariosOpciones">
             <option value="">— Sin veterinario asignado —</option>
@@ -53,7 +53,7 @@
         <span asp-validation-for="mascota.VeterinarioId" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="mascota.HistoriaId">Historia clínica</label>
         <select asp-for="mascota.HistoriaId" class="form-control" asp-items="Model.HistoriasOpciones">
             <option value="">— Sin historia asignada —</option>

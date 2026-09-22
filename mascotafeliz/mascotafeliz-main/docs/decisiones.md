@@ -57,6 +57,14 @@ Las decisiones anteriores quedan resueltas así:
 
 - Antes de escribir código de infraestructura (migración .NET 10, SQL Server, Blob Storage, Identity), confirmar el plan con Giraldo.
 
+## Confirmaciones finales de Giraldo (2026-09-22)
+
+- **Dirección visual elegida: A — "Verde Cálido"** (esmeralda `#0d7a5f` + ámbar `#f59e0b`, Inter + Fraunces). Descartadas B y C. Se aplica como tema real en 3.2.
+- **Azure:** Giraldo usa **su propia suscripción** (no Azure for Students). Proceder como con cualquier suscripción de pago normal.
+- **Nombres de recursos Azure:** `mascotafeliz-dev` y `mascotafeliz-prod` para todo (App Service, base de datos, storage account, resource group).
+- **Destrabado:** 3.3 (SQL Server), 3.5 (Blob Storage), 3.9 (CI/CD).
+- Si se necesita login interactivo en Azure CLI o autorización, pedirlo explícitamente (no asumir acceso).
+
 ## Remediación de Fase 0 (ronda de QA automática, 2026-09-22)
 
 El usuario sigue en Fase 2 esperando respuestas, así que **no se inició la Fase 3 (rediseño)**. Se ejecutó la remediación de los bugs confirmados en Fase 0 sobre la UI existente, más detalles de estilo y features mínimas. Decisiones tomadas (lo pequeño):

@@ -16,27 +16,27 @@
     <input type="hidden" asp-for="veterinario.Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="veterinario.Nombres"></label>
         <input asp-for="veterinario.Nombres" class="form-control" autocomplete="given-name" />
         <span asp-validation-for="veterinario.Nombres" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="veterinario.Apellidos"></label>
         <input asp-for="veterinario.Apellidos" class="form-control" autocomplete="family-name" />
         <span asp-validation-for="veterinario.Apellidos" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="veterinario.TarjetaProfesional"></label>
         <input asp-for="veterinario.TarjetaProfesional" class="form-control" placeholder="TP0001" />
         <span asp-validation-for="veterinario.TarjetaProfesional" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="veterinario.Telefono"></label>
         <input asp-for="veterinario.Telefono" class="form-control" inputmode="tel" autocomplete="tel" placeholder="300 123 4567" />
         <span asp-validation-for="veterinario.Telefono" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="veterinario.Direccion"></label>
         <input asp-for="veterinario.Direccion" class="form-control" autocomplete="street-address" />
         <span asp-validation-for="veterinario.Direccion" class="text-danger"></span>

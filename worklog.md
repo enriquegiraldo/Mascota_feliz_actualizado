@@ -329,3 +329,32 @@ Stage Summary:
 - Estado: solución completa (5 proyectos) migrada a .NET 10 LTS con 0 errores/0 warnings y 49/49 pruebas. App corre en .NET 10. Identidad visual propuesta (3 direcciones).
 - Próximo paso: Giraldo elige dirección visual (A/B/C) → arranco 3.2 (Bootstrap 5 + tema). Confirmación Azure pendiente para 3.3 (SQL Server), 3.5 (Storage), 3.9 (CI/CD).
 - Riesgos/pendientes: (1) Sigo esperando confirmación de Giraldo sobre suscripción Azure (bloquea SQL Server, Blob Storage, CI/CD). (2) Versión de EF Core.Design sigue como PrivateAssets all — normal. (3) El cambio a SQL Server (3.3) requerirá regenerar migración EF y adaptar pruebas (SQLite en memoria → SQL Server LocalDB en pruebas). (4) Bootstrap 4.6 → 5.3 requiere revisar clases (ml-auto→ms-auto, data-toggle→data-bs-toggle, etc.).
+
+---
+Task ID: 14
+Agent: Z.ai Code (orquestador) — Fase 3.2 (Bootstrap 5 + tema Verde Cálido)
+Task: Aplicar dirección visual A (Verde Cálido: esmeralda #0d7a5f + ámbar #f59e0b, Inter+Fraunces) sobre Bootstrap 5.3. Migrar de BS4.6, nuevo logo/favicon (estetoscopio), tokens CSS nuevos, modo claro/oscuro nativo BS5.
+
+Work Log:
+- Confirmaciones de Giraldo registradas en docs/decisiones.md: dirección A, Azure propia suscripción, nombres mascotafeliz-dev/-prod.
+- 3.2 Migración Bootstrap 4.6 → 5.3:
+  - _Layout.cshtml: CDN BS 5.3.3, data-bs-toggle/data-bs-target (no data-toggle), navbar-expand-md (no navbar-toggleable-sm), ms-auto (no ml-auto), eliminado jQuery (BS5 no lo necesita), añadido script data-bs-theme="auto" que sincroniza con prefers-color-scheme.
+  - Tipografías libres: Inter (400-800) + Fraunces (500-700) vía Google Fonts con preconnect.
+  - form-group → mb-3 en los 5 formularios (BS5 eliminó form-group).
+- 3.2 Tema "Verde Cálido" en site.css (reescrito completo):
+  - Tokens nuevos: --mf-verde #0d7a5f, --mf-verde-osc #095c47, --mf-ambar #f59e0b, --mf-ambar-osc #b45309, --mf-verde-claro #d1f0e6, --mf-crema #f8faf9, --mf-tinta #1a2f28.
+  - Mapeo a variables nativas de BS5 (--bs-primary, --bs-body-bg, --bs-body-color, --bs-link-color, etc.) para que los componentes BS5 hereden el tema automáticamente.
+  - Modo oscuro nativo BS5: [data-bs-theme="dark"] redefine todos los tokens (crema→#0a1f1a, blanco→#122e26, etc.). El script del layout sincroniza data-bs-theme con prefers-color-scheme.
+  - Tipografía: titulares en Fraunces (serif), cuerpo en Inter. font-feature-settings para variantes de Inter.
+  - Componentes actualizados: badges (.mf-badge--ambar reemplaza --terracota), hero de mascota con gradient nuevo, KPIs con Fraunces, etc.
+- 3.2 Nuevo logo + favicon SVG: estetoscopio estilizado (Y de auriculares + tubo + diafragma) sobre fondo esmeralda con gradient, más un corazón ámbar como acento cálido. Reemplaza la huella. Aplicado en navbar, footer y hero del home.
+- Limpieza de paleta vieja: reemplazadas todas las referencias a #4a7c59, #d97757, #fbf7f0, mf-badge--terracota en 7 archivos (Index, DetallesHistoria, DetallesMascotas, Error, NotFound, DetallesDuenos, DetallesVisitaPyP).
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 49/49 (sin cambios, la UI no afecta pruebas).
+- QA runtime (todas 200): /, /Mascotas/ListaMascotas, /Mascotas/DetallesMascotas, /Mascotas/EditarMascota, /Duenos/DetallesDuenos.
+- Capturas en /home/z/my-project/download/qa-fase3-2/ a 390px y 1440px (claro y oscuro). VLM confirmó: home claro "4 KPIs + donut, paleta verde esmeralda + ámbar (no salvia/terracota), logo estetoscopio (no huella), Inter + Fraunces, sin scroll"; home oscuro "fondo oscuro con texto claro, paleta esmeralda preservada, sin scroll"; home final "estetoscopio en hero y navbar, paleta verde esmeralda + ámbar, corazón ámbar como acento".
+- README.md actualizado (Bootstrap 5.3, Inter+Fraunces, .NET 10).
+
+Stage Summary:
+- Estado: tema "Verde Cálido" aplicado sobre Bootstrap 5.3 con modo claro/oscuro nativo. Logo estetoscopio. Build 0/0, 49/49 pruebas. App corre en .NET 10.
+- Próximo paso: 3.3 (SQLite → SQL Server). Como Giraldo confirmó Azure propia suscripción, procedo con el cambio de proveedor EF Core y la migración. Después 3.4 (Cita), 3.5 (Fotos/Storage), 3.6 (Recordatorios), 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD).
+- Riesgos/pendientes: (1) El cambio a SQL Server (3.3) requiere regenerar migración EF y adaptar pruebas (SQLite en memoria → SQL Server LocalDB o SQLServer in-memory). (2) Las tipografías se cargan de Google Fonts CDN — en producción se podría autohospedar con fontsource para privacidad/rendimiento. (3) Bootstrap 5.3 por CDN — se podría bundle local en Fase 3 final. (4) Memorial digital sigue parqueado (no construir).

@@ -16,27 +16,27 @@
     <input type="hidden" asp-for="dueno.Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="dueno.Nombres"></label>
         <input asp-for="dueno.Nombres" class="form-control" autocomplete="given-name" />
         <span asp-validation-for="dueno.Nombres" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="dueno.Apellidos"></label>
         <input asp-for="dueno.Apellidos" class="form-control" autocomplete="family-name" />
         <span asp-validation-for="dueno.Apellidos" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="dueno.Telefono"></label>
         <input asp-for="dueno.Telefono" class="form-control" inputmode="tel" autocomplete="tel" placeholder="300 123 4567" />
         <span asp-validation-for="dueno.Telefono" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="dueno.Correo"></label>
         <input asp-for="dueno.Correo" class="form-control" inputmode="email" autocomplete="email" placeholder="nombre@correo.com" />
         <span asp-validation-for="dueno.Correo" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="dueno.Direccion"></label>
         <input asp-for="dueno.Direccion" class="form-control" autocomplete="street-address" />
         <span asp-validation-for="dueno.Direccion" class="text-danger"></span>
