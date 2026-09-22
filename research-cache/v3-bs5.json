@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://smth.uk",
+    "name": "Use design tokens to customise Bootstrap by Sam Smith",
+    "snippet": "Jan 12, 2020 — Design tokens simply offer an agnostic way to store variables . That is to say, those variables can in theory be used in any project, regardless ...",
+    "host_name": "smth.uk",
+    "rank": 0,
+    "date": "Jan 12, 2020",
+    "favicon": ""
+  },
+  {
+    "url": "https://getbootstrap.com",
+    "name": "CSS variables",
+    "snippet": "Use Bootstrap's CSS custom properties . These provide easy access to commonly used values like our theme colors, breakpoints, and primary font stacks",
+    "host_name": "getbootstrap.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://bootstrap.build",
+    "name": "How to Customize Bootstrap 5 Colors",
+    "snippet": "Jun 3, 2026 — Recolor your Bootstrap theme in the browser or with Sass: override $primary and $ theme - colors , add a brand color , and export the result.",
+    "host_name": "bootstrap.build",
+    "rank": 2,
+    "date": "Jun 3, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://pinegrow.com",
+    "name": "Customizing Bootstrap 5 themes",
+    "snippet": "Sep 16, 2021 — This tutorial will demonstrate how to use SAS S variables to customize a Bootstrap 5 theme in Pinegrow. colors and fonts.",
+    "host_name": "pinegrow.com",
+    "rank": 3,
+    "date": "Sep 16, 2021",
+    "favicon": ""
+  },
+  {
+    "url": "https://surveyjs.io",
+    "name": "SurveyJS Design Tokens — CSS-Based Customization",
+    "snippet": "SurveyJS themes use a unified design token system that allows you to style all four SurveyJS products—Form Library, Survey Creator, Dashboard, and PDF Generator ...",
+    "host_name": "surveyjs.io",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -179,7 +179,7 @@ dotnet clean
 | `AppContext` ambiguo con `System.AppContext` | Conflicto de nombres | En `Program.cs` usar: `using AppContext = MascotaFeliz.App.Persistencia.AppContext;` |
 | Error `AddDbContext was called with configuration but context only declares parameterless constructor` | Falta constructor con `DbContextOptions` | Añadir a `AppContext`: `public AppContext(DbContextOptions<AppContext> options) : base(options) {}` |
 | Razor no encuentra `*Model` | Falta namespace en `_ViewImports` | Añadir `@namespace MascotaFeliz.App.Frontend.Pages` y `@using MascotaFeliz.App.Frontend.Pages` |
-| `Framework Microsoft.AspNetCore.App 8.0 not found` | SDK instalado es 9.0, csproj apunta a 8.0 | Cambiar todos los `TargetFramework` a `net9.0` |
+| `Framework Microsoft.AspNetCore.App 8.0 not found` | SDK instalado es 9.0, csproj apunta a 8.0 | Cambiar todos los `TargetFramework` a `net10.0` (LTS) |
 | Datos duplicados después de un reinicio | Seed data corre cada vez | Envolver cada insert en `if (!context.Tabla.Any())` (ya hecho en Program.cs) |
 | "Failed to determine the https port" | No hay certificado dev HTTPS | Ejecutar `dotnet dev-certs https --trust` o usar HTTP (`http://localhost:5000`) |
 

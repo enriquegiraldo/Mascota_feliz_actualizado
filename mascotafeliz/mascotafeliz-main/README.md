@@ -21,14 +21,14 @@ Sistema de gestión para la clínica veterinaria **Mascota Feliz**, desarrollado
 
 ## 🛠️ Tecnologías
 
-- **.NET 9.0** (SDK `9.0.318`)
+- **.NET 10.0 LTS** (SDK `10.0.401`) — migrado desde .NET 9 STS.
 - **ASP.NET Core Razor Pages** (Frontend)
-- **Entity Framework Core 8.0** (ORM) sobre SQLite
-- **SQLite** (Base de datos embebida, sin instalación)
-- **Bootstrap 4.6** (UI base por CDN) + **tema propio** en `wwwroot/css/site.css` (tokens, modo cálido, componentes)
-- **jQuery Validate** (validación en cliente) y **JS ligero** propio en `wwwroot/js/site.js`
+- **Entity Framework Core 10.0.12** (ORM) sobre SQLite (en proceso de migración a Azure SQL).
+- **SQLite** (Base de datos embebida para dev; producción será Azure SQL Database).
+- **Bootstrap 5.3** (UI base por CDN) + **tema propio** en `wwwroot/css/site.css` (en proceso de reemplazo desde Bootstrap 4.6).
+- **jQuery Validate** (validación en cliente) y **JS ligero** propio en `wwwroot/js/site.js`, `wwwroot/js/command-palette.js`.
 
-> Nota de versiones: .NET 9 es STS (fin de soporte 10-nov-2026). Como parte de la Fase 2 se evalúa migrar a **.NET 10 LTS** y alinear EF Core. Ver `docs/decisiones.md`.
+> **Fase 3 en curso:** migración a .NET 10 completada. Pendiente: cambio a Bootstrap 5 + nueva identidad visual, migración SQLite→Azure SQL, Blob Storage para fotos, ASP.NET Core Identity con roles, entidad Cita. Ver `docs/decisiones.md` y `docs/propuesta-visual.md`.
 
 ---
 
@@ -106,7 +106,7 @@ MascotaFelizGrupo5/
 
 ## ✅ Requisitos Previos
 
-- **.NET 9.0 SDK** (o superior)
+- **.NET 10.0 SDK** (LTS) o superior
   - Verificar instalación:
     ```bash
     dotnet --version

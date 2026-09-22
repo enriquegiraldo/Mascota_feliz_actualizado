@@ -306,3 +306,26 @@ Work Log:
 
 Stage Summary:
 - Fase 2 cerrada. docs/decisiones.md actualizado. Pendiente: confirmación de Giraldo sobre (a) el plan de infraestructura y (b) la suscripción Azure, antes de empezar la Fase 3.1 (migración .NET 10).
+
+---
+Task ID: 13
+Agent: Z.ai Code (orquestador) — Fase 3.0 + 3.1 (identidad + .NET 10)
+Task: Fase 2 cerrada por Giraldo. Avanzar sub-fases que NO tocan infraestructura: 3.0 (proponer direcciones visuales) y 3.1 (migrar 4 proyectos a .NET 10 + EF Core 10). SQL Server/Storage/Identity quedan pendientes de confirmación Azure.
+
+Work Log:
+- Fase 2 CERRADA: decisiones registradas en docs/decisiones.md (alcance, UI Bootstrap 5, .NET 10, Citas/Fotos/Recordatorios/Identity, identidad nueva, Azure). Memorial digital parqueado (no construir).
+- 3.1 Migración a .NET 10:
+  - Instalado .NET 10 SDK (10.0.401) en $HOME/.dotnet (convive con 9.0.318).
+  - Actualizados 5 csproj: net9.0 → net10.0 (Dominio, Persistencia, Frontend, Consola, Pruebas).
+  - EF Core 8.0.0 → 10.0.12 (parche más reciente; 10.0.0 base traía warnings NU1903 de System.Security.Cryptography.Xml 9.0.0 y SQLitePCLRaw 2.1.11; el parche 10.0.12 los resuelve).
+  - `dotnet build` → 0 errores, 0 warnings (antes 24 warnings NU1903, ahora 0).
+  - `dotnet test` → 49/49 pasan en .NET 10.
+  - Smoke test runtime: app arranca en http://localhost:5000 con .NET 10, /, /Mascotas/ListaMascotas y /Buscar?q=fir (JSON) responden 200. Búsqueda funciona.
+- 3.0 Identidad visual:
+  - docs/propuesta-visual.md con 3 direcciones: A "Verde Cálido" (verde esmeralda #0d7a5f + ámbar #f59e0b, Inter+Fraunces — mi recomendada), B "Azul Profesional" (índigo, Inter+Sora — solo si Giraldo la pide explícitamente), C "Naturaleza Vibrante" (verde+naranja+violeta, Plus Jakarta Sans+Bricolage — más arriesgada). Descarta la paleta "Cálida clínica" y el logo huella. Tipografías libres (OFL/SIL). Pendiente elección de Giraldo.
+- README.md y AGENTE.md actualizados (.NET 10, EF Core 10.0.12, requisitos).
+
+Stage Summary:
+- Estado: solución completa (5 proyectos) migrada a .NET 10 LTS con 0 errores/0 warnings y 49/49 pruebas. App corre en .NET 10. Identidad visual propuesta (3 direcciones).
+- Próximo paso: Giraldo elige dirección visual (A/B/C) → arranco 3.2 (Bootstrap 5 + tema). Confirmación Azure pendiente para 3.3 (SQL Server), 3.5 (Storage), 3.9 (CI/CD).
+- Riesgos/pendientes: (1) Sigo esperando confirmación de Giraldo sobre suscripción Azure (bloquea SQL Server, Blob Storage, CI/CD). (2) Versión de EF Core.Design sigue como PrivateAssets all — normal. (3) El cambio a SQL Server (3.3) requerirá regenerar migración EF y adaptar pruebas (SQLite en memoria → SQL Server LocalDB en pruebas). (4) Bootstrap 4.6 → 5.3 requiere revisar clases (ml-auto→ms-auto, data-toggle→data-bs-toggle, etc.).
