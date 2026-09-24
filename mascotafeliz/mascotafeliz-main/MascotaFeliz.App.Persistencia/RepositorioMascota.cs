@@ -40,6 +40,13 @@ namespace MascotaFeliz.App.Persistencia
                 mascotaEncontrada.Color = mascota.Color;
                 mascotaEncontrada.Especie = mascota.Especie;
                 mascotaEncontrada.Raza = mascota.Raza;
+                // FotoUrl: se actualiza solo si viene un valor nuevo (gestionada por
+                // el servicio de fotos en OnPost). Si llega null, se preserva la foto
+                // existente para no borrarla al editar otros campos.
+                if (!string.IsNullOrEmpty(mascota.FotoUrl))
+                {
+                    mascotaEncontrada.FotoUrl = mascota.FotoUrl;
+                }
                 // Los tres vínculos (dueño, veterinario e historia) se actualizan
                 // desde el formulario mediante selectores. Si el usuario elige
                 // "sin asignar", el valor llega null y se desvincula correctamente.

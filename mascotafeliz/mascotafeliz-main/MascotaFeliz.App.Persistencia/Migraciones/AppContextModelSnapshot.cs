@@ -131,6 +131,10 @@ namespace MascotaFeliz.App.Persistencia.Migraciones
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
+                    b.Property<string>("FotoUrl")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<int?>("HistoriaId")
                         .HasColumnType("int");
 

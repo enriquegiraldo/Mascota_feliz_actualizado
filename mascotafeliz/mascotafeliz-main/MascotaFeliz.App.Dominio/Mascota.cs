@@ -30,6 +30,14 @@ namespace MascotaFeliz.App.Dominio
         [Display(Name = "Raza")]
         public string Raza { get; set; }
 
+        /// <summary>
+        /// URL relativa de la foto principal de la mascota.
+        /// En dev: /uploads/mascotas/<guid>.<ext>; en prod: URL del Blob Storage.
+        /// </summary>
+        [StringLength(300)]
+        [Display(Name = "Foto")]
+        public string FotoUrl { get; set; }
+
         [Display(Name = "Veterinario")]
         public int? VeterinarioId { get; set; }
         public Veterinario Veterinario { get; set; }

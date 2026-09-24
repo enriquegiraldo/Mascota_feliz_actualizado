@@ -21,16 +21,23 @@ else
     @foreach (var m in Model)
     {
         <a class="mf-card mf-card--clickable mf-tarjeta-mascota" asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@m.Id">
-            <span class="mf-tarjeta-mascota-avatar mf-avatar-@(m.Especie == "Gato" ? "gato" : "perro")" aria-hidden="true">
-                @if (m.Especie == "Gato")
-                {
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8C8 8 6 11 6 14v6h12v-6c0-3-2-6-6-6zM6 4l3 4-2 1-3-3zM18 4l2 2-3 3-2-1z"/></svg>
-                }
-                else
-                {
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10c0-3 2-5 5-5 1 0 2 1 3 1s2-1 3-1c3 0 5 2 5 5v3h-3v6H7v-6H4z"/></svg>
-                }
-            </span>
+            @if (!string.IsNullOrEmpty(m.FotoUrl))
+            {
+                <img src="@m.FotoUrl" alt="Foto de @m.Nombre" class="mf-foto-mini" />
+            }
+            else
+            {
+                <span class="mf-tarjeta-mascota-avatar mf-avatar-@(m.Especie == "Gato" ? "gato" : "perro")" aria-hidden="true">
+                    @if (m.Especie == "Gato")
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8C8 8 6 11 6 14v6h12v-6c0-3-2-6-6-6zM6 4l3 4-2 1-3-3zM18 4l2 2-3 3-2-1z"/></svg>
+                    }
+                    else
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10c0-3 2-5 5-5 1 0 2 1 3 1s2-1 3-1c3 0 5 2 5 5v3h-3v6H7v-6H4z"/></svg>
+                    }
+                </span>
+            }
             <span style="flex:1;min-width:0;">
                 <strong>@m.Nombre</strong>
                 <div class="mf-muted" style="font-size:.82rem;">

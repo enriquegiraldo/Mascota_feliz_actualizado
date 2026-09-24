@@ -19,3 +19,12 @@ logs/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# ===== Fotos subidas en desarrollo (no versionar) =====
+MascotaFeliz.App.Frontend/wwwroot/uploads/mascotas/*
+!MascotaFeliz.App.Frontend/wwwroot/uploads/mascotas/.gitkeep
+
+# ===== Secretos (nunca versionar) =====
+appsettings.*.Local.json
+*.pfx
+.env

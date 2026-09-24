@@ -1,6 +1,7 @@
 using AppContext = MascotaFeliz.App.Persistencia.AppContext;
 using MascotaFeliz.App.Dominio;
 using MascotaFeliz.App.Persistencia;
+using MascotaFeliz.App.Frontend.Servicios;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,17 @@ builder.Services.AddScoped<IRepositorioMascota, RepositorioMascota>();
 builder.Services.AddScoped<IRepositorioHistoria, RepositorioHistoria>();
 builder.Services.AddScoped<IRepositorioVisitaPyP, RepositorioVisitaPyP>();
 builder.Services.AddScoped<IRepositorioCita, RepositorioCita>();
+
+// Servicio de fotos: Blob Storage en producción (si hay connection string),
+// almacenamiento local en wwwroot/uploads en desarrollo.
+if (!string.IsNullOrWhiteSpace(builder.Configuration["Storage:ConnectionString"]))
+{
+    builder.Services.AddScoped<IServicioFotos, ServicioFotosBlob>();
+}
+else
+{
+    builder.Services.AddScoped<IServicioFotos, ServicioFotosLocal>();
+}
 
 var app = builder.Build();
 

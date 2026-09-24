@@ -34,16 +34,23 @@
 
 <section class="mf-ficha mf-hero-mascota" style="background:linear-gradient(135deg,var(--mf-verde-claro2) 0%,var(--mf-arena) 100%);">
     <div class="mf-hero-mascota-contenido">
-        <span class="mf-hero-avatar mf-hero-avatar--@(Model.mascota.Especie == "Gato" ? "gato" : "perro")" aria-hidden="true">
-            @if (Model.mascota.Especie == "Gato")
-            {
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8C8 8 6 11 6 14v6h12v-6c0-3-2-6-6-6zM6 4l3 4-2 1-3-3zM18 4l2 2-3 3-2-1z"/></svg>
-            }
-            else
-            {
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10c0-3 2-5 5-5 1 0 2 1 3 1s2-1 3-1c3 0 5 2 5 5v3h-3v6H7v-6H4z"/></svg>
-            }
-        </span>
+        @if (!string.IsNullOrEmpty(Model.mascota.FotoUrl))
+        {
+            <img src="@Model.mascota.FotoUrl" alt="Foto de @Model.mascota.Nombre" class="mf-foto-avatar-grande" />
+        }
+        else
+        {
+            <span class="mf-hero-avatar mf-hero-avatar--@(Model.mascota.Especie == "Gato" ? "gato" : "perro")" aria-hidden="true">
+                @if (Model.mascota.Especie == "Gato")
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8C8 8 6 11 6 14v6h12v-6c0-3-2-6-6-6zM6 4l3 4-2 1-3-3zM18 4l2 2-3 3-2-1z"/></svg>
+                }
+                else
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10c0-3 2-5 5-5 1 0 2 1 3 1s2-1 3-1c3 0 5 2 5 5v3h-3v6H7v-6H4z"/></svg>
+                }
+            </span>
+        }
         <div>
             <span class="mf-badge">@(Model.mascota.Especie ?? "Mascota") · @Model.mascota.Raza</span>
             <h1 style="margin-top:.4rem;">@Model.mascota.Nombre</h1>

@@ -412,3 +412,34 @@ Stage Summary:
 - Estado: entidad Cita completa (Dominio→Persistencia→Frontend) con CRUD, búsqueda, filtros, paginación, badges de estado, command palette y 11 pruebas. 60/60 tests. Build 0/0. Migración EF AddCita generada.
 - Próximo paso: 3.5 (Fotos de mascota con Blob Storage / Azurite en dev). Después 3.6 (Recordatorios visuales), 3.7 (Identity), 3.8 (sitio público con /Agendar), 3.9 (CI/CD).
 - Riesgos/pendientes: (1) La vista pública /Agendar queda para 3.8 (sitio público) — por ahora las citas se crean desde el panel. (2) No hay validación de conflictos de horario (dos citas mismo vet+hora) — se podría añadir en una capa de Servicios. (3) El cambio de estado no genera notificaciones (email/WhatsApp) — pendiente de decisión con Giraldo. (4) Memorial digital sigue parqueado (no construir).
+
+---
+Task ID: 17
+Agent: Z.ai Code (orquestador) — Fase 3.5 (Fotos de mascota)
+Task: Implementar subida de foto principal por mascota. Abstracción IServicioFotos con dos implementaciones: local (wwwroot/uploads, dev) y Blob Storage (prod). Integración en EditarMascota con preview y validación.
+
+Work Log:
+- Giraldo confirmó "sigue con el 3.5".
+- Dominio: añadida columna FotoUrl (string, StringLength 300) a Mascota.cs.
+- Persistencia: UpdateMascota preserva FotoUrl si llega null (no se borra al editar otros campos). Migración AddFotoMascota generada (añade columna FotoUrl a tabla Mascotas).
+- Abstracción IServicioFotos en MascotaFeliz.App.Frontend/Servicios/:
+  - GuardarFotoAsync(IFormFile, mascotaId) → devuelve URL.
+  - EliminarFotoAsync(url).
+  - ExtensionesPermitidas: .jpg, .jpeg, .png, .webp. TamanoMaximo: 2MB.
+- ServicioFotosLocal (dev): guarda en wwwroot/uploads/mascotas/, nombre único mascota-{id}-{guid}.{ext}, sirve como StaticFiles. Valida extensión y tamaño.
+- ServicioFotosBlob (prod): Azure.Storage.Blobs (paquete 12.23.0). Contenedor "mascotas-fotos" (CreateIfNotExists, PublicAccessType.Blob). Devuelve URL absoluta del blob. Elimina blob anterior al reemplazar.
+- Program.cs: registro condicional — si existe Storage:ConnectionString en config, usa Blob; sino, Local. Permite cambiar de entorno sin tocar código.
+- EditarMascota.cshtml.cs: inyecta IServicioFotos. OnPostAsync procesa la foto (si se subió): elimina la anterior, guarda la nueva, asigna URL a mascota.FotoUrl. OnPostEliminarFotoAsync para quitar la foto. Form enctype="multipart/form-data".
+- EditarMascota.cshtml: campo de foto con preview (120px, FileReader JS), acepta .jpg/.jpeg/.png/.webp, botón "Quitar foto" si ya tiene. Validación de extensión y tamaño.
+- DetallesMascotas: hero muestra la foto real (mf-foto-avatar-grande) si existe; si no, el avatar SVG de especie.
+- ViewComponent TarjetasMascotas: tarjetas muestran foto mini (mf-foto-mini) si existe.
+- CSS: nuevos estilos .mf-foto-upload, .mf-foto-preview, .mf-foto-placeholder, .mf-foto-controles, .mf-foto-mini, .mf-foto-avatar-grande.
+- .gitignore: excluido wwwroot/uploads/mascotas/* (con .gitkeep), appsettings.*.Local.json, *.pfx, .env.
+- Paquete añadido: Azure.Storage.Blobs 12.23.0 al Frontend.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan.
+- Migración AddFotoMascota generada (añade FotoUrl nvarchar(300) a Mascotas).
+
+Stage Summary:
+- Estado: fotos de mascota implementadas con abstracción IServicioFotos (local/Blob). Subida con preview, validación, eliminación. Mostradas en perfil, tarjetas y formulario. Build 0/0, 60/60 tests.
+- Próximo paso: 3.6 (Recordatorios visuales de vacunas). Después 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD).
+- Riesgos/pendientes: (1) En dev las fotos se guardan en wwwroot/uploads (no persisten en Azure). (2) No hay redimensionado/recorte en servidor — se podría añadir con SixLabors.ImageSharp si Giraldo lo pide. (3) El connection string de Storage se inyecta desde App Service en prod (no versionado). (4) Memorial digital sigue parqueado.

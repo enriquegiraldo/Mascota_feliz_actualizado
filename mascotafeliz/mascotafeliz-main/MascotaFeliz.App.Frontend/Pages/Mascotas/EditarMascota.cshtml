@@ -12,9 +12,41 @@
     <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaMascotas">← Volver</a>
 </div>
 
-<form method="post" class="mf-ficha mf-form">
+<form method="post" enctype="multipart/form-data" class="mf-ficha mf-form">
     <input type="hidden" asp-for="mascota.Id" />
+    <input type="hidden" asp-for="mascota.FotoUrl" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    @* Foto de la mascota *@
+    <div class="mb-3">
+        <label asp-for="Foto">Foto de la mascota</label>
+        <div class="mf-foto-upload">
+            <div class="mf-foto-preview" id="fotoPreview">
+                @if (!string.IsNullOrEmpty(Model.mascota.FotoUrl))
+                {
+                    <img src="@Model.mascota.FotoUrl" alt="Foto de @Model.mascota.Nombre" />
+                }
+                else
+                {
+                    <span class="mf-foto-placeholder" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </span>
+                }
+            </div>
+            <div class="mf-foto-controles">
+                <input asp-for="Foto" type="file" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
+                <small class="mf-muted">JPG, PNG o WebP · máx. 2 MB</small>
+                @if (!string.IsNullOrEmpty(Model.mascota.FotoUrl))
+                {
+                    <form method="post" asp-page-handler="EliminarFoto" asp-route-mascotaId="@Model.mascota.Id"
+                          data-mf-borrar="true" data-nombre="la foto actual" style="margin-top:.5rem;">
+                        <button type="submit" class="btn btn-ghost btn-sm">Quitar foto</button>
+                    </form>
+                }
+                <span asp-validation-for="Foto" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
 
     <div class="mb-3">
         <label asp-for="mascota.Nombre"></label>
@@ -39,7 +71,7 @@
 
     <div class="mb-3">
         <label asp-for="mascota.DuenoId">Dueño</label>
-        <select asp-for="mascota.DuenoId" class="form-control" asp-items="Model.DuenosOpciones">
+        <select asp-for="mascota.DuenoId" class="form-select" asp-items="Model.DuenosOpciones">
             <option value="">— Sin dueño asignado —</option>
         </select>
         <span asp-validation-for="mascota.DuenoId" class="text-danger"></span>
@@ -47,7 +79,7 @@
 
     <div class="mb-3">
         <label asp-for="mascota.VeterinarioId">Veterinario</label>
-        <select asp-for="mascota.VeterinarioId" class="form-control" asp-items="Model.VeterinariosOpciones">
+        <select asp-for="mascota.VeterinarioId" class="form-select" asp-items="Model.VeterinariosOpciones">
             <option value="">— Sin veterinario asignado —</option>
         </select>
         <span asp-validation-for="mascota.VeterinarioId" class="text-danger"></span>
@@ -55,7 +87,7 @@
 
     <div class="mb-3">
         <label asp-for="mascota.HistoriaId">Historia clínica</label>
-        <select asp-for="mascota.HistoriaId" class="form-control" asp-items="Model.HistoriasOpciones">
+        <select asp-for="mascota.HistoriaId" class="form-select" asp-items="Model.HistoriasOpciones">
             <option value="">— Sin historia asignada —</option>
         </select>
         <span asp-validation-for="mascota.HistoriaId" class="text-danger"></span>
@@ -70,4 +102,22 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Preview de la foto antes de subir
+        document.addEventListener("DOMContentLoaded", function () {
+            var input = document.getElementById("Foto");
+            var preview = document.getElementById("fotoPreview");
+            if (!input || !preview) return;
+            input.addEventListener("change", function (e) {
+                var file = e.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (ev) {
+                        preview.innerHTML = '<img src="' + ev.target.result + '" alt="Vista previa" />';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
 }
