@@ -33,6 +33,9 @@ else
     builder.Services.AddScoped<IServicioFotos, ServicioFotosLocal>();
 }
 
+// Servicio de recordatorios de vacunas (visual, sin email).
+builder.Services.AddScoped<IServicioRecordatorios, ServicioRecordatorios>();
+
 var app = builder.Build();
 
 // Datos de ejemplo idempotentes (solo se insertan si la tabla está vacía).
@@ -83,39 +86,47 @@ using (var scope = app.Services.CreateScope())
 
     if (!context.VisitasPyP.Any())
     {
+        // Fechas relativas a hoy para que los recordatorios de vacunas sean reales.
+        var hoy = DateTime.Today;
         context.VisitasPyP.AddRange(
             new VisitaPyP
             {
                 HistoriaId = 1,
-                FechaVisita = new DateTime(2023, 1, 15),
+                FechaVisita = hoy.AddDays(-60),
                 Temperatura = 38.5f,
                 Peso = 28.0f,
                 FrecuenciaRespiratoria = 22,
                 FrecuenciaCardiaca = 110,
                 EstadoAnimo = "Activo y alerta",
-                Recomendaciones = "Refuerzo de vacunas en 30 días. Dieta balanceada para perro adulto."
+                Recomendaciones = "Dieta balanceada para perro adulto.",
+                ProximaVacuna = hoy.AddDays(5),   // próxima: en 5 días
+                TipoProximaVacuna = "Refuerzo de rabia"
             },
             new VisitaPyP
             {
                 HistoriaId = 1,
-                FechaVisita = new DateTime(2023, 6, 10),
+                FechaVisita = hoy.AddDays(-120),
                 Temperatura = 38.2f,
                 Peso = 29.5f,
                 FrecuenciaRespiratoria = 20,
                 FrecuenciaCardiaca = 105,
                 EstadoAnimo = "Tranquilo",
-                Recomendaciones = "Control de peso adecuado. Desparasitación trimestral."
+                Recomendaciones = "Control de peso adecuado. Desparasitación trimestral.",
+                ProximaVacuna = hoy.AddDays(-10),  // vencida: hace 10 días
+                TipoProximaVacuna = "Refuerzo de moquillo"
             },
             new VisitaPyP
             {
                 HistoriaId = 3,
-                FechaVisita = new DateTime(2023, 5, 10),
+                FechaVisita = hoy.AddDays(-90),
                 Temperatura = 38.8f,
                 Peso = 4.2f,
                 FrecuenciaRespiratoria = 28,
                 FrecuenciaCardiaca = 160,
                 EstadoAnimo = "Receloso",
-                Recomendaciones = "Esterilización recomendada. Revisión dental en 6 meses."
+                Recomendaciones = "Esterilización recomendada. Revisión dental en 6 meses.",
+                ProximaVacuna = hoy.AddDays(20),   // próxima: en 20 días
+                TipoProximaVacuna = "Triple felina"
             }
         );
     }

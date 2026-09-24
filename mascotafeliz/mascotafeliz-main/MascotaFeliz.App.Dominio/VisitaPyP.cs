@@ -40,6 +40,18 @@ namespace MascotaFeliz.App.Dominio
         [Display(Name = "Recomendaciones")]
         public string Recomendaciones { get; set; }
 
+        /// <summary>
+        /// Fecha programada para la próxima vacuna/refuerzo (opcional).
+        /// Se usa para calcular recordatorios visuales en el panel.
+        /// </summary>
+        [DataType(DataType.Date)]
+        [Display(Name = "Próxima vacuna")]
+        public DateTime? ProximaVacuna { get; set; }
+
+        [StringLength(100, ErrorMessage = "El tipo de vacuna no puede superar 100 caracteres.")]
+        [Display(Name = "Tipo de próxima vacuna")]
+        public string TipoProximaVacuna { get; set; }
+
         [Display(Name = "Historia clínica")]
         public int HistoriaId { get; set; }
         public Historia Historia { get; set; }

@@ -66,6 +66,20 @@
         <span asp-validation-for="visitaPyP.Recomendaciones" class="text-danger"></span>
     </div>
 
+    <h3 style="font-size:1rem;margin-top:1.25rem;color:var(--mf-gris);">Recordatorio de vacuna (opcional)</h3>
+    <div class="mf-grid-2">
+        <div class="mb-3">
+            <label asp-for="visitaPyP.ProximaVacuna"></label>
+            <input asp-for="visitaPyP.ProximaVacuna" class="form-control" type="date" />
+            <span asp-validation-for="visitaPyP.ProximaVacuna" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="visitaPyP.TipoProximaVacuna"></label>
+            <input asp-for="visitaPyP.TipoProximaVacuna" class="form-control" placeholder="Refuerzo de rabia, triple felina…" />
+            <span asp-validation-for="visitaPyP.TipoProximaVacuna" class="text-danger"></span>
+        </div>
+    </div>
+
     <div class="mf-tabla-acciones" style="margin-top:1rem;">
         <button type="submit" class="btn btn-primary mf-btn-tactil">Guardar visita</button>
         <a class="btn btn-ghost mf-btn-tactil" asp-page="/VisitasPyP/ListaVisitasPyP">Cancelar</a>

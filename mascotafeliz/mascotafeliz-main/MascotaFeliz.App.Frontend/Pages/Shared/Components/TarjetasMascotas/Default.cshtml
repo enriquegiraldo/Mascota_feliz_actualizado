@@ -44,7 +44,7 @@ else
                     @m.Especie · @m.Raza
                     @if (ViewBag.MostrarDueno != null && (bool)ViewBag.MostrarDueno && m.Dueno != null)
                     {
-                        <text> · Dueño: @m.Dueno.Nombres @m.Dueno.Apellidos</text>
+                        @: · Dueño: @m.Dueno.Nombres @m.Dueno.Apellidos
                     }
                 </div>
             </span>

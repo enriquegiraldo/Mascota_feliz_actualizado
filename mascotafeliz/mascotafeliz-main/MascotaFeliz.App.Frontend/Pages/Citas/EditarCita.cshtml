@@ -47,12 +47,7 @@
 
     <div class="mb-3">
         <label asp-for="cita.Estado"></label>
-        <select asp-for="cita.Estado" class="form-select">
-            @foreach (var est in estados)
-            {
-                <option value="@((int)est)">@est</option>
-            }
-        </select>
+        <select asp-for="cita.Estado" class="form-select" asp-items="Html.GetEnumSelectList<MascotaFeliz.App.Dominio.EstadoCita>()"></select>
         <span asp-validation-for="cita.Estado" class="text-danger"></span>
     </div>
 

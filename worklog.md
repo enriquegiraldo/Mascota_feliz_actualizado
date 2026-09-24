@@ -443,3 +443,26 @@ Stage Summary:
 - Estado: fotos de mascota implementadas con abstracción IServicioFotos (local/Blob). Subida con preview, validación, eliminación. Mostradas en perfil, tarjetas y formulario. Build 0/0, 60/60 tests.
 - Próximo paso: 3.6 (Recordatorios visuales de vacunas). Después 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD).
 - Riesgos/pendientes: (1) En dev las fotos se guardan en wwwroot/uploads (no persisten en Azure). (2) No hay redimensionado/recorte en servidor — se podría añadir con SixLabors.ImageSharp si Giraldo lo pide. (3) El connection string de Storage se inyecta desde App Service en prod (no versionado). (4) Memorial digital sigue parqueado.
+
+---
+Task ID: 18
+Agent: Z.ai Code (orquestador) — Fase 3.6 (Recordatorios visuales de vacunas)
+Task: Implementar recordatorios visuales de vacunas en el panel (tarjeta en Inicio calculada desde VisitaPyP.ProximaVacuna). Sin email (queda como mejora posterior).
+
+Work Log:
+- Giraldo confirmó "avanza con la 3.5" (ya completada, interpretado como 3.6).
+- Dominio: añadidos campos ProximaVacuna (DateTime?) y TipoProximaVacuna (string) a VisitaPyP. Permite registrar la fecha de la próxima vacuna desde el formulario de visita.
+- ServicioRecordatorios (IServicioRecordatorios): ObtenerRecordatorios(diasVentana) busca visitas con ProximaVacuna dentro de la ventana, las ordena por fecha, y devuelve DTOs RecordatorioVacuna (MascotaNombre, TipoProximaVacuna, ProximaVacuna, DiasRestantes, Etiqueta, Severidad). ContarProximas y ContarVencidas para badges.
+- Program.cs: registrado IServicioRecordatorios en DI. Semilla actualizada con fechas relativas a hoy (vencida hace 10 días, próxima en 5 días, futura en 20 días) para que haya recordatorios reales.
+- IndexModel: inyecta IServicioRecordatorios. Genera DonutSvg, LeyendaDonutHtml y RecordatoriosHtml como strings HTML en el code-behind (evita problemas del compilador Razor .NET 10 con bloques anidados y SVG).
+- Index.cshtml: sección "Vacunas próximas a vencer" con badges (vencida=rojo, próxima=ámbar, futura=verde), tarjetas clicables que enlazan al perfil de la mascota. @Html.Raw para renderizar HTML generado en servidor.
+- EditarVisitaPyP: añadidos campos ProximaVacuna (date) y TipoProximaVacuna (text) en una sección "Recordatorio de vacuna (opcional)".
+- CSS: nuevos estilos .mf-badge--vencida, .mf-lista-recordatorios, .mf-tarjeta-recordatorio*, .mf-tarjeta-recordatorio-ico--* (rojo/ámbar/verde según severidad). Variantes dark mode.
+- Migración AddProximaVacuna generada (añade columnas ProximaVacuna datetime2 y TipoProximaVacuna nvarchar(100) a VisitasPyP).
+- Bug de Razor .NET 10 encontrado y corregido: el compilador Razor de .NET 10 no soporta bloques @if dentro de <form> con tag helpers (asp-items). Síntomas: "asp-items" se parsea como resta C# ("asp" - "items"), generando errores CS0103. Solución: mover toda la lógica condicional fuera del form, generar HTML complejo en el code-behind con StringBuilder y renderizar con @Html.Raw. También se simplificó el SVG del donut (generado en C#, no en Razor).
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan.
+
+Stage Summary:
+- Estado: recordatorios visuales de vacunas implementados (tarjeta en Inicio con badges de severidad, fechas relativas, enlaces a perfiles). Campos ProximaVacuna/TipoProximaVacuna en formulario de visitas. Build 0/0, 60/60 tests.
+- Próximo paso: 3.7 (Identity + roles). Después 3.8 (sitio público), 3.9 (CI/CD).
+- Riesgos/pendientes: (1) El envío de recordatorios por email queda como mejora posterior (Giraldo pedirá confirmación). (2) El compilador Razor de .NET 10 es más estricto que .NET 9 — requiere generar HTML complejo en el code-behind con StringBuilder para evitar errores de parsing. (3) Memorial digital sigue parqueado.

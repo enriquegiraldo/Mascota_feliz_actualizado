@@ -82,7 +82,10 @@ else
                         <a asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@cita.Mascota.Id">@cita.Mascota.Nombre</a>
                         <div class="mf-muted" style="font-size:.8rem;">@cita.Mascota.Especie</div>
                     }
-                    else { <span class="mf-muted">—</span> }
+                    else
+                    {
+                        <span class="mf-muted">—</span>
+                    }
                 </td>
                 <td>
                     @(cita.Veterinario != null ? $"{cita.Veterinario.Nombres} {cita.Veterinario.Apellidos}" : "—")

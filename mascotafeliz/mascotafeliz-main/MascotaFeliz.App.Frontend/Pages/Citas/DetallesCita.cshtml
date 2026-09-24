@@ -60,7 +60,10 @@
                     <a asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@Model.cita.Mascota.Id">@Model.cita.Mascota.Nombre</a>
                     <span class="mf-muted" style="font-size:.85rem;"> · @Model.cita.Mascota.Especie · @Model.cita.Mascota.Raza</span>
                 }
-                else { <span class="mf-muted">—</span> }
+                else
+                {
+                    <span class="mf-muted">—</span>
+                }
             </dd>
         </div>
         <div class="mf-fila">
@@ -70,7 +73,10 @@
                 {
                     <a asp-page="/Veterinarios/DetallesVeterinarios" asp-route-veterinarioId="@Model.cita.Veterinario.Id">@Model.cita.Veterinario.Nombres @Model.cita.Veterinario.Apellidos</a>
                 }
-                else { <span class="mf-muted">—</span> }
+                else
+                {
+                    <span class="mf-muted">—</span>
+                }
             </dd>
         </div>
     </dl>

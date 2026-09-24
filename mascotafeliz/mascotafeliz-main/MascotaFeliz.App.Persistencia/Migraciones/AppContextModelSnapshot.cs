@@ -226,12 +226,19 @@ namespace MascotaFeliz.App.Persistencia.Migraciones
                     b.Property<float>("Peso")
                         .HasColumnType("real");
 
+                    b.Property<DateTime?>("ProximaVacuna")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Recomendaciones")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<float>("Temperatura")
                         .HasColumnType("real");
+
+                    b.Property<string>("TipoProximaVacuna")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

@@ -2,29 +2,6 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Inicio";
-
-    // Cálculo del donut de distribución por especie.
-    var colores = new[] { "#0d7a5f", "#f59e0b", "#6b7280", "#f08c00", "#2f9e44" };
-    var especies = Model.DistribucionEspecies.ToList();
-    var totalDist = especies.Sum(e => e.Value);
-    double cx = 60, cy = 60, r = 44, rInt = 28;
-    double angulo = -90; // empezar arriba
-    var arcos = new List<(string Especie, int Cuenta, string Color, string Path, double Porcentaje)>();
-    for (int i = 0; i < especies.Count; i++)
-    {
-        var (esp, cuenta) = especies[i];
-        var porcion = totalDist > 0 ? cuenta / (double)totalDist * 360 : 0;
-        var a0 = angulo * System.Math.PI / 180;
-        var a1 = (angulo + porcion) * System.Math.PI / 180;
-        var x0o = cx + r * System.Math.Cos(a0); var y0o = cy + r * System.Math.Sin(a0);
-        var x1o = cx + r * System.Math.Cos(a1); var y1o = cy + r * System.Math.Sin(a1);
-        var x0i = cx + rInt * System.Math.Cos(a1); var y0i = cy + rInt * System.Math.Sin(a1);
-        var x1i = cx + rInt * System.Math.Cos(a0); var y1i = cy + rInt * System.Math.Sin(a0);
-        var largeArc = porcion > 180 ? 1 : 0;
-        var path = $"M {x0o:F1},{y0o:F1} A {r},{r} 0 {largeArc} 1 {x1o:F1},{y1o:F1} L {x0i:F1},{y0i:F1} A {rInt},{rInt} 0 {largeArc} 0 {x1i:F1},{y1i:F1} Z";
-        arcos.Add((esp, cuenta, colores[i % colores.Length], path, totalDist > 0 ? cuenta / (double)totalDist : 0));
-        angulo += porcion;
-    }
 }
 
 <section class="mf-ficha mf-hero-mascota" style="background:linear-gradient(135deg,var(--mf-verde-claro2) 0%,var(--mf-arena) 100%);">
@@ -67,7 +44,7 @@
 
         <article class="mf-card mf-card--clickable">
             <div class="mf-kpi">
-                <span class="mf-kpi-ico mf-kpi-ico--terracota" aria-hidden="true">
+                <span class="mf-kpi-ico mf-kpi-ico--ambar" aria-hidden="true">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </span>
                 <div>
@@ -106,33 +83,14 @@
     </div>
 </section>
 
-@if (arcos.Any())
+@if (!string.IsNullOrEmpty(Model.DonutSvg))
 {
-    <section aria-labelledby="dist-titulo" class="mf-ficha" style="margin-top:1.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:1.5rem;">
-        <div style="flex:0 0 auto;">
-            <h2 id="dist-titulo" style="font-size:1.1rem;margin:0 0 .5rem;">Distribución por especie</h2>
-            <svg width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Donut de distribución de mascotas por especie" style="display:block;">
-                @foreach (var a in arcos)
-                {
-                    var pct = (a.Porcentaje * 100).ToString("0");
-                    <path d="@a.Path" fill="@a.Color" stroke="#ffffff" stroke-width="1.5"><title>@a.Especie: @a.Cuenta (@pct%)</title></path>
-                }
-                <text x="60" y="56" text-anchor="middle" font-size="20" font-weight="800" fill="#355c43">@totalDist</text>
-                <text x="60" y="72" text-anchor="middle" font-size="9" fill="#6b7280">mascotas</text>
-            </svg>
-        </div>
-        <ul class="mf-leyenda" style="flex:1 1 200px;list-style:none;padding:0;margin:0;display:grid;gap:.4rem;">
-            @foreach (var a in arcos)
-            {
-                var pct2 = (a.Porcentaje * 100).ToString("0");
-                <li class="mf-leyenda-item">
-                    <span class="mf-leyenda-punto" style="background:@a.Color;" aria-hidden="true"></span>
-                    <span>@a.Especie</span>
-                    <span class="mf-leyenda-valor">@a.Cuenta · @pct2%</span>
-                </li>
-            }
-        </ul>
-    </section>
+    @Html.Raw($"<section aria-labelledby=\"dist-titulo\" class=\"mf-ficha\" style=\"margin-top:1.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:1.5rem;\"><div style=\"flex:0 0 auto;\"><h2 id=\"dist-titulo\" style=\"font-size:1.1rem;margin:0 0 .5rem;\">Distribución por especie</h2>{Model.DonutSvg}</div><ul class=\"mf-leyenda\" style=\"flex:1 1 200px;list-style:none;padding:0;margin:0;display:grid;gap:.4rem;\">{Model.LeyendaDonutHtml}</ul></section>")
+}
+
+@if (!string.IsNullOrEmpty(Model.RecordatoriosHtml))
+{
+    @Html.Raw(Model.RecordatoriosHtml)
 }
 
 <section aria-labelledby="accesos-titulo" style="margin-top:1.5rem;">
@@ -142,6 +100,7 @@
         <a class="btn btn-ghost mf-btn-tactil" asp-page="/Duenos/EditarDueno">+ Nuevo dueño</a>
         <a class="btn btn-ghost mf-btn-tactil" asp-page="/Veterinarios/EditarVeterinario">+ Nuevo veterinario</a>
         <a class="btn btn-ghost mf-btn-tactil" asp-page="/VisitasPyP/EditarVisitaPyP">+ Nueva visita</a>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="/Citas/EditarCita">+ Nueva cita</a>
         <a class="btn btn-ghost mf-btn-tactil" asp-page="/Historias/ListaHistorias">Historias clínicas</a>
     </div>
 </section>

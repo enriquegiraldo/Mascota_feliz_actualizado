@@ -97,7 +97,10 @@
                 {
                     <a asp-page="/Duenos/DetallesDuenos" asp-route-duenoId="@Model.mascota.Dueno.Id">@Model.mascota.Dueno.Nombres @Model.mascota.Dueno.Apellidos</a>
                 }
-                else { <span class="mf-muted">Sin dueño asignado</span> }
+                else
+                {
+                    <span class="mf-muted">Sin dueño asignado</span>
+                }
             </dd>
         </div>
         <div class="mf-fila">
@@ -107,7 +110,10 @@
                 {
                     <a asp-page="/Veterinarios/DetallesVeterinarios" asp-route-veterinarioId="@Model.mascota.Veterinario.Id">@Model.mascota.Veterinario.Nombres @Model.mascota.Veterinario.Apellidos</a>
                 }
-                else { <span class="mf-muted">Sin veterinario asignado</span> }
+                else
+                {
+                    <span class="mf-muted">Sin veterinario asignado</span>
+                }
             </dd>
         </div>
     </dl>
