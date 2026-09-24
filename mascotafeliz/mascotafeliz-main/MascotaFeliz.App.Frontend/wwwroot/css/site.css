@@ -148,7 +148,9 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 .mf-badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .65rem; border-radius: var(--mf-radio-pill); font-size: .78rem; font-weight: 600; background: var(--mf-verde-claro); color: var(--mf-verde-osc); }
 .mf-badge--ambar { background: #fef3c7; color: var(--mf-ambar-osc); }
 .mf-badge--gris { background: var(--mf-gris-claro); color: var(--mf-gris); }
+.mf-badge--exito { background: #dcfce7; color: #15803d; }
 [data-bs-theme="dark"] .mf-badge--ambar { background: #3a2f10; color: #fcd34d; }
+[data-bs-theme="dark"] .mf-badge--exito { background: #0f2a1c; color: #4ade80; }
 
 /* ---- Formularios ---- */
 .mf-form { max-width: 660px; }
@@ -291,6 +293,7 @@ a:hover { color: var(--mf-verde-osc); text-decoration: none; }
 .mf-cmdk-item-ico--veterinario { background: var(--mf-gris); }
 .mf-cmdk-item-ico--historia { background: var(--mf-aviso); }
 .mf-cmdk-item-ico--visita { background: var(--mf-exito); }
+.mf-cmdk-item-ico--cita { background: var(--mf-verde-osc); }
 .mf-cmdk-item-cuerpo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .mf-cmdk-item-titulo { font-weight: 600; color: var(--mf-tinta); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mf-cmdk-item-sub { font-size: .8rem; color: var(--mf-gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

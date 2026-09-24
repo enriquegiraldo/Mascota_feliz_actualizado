@@ -1,0 +1,141 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.ListaCitasModel
+@{
+    ViewData["Title"] = "Citas";
+    var cultura = new System.Globalization.CultureInfo("es-CO");
+    var estados = Enum.GetValues(typeof(MascotaFeliz.App.Dominio.EstadoCita)).Cast<MascotaFeliz.App.Dominio.EstadoCita>();
+}
+
+<div class="mf-encabezado">
+    <div>
+        <h1>Citas</h1>
+        <p class="mf-muted">Gestión de citas solicitadas por dueños y asignadas a veterinarios.</p>
+    </div>
+    <div class="mf-acciones">
+        <a class="btn btn-primary mf-btn-tactil" asp-page="./EditarCita">+ Nueva cita</a>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="mf-aviso" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>@TempData["Error"]</span>
+    </div>
+}
+
+<form method="get" class="mf-buscador" role="search">
+    <div class="mf-input-busqueda">
+        <span class="mf-ico-lupa" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="search" name="Q" value="@Model.Q" placeholder="Buscar por mascota, veterinario o motivo…" aria-label="Buscar citas" />
+    </div>
+    <button type="submit" class="btn btn-outline-primary mf-btn-tactil">Buscar</button>
+    @if (!string.IsNullOrWhiteSpace(Model.Q) || Model.Estado.HasValue)
+    {
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaCitas">Limpiar</a>
+    }
+</form>
+
+<div class="mf-chips" role="group" aria-label="Filtrar por estado">
+    <a class="mf-chip @(!Model.Estado.HasValue ? "mf-chip--activo" : "")" asp-page="./ListaCitas" asp-route-Q="@Model.Q">Todas</a>
+    @foreach (var est in estados)
+    {
+        <a class="mf-chip @(Model.Estado == est ? "mf-chip--activo" : "")" asp-page="./ListaCitas" asp-route-Q="@Model.Q" asp-route-Estado="@((int)est)">@est</a>
+    }
+</div>
+
+@if (!Model.listaCitas.Any())
+{
+    <div class="mf-vacio">
+        <svg class="mf-vacio-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p>No hay citas que coincidan con la búsqueda.</p>
+        <a class="btn btn-primary mf-btn-tactil" asp-page="./EditarCita">Agendar la primera cita</a>
+    </div>
+}
+else
+{
+    <div style="overflow-x:auto;">
+    <table class="mf-tabla">
+        <thead>
+            <tr>
+                <th>Fecha y hora</th>
+                <th>Mascota</th>
+                <th>Veterinario</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+                <th><span class="mf-sr-only">Acciones</span></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var cita in Model.listaCitas)
+        {
+            <tr>
+                <td>
+                    <strong>@cita.FechaHora.ToString("ddd d 'de' MMM, HH:mm", cultura)</strong>
+                    <div class="mf-muted" style="font-size:.8rem;">#@cita.Id</div>
+                </td>
+                <td>
+                    @if (cita.Mascota != null)
+                    {
+                        <a asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@cita.Mascota.Id">@cita.Mascota.Nombre</a>
+                        <div class="mf-muted" style="font-size:.8rem;">@cita.Mascota.Especie</div>
+                    }
+                    else { <span class="mf-muted">—</span> }
+                </td>
+                <td>
+                    @(cita.Veterinario != null ? $"{cita.Veterinario.Nombres} {cita.Veterinario.Apellidos}" : "—")
+                </td>
+                <td>@(string.IsNullOrWhiteSpace(cita.Motivo) ? "—" : cita.Motivo)</td>
+                <td>
+                    @{
+                        var claseBadge = cita.Estado switch
+                        {
+                            MascotaFeliz.App.Dominio.EstadoCita.Pendiente => "mf-badge mf-badge--ambar",
+                            MascotaFeliz.App.Dominio.EstadoCita.Confirmada => "mf-badge",
+                            MascotaFeliz.App.Dominio.EstadoCita.Atendida => "mf-badge mf-badge--exito",
+                            MascotaFeliz.App.Dominio.EstadoCita.Cancelada => "mf-badge mf-badge--gris",
+                            _ => "mf-badge"
+                        };
+                    }
+                    <span class="@claseBadge">@cita.Estado</span>
+                </td>
+                <td>
+                    <div class="mf-tabla-acciones">
+                        <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesCita" asp-route-citaId="@cita.Id">Detalle</a>
+                        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarCita" asp-route-citaId="@cita.Id">Editar</a>
+                        <form method="post" asp-page-handler="Eliminar" asp-route-citaId="@cita.Id"
+                              data-mf-borrar="true" data-nombre="la cita del @cita.FechaHora.ToString("d 'de' MMMM", cultura)">
+                            <button type="submit" class="btn btn-danger mf-btn-tactil" aria-label="Eliminar cita">Eliminar</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    </div>
+
+    <nav class="mf-paginacion" aria-label="Paginación" style="justify-content:space-between;">
+        <span class="mf-muted" style="border:none;background:none;">@Model.Total registro(s) · pág. @Model.Pagina de @Model.TotalPaginas</span>
+        <span style="display:flex;gap:.35rem;">
+            @if (Model.Pagina > 1)
+            {
+                <a asp-page="./ListaCitas" asp-route-Q="@Model.Q" asp-route-Estado="@((int?)Model.Estado)" asp-route-Pagina="@(Model.Pagina - 1)">‹ Anterior</a>
+            }
+            else
+            {
+                <span class="mf-deshab">‹ Anterior</span>
+            }
+            @if (Model.Pagina < Model.TotalPaginas)
+            {
+                <a asp-page="./ListaCitas" asp-route-Q="@Model.Q" asp-route-Estado="@((int?)Model.Estado)" asp-route-Pagina="@(Model.Pagina + 1)">Siguiente ›</a>
+            }
+            else
+            {
+                <span class="mf-deshab">Siguiente ›</span>
+            }
+        </span>
+    </nav>
+}

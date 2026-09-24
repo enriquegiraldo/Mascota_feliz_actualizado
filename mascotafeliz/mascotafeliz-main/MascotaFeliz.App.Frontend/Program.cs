@@ -19,6 +19,7 @@ builder.Services.AddScoped<IRepositorioVeterinario, RepositorioVeterinario>();
 builder.Services.AddScoped<IRepositorioMascota, RepositorioMascota>();
 builder.Services.AddScoped<IRepositorioHistoria, RepositorioHistoria>();
 builder.Services.AddScoped<IRepositorioVisitaPyP, RepositorioVisitaPyP>();
+builder.Services.AddScoped<IRepositorioCita, RepositorioCita>();
 
 var app = builder.Build();
 
@@ -103,6 +104,48 @@ using (var scope = app.Services.CreateScope())
                 FrecuenciaCardiaca = 160,
                 EstadoAnimo = "Receloso",
                 Recomendaciones = "Esterilización recomendada. Revisión dental en 6 meses."
+            }
+        );
+    }
+
+    if (!context.Citas.Any())
+    {
+        context.Citas.AddRange(
+            new Cita
+            {
+                MascotaId = 1,
+                VeterinarioId = 1,
+                FechaHora = new DateTime(2026, 9, 28, 10, 0, 0),
+                Motivo = "Control de vacunación anual",
+                Estado = EstadoCita.Pendiente,
+                NotasInternas = "Verificar refuerzo de rabia."
+            },
+            new Cita
+            {
+                MascotaId = 3,
+                VeterinarioId = 2,
+                FechaHora = new DateTime(2026, 9, 25, 15, 30, 0),
+                Motivo = "Consulta general y desparasitación",
+                Estado = EstadoCita.Confirmada,
+                NotasInternas = "Dueño confirma asistencia por WhatsApp."
+            },
+            new Cita
+            {
+                MascotaId = 2,
+                VeterinarioId = 2,
+                FechaHora = new DateTime(2026, 9, 20, 9, 0, 0),
+                Motivo = "Limpieza dental",
+                Estado = EstadoCita.Atendida,
+                NotasInternas = "Sin complicaciones. Control en 30 días."
+            },
+            new Cita
+            {
+                MascotaId = 4,
+                VeterinarioId = 1,
+                FechaHora = new DateTime(2026, 9, 18, 14, 0, 0),
+                Motivo = "Cojera en pata delantera",
+                Estado = EstadoCita.Cancelada,
+                NotasInternas = "Dueño canceló por inconveniente de horario."
             }
         );
     }

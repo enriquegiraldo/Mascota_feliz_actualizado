@@ -1,0 +1,77 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.DetallesCitaModel
+@{
+    ViewData["Title"] = "Cita #" + Model.cita.Id;
+    var cultura = new System.Globalization.CultureInfo("es-CO");
+
+    var claseBadge = Model.cita.Estado switch
+    {
+        MascotaFeliz.App.Dominio.EstadoCita.Pendiente => "mf-badge mf-badge--ambar",
+        MascotaFeliz.App.Dominio.EstadoCita.Confirmada => "mf-badge",
+        MascotaFeliz.App.Dominio.EstadoCita.Atendida => "mf-badge mf-badge--exito",
+        MascotaFeliz.App.Dominio.EstadoCita.Cancelada => "mf-badge mf-badge--gris",
+        _ => "mf-badge"
+    };
+}
+
+<nav aria-label="Migas de pan" class="mf-migas">
+    <a asp-page="/Citas/ListaCitas">Citas</a>
+    <span aria-hidden="true">›</span>
+    <span aria-current="page">Cita #@Model.cita.Id</span>
+</nav>
+
+<div class="mf-encabezado">
+    <div>
+        <span class="@claseBadge">@Model.cita.Estado</span>
+        <h1 style="margin-top:.4rem;">Cita del @Model.cita.FechaHora.ToString("d 'de' MMMM 'de' yyyy", cultura)</h1>
+        <p class="mf-muted">Hora: @Model.cita.FechaHora.ToString("HH:mm", cultura)</p>
+    </div>
+    <div class="mf-acciones">
+        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarCita" asp-route-citaId="@Model.cita.Id">Editar</a>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaCitas">← Volver</a>
+    </div>
+</div>
+
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <h2 style="margin:0;">Datos de la cita</h2>
+    </div>
+    <dl>
+        <div class="mf-fila"><dt>Fecha y hora</dt><dd>@Model.cita.FechaHora.ToString("dddd d 'de' MMMM 'de' yyyy · HH:mm", cultura)</dd></div>
+        <div class="mf-fila"><dt>Estado</dt><dd><span class="@claseBadge">@Model.cita.Estado</span></dd></div>
+        <div class="mf-fila"><dt>Motivo</dt><dd>@(string.IsNullOrWhiteSpace(Model.cita.Motivo) ? "—" : Model.cita.Motivo)</dd></div>
+        <div class="mf-fila"><dt>Notas internas</dt><dd>@(string.IsNullOrWhiteSpace(Model.cita.NotasInternas) ? "—" : Model.cita.NotasInternas)</dd></div>
+        <div class="mf-fila"><dt>Identificador</dt><dd>#@Model.cita.Id</dd></div>
+    </dl>
+</div>
+
+<div class="mf-ficha">
+    <div class="mf-ficha-titulo">
+        <svg class="mf-ficha-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="4" cy="8" r="2"/><circle cx="18" cy="16" r="2"/><circle cx="4" cy="16" r="2"/><path d="M9 10c0 3 2 5 3 7 1-2 3-4 3-7"/></svg>
+        <h2 style="margin:0;">Mascota y veterinario</h2>
+    </div>
+    <dl>
+        <div class="mf-fila">
+            <dt>Mascota</dt>
+            <dd>
+                @if (Model.cita.Mascota != null)
+                {
+                    <a asp-page="/Mascotas/DetallesMascotas" asp-route-mascotaId="@Model.cita.Mascota.Id">@Model.cita.Mascota.Nombre</a>
+                    <span class="mf-muted" style="font-size:.85rem;"> · @Model.cita.Mascota.Especie · @Model.cita.Mascota.Raza</span>
+                }
+                else { <span class="mf-muted">—</span> }
+            </dd>
+        </div>
+        <div class="mf-fila">
+            <dt>Veterinario</dt>
+            <dd>
+                @if (Model.cita.Veterinario != null)
+                {
+                    <a asp-page="/Veterinarios/DetallesVeterinarios" asp-route-veterinarioId="@Model.cita.Veterinario.Id">@Model.cita.Veterinario.Nombres @Model.cita.Veterinario.Apellidos</a>
+                }
+                else { <span class="mf-muted">—</span> }
+            </dd>
+        </div>
+    </dl>
+</div>

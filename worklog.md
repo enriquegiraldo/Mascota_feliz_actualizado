@@ -380,3 +380,35 @@ Stage Summary:
 - Estado: proveedor de BD migrado a SQL Server. Migración EF inicial generada. Pruebas 49/49. Build 0/0. App lista para correr en Windows con LocalDB; en producción apuntará a Azure SQL.
 - Próximo paso: 3.4 (entidad Cita — Dominio→Persistencia→Frontend). Después 3.5 (Fotos/Storage), 3.6 (Recordatorios), 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD).
 - Riesgos/pendientes: (1) En el entorno Linux de QA no puedo probar runtime con LocalDB (no hay SQL Server); las pruebas unitarias sí pasan. Giraldo debe verificar en su Windows que la app arranca y Migrate() crea la BD. (2) La migración inicial se generó con el modelo actual (5 entidades) — cuando se añada Cita (3.4) se creará una nueva migración incremental. (3) SQLite eliminado de Persistencia/Frontend pero mantenido en Pruebas (documentado). (4) Memorial digital sigue parqueado (no construir).
+
+---
+Task ID: 16
+Agent: Z.ai Code (orquestador) — Fase 3.4 (entidad Cita)
+Task: Construir entidad Cita siguiendo AGENTE.md (Dominio→Persistencia→Frontend). Vista pública pendiente (3.8); aquí se hace el panel interno completo.
+
+Work Log:
+- Giraldo confirmó "continúa con 3.4".
+- Dominio:
+  - EstadoCita.cs: enum (Pendiente=0, Confirmada=1, Cancelada=2, Atendida=3).
+  - Cita.cs: Id, FechaHora, MascotaId (FK), VeterinarioId (FK), Motivo, Estado (EstadoCita), NotasInternas. DataAnnotations (Required, StringLength, DataType).
+- Persistencia:
+  - AppContext: DbSet<Cita> Citas; configuración de FK (Mascota, Veterinario) con Restrict; Estado con HasConversion<int> (se guarda como entero).
+  - IRepositorioCita + RepositorioCita: Add, Get (incluye Mascota+Veterinario), Update (actualiza FechaHora, FK, Motivo, Estado, NotasInternas), GetAll, GetCitasPorFiltro (accent-insensitive: mascota, veterinario, motivo, fecha dd/MM/yyyy), GetCitasPorMascota, GetCitasPorVeterinario, GetCitasPorEstado, Delete.
+  - Migración incremental AddCita generada (20260924030215_AddCita) — crea tabla Citas con FK a Mascotas y Veterinarios.
+- Program.cs: registrado IRepositorioCita/RepositorioCita en DI (Scoped). Sembradas 4 citas de ejemplo (Pendiente, Confirmada, Atendida, Cancelada) con motivos realistas.
+- Frontend (panel interno):
+  - Pages/Citas/ListaCitas: lista con búsqueda (mascota/vet/motivo/fecha), filtro por estado (chips: Todas/Pendiente/Confirmada/Cancelada/Atendida), paginación (10/pág). Ordena pendientes/confirmadas primero (por fecha asc), luego atendidas/canceladas. Badges de estado con colores (ámbar/verde/éxito/gris). Eliminar con confirmación.
+  - Pages/Citas/EditarCita: crear/editar con selectores de Mascota y Veterinario, datetime-local, motivo, estado (select), notas internas (textarea). Validación DataAnnotations + jQuery Validate. Acepta ?mascotaId= para preseleccionar. PRG + toasts.
+  - Pages/Citas/DetallesCita: ficha completa con migas, datos de la cita, mascota (link a perfil) y veterinario (link a detalle). Badges de estado.
+- Navbar: añadido "Citas" al menú.
+- Command palette: BuscarModel ampliado para buscar en Citas (por mascota, veterinario, motivo, fecha). Nuevo icono "Cita" (calendario con check) en JS y CSS (.mf-cmdk-item-ico--cita, color verde oscuro).
+- CSS: nuevo .mf-badge--exito (verde claro) para estado Atendida, con variante dark.
+- Pruebas xUnit (RepositorioCitaPruebas, 11 tests): Add, Get (incluye relaciones), Update (estado+fecha), GetCitasPorMascota, GetCitasPorVeterinario, GetCitasPorEstado, GetCitasPorFiltro por motivo/fecha, accent-insensitive ("vacunacion" encuentra "vacunación"), Delete, GetAll.
+- Bug encontrado por las pruebas: FK constraint failed porque la semilla de pruebas creaba mascota con DuenoId=1 sin dueño. Corregido añadiendo dueño primero.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan (antes 49, +11 de Cita).
+- Nota: la vista pública /Agendar (para que dueños soliciten citas sin login) se hará en 3.8 (sitio público). Aquí se construyó el panel interno completo.
+
+Stage Summary:
+- Estado: entidad Cita completa (Dominio→Persistencia→Frontend) con CRUD, búsqueda, filtros, paginación, badges de estado, command palette y 11 pruebas. 60/60 tests. Build 0/0. Migración EF AddCita generada.
+- Próximo paso: 3.5 (Fotos de mascota con Blob Storage / Azurite en dev). Después 3.6 (Recordatorios visuales), 3.7 (Identity), 3.8 (sitio público con /Agendar), 3.9 (CI/CD).
+- Riesgos/pendientes: (1) La vista pública /Agendar queda para 3.8 (sitio público) — por ahora las citas se crean desde el panel. (2) No hay validación de conflictos de horario (dos citas mismo vet+hora) — se podría añadir en una capa de Servicios. (3) El cambio de estado no genera notificaciones (email/WhatsApp) — pendiente de decisión con Giraldo. (4) Memorial digital sigue parqueado (no construir).

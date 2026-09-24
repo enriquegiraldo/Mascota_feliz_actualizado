@@ -11,9 +11,9 @@ namespace MascotaFeliz.App.Frontend.Pages
 {
     /// <summary>
     /// Búsqueda global (Cmd/Ctrl+K). Devuelve JSON con resultados de
-    /// mascotas, dueños, veterinarios, historias y visitas PyP que
-    /// coinciden con el término. La búsqueda es insensible a mayúsculas
-    /// y acentos (es-CO).
+    /// mascotas, dueños, veterinarios, historias, visitas PyP y citas
+    /// que coinciden con el término. La búsqueda es insensible a
+    /// mayúsculas y acentos (es-CO).
     /// </summary>
     public class BuscarModel : PageModel
     {
@@ -22,6 +22,7 @@ namespace MascotaFeliz.App.Frontend.Pages
         private readonly IRepositorioVeterinario _repoVeterinario;
         private readonly IRepositorioHistoria _repoHistoria;
         private readonly IRepositorioVisitaPyP _repoVisitaPyP;
+        private readonly IRepositorioCita _repoCita;
         private readonly IRepositorioMascota _repoMascotaLookup;
 
         public BuscarModel(
@@ -29,13 +30,15 @@ namespace MascotaFeliz.App.Frontend.Pages
             IRepositorioDueno repoDueno,
             IRepositorioVeterinario repoVeterinario,
             IRepositorioHistoria repoHistoria,
-            IRepositorioVisitaPyP repoVisitaPyP)
+            IRepositorioVisitaPyP repoVisitaPyP,
+            IRepositorioCita repoCita)
         {
             _repoMascota = repoMascota;
             _repoDueno = repoDueno;
             _repoVeterinario = repoVeterinario;
             _repoHistoria = repoHistoria;
             _repoVisitaPyP = repoVisitaPyP;
+            _repoCita = repoCita;
             _repoMascotaLookup = repoMascota;
         }
 
@@ -132,6 +135,21 @@ namespace MascotaFeliz.App.Frontend.Pages
                     Subtitulo = mascota != null ? $"{mascota.Nombre} · {v.EstadoAnimo}" : v.EstadoAnimo,
                     Url = $"/VisitasPyP/DetallesVisitaPyP?visitaPyPId={v.Id}",
                     Icono = "visita"
+                });
+            }
+
+            // Citas: por mascota, veterinario, motivo o fecha.
+            foreach (var c in _repoCita.GetCitasPorFiltro(termino).Take(5))
+            {
+                resultados.Add(new ResultadoBusqueda
+                {
+                    Tipo = "Cita",
+                    Titulo = $"Cita {c.FechaHora.ToString("d 'de' MMM, HH:mm", cultura)}",
+                    Subtitulo = c.Mascota != null
+                        ? $"{c.Mascota.Nombre} · {c.Estado}"
+                        : c.Estado.ToString(),
+                    Url = $"/Citas/DetallesCita?citaId={c.Id}",
+                    Icono = "cita"
                 });
             }
 

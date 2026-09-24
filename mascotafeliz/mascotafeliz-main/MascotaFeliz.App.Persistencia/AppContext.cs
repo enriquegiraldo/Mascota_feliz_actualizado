@@ -10,6 +10,7 @@ namespace MascotaFeliz.App.Persistencia
         public DbSet<Mascota> Mascotas { get; set; }
         public DbSet<Historia> Historias { get; set; }
         public DbSet<VisitaPyP> VisitasPyP { get; set; }
+        public DbSet<Cita> Citas { get; set; }
 
         public AppContext()
         {
@@ -71,6 +72,28 @@ namespace MascotaFeliz.App.Persistencia
                 .WithMany(h => h.VisitasPyP)
                 .HasForeignKey(v => v.HistoriaId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Cita>()
+                .HasKey(c => c.Id);
+
+            // Una cita pertenece a una mascota y la atiende un veterinario.
+            // Restrict: no se puede borrar una mascota/veterinario con citas asociadas.
+            modelBuilder.Entity<Cita>()
+                .HasOne(c => c.Mascota)
+                .WithMany()
+                .HasForeignKey(c => c.MascotaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Cita>()
+                .HasOne(c => c.Veterinario)
+                .WithMany()
+                .HasForeignKey(c => c.VeterinarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // El estado se almacena como entero en la base de datos.
+            modelBuilder.Entity<Cita>()
+                .Property(c => c.Estado)
+                .HasConversion<int>();
         }
     }
 }

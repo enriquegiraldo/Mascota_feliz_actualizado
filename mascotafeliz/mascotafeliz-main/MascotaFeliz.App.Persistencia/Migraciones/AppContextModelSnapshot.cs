@@ -22,6 +22,43 @@ namespace MascotaFeliz.App.Persistencia.Migraciones
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MascotaFeliz.App.Dominio.Cita", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaHora")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MascotaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Motivo")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("NotasInternas")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("VeterinarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MascotaId");
+
+                    b.HasIndex("VeterinarioId");
+
+                    b.ToTable("Citas");
+                });
+
             modelBuilder.Entity("MascotaFeliz.App.Dominio.Dueno", b =>
                 {
                     b.Property<int>("Id")
@@ -197,6 +234,25 @@ namespace MascotaFeliz.App.Persistencia.Migraciones
                     b.HasIndex("HistoriaId");
 
                     b.ToTable("VisitasPyP");
+                });
+
+            modelBuilder.Entity("MascotaFeliz.App.Dominio.Cita", b =>
+                {
+                    b.HasOne("MascotaFeliz.App.Dominio.Mascota", "Mascota")
+                        .WithMany()
+                        .HasForeignKey("MascotaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MascotaFeliz.App.Dominio.Veterinario", "Veterinario")
+                        .WithMany()
+                        .HasForeignKey("VeterinarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Mascota");
+
+                    b.Navigation("Veterinario");
                 });
 
             modelBuilder.Entity("MascotaFeliz.App.Dominio.Mascota", b =>

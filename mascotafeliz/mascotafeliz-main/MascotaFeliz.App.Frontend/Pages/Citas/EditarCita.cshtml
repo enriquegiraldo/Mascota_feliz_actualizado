@@ -1,0 +1,73 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.EditarCitaModel
+@{
+    ViewData["Title"] = Model.cita.Id > 0 ? "Editar cita" : "Nueva cita";
+    var estados = Enum.GetValues(typeof(MascotaFeliz.App.Dominio.EstadoCita)).Cast<MascotaFeliz.App.Dominio.EstadoCita>();
+}
+
+<div class="mf-encabezado">
+    <div>
+        <h1>@(Model.cita.Id > 0 ? "Editar cita" : "Nueva cita")</h1>
+        <p class="mf-muted">Agenda una cita entre una mascota y un veterinario.</p>
+    </div>
+    <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaCitas">← Volver</a>
+</div>
+
+<form method="post" class="mf-ficha mf-form">
+    <input type="hidden" asp-for="cita.Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="cita.MascotaId"></label>
+        <select asp-for="cita.MascotaId" class="form-select" asp-items="Model.MascotasOpciones">
+            <option value="">— Selecciona una mascota —</option>
+        </select>
+        <span asp-validation-for="cita.MascotaId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="cita.VeterinarioId"></label>
+        <select asp-for="cita.VeterinarioId" class="form-select" asp-items="Model.VeterinariosOpciones">
+            <option value="">— Selecciona un veterinario —</option>
+        </select>
+        <span asp-validation-for="cita.VeterinarioId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="cita.FechaHora"></label>
+        <input asp-for="cita.FechaHora" class="form-control" type="datetime-local" />
+        <span asp-validation-for="cita.FechaHora" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="cita.Motivo"></label>
+        <input asp-for="cita.Motivo" class="form-control" placeholder="Control, vacunación, consulta…" />
+        <span asp-validation-for="cita.Motivo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="cita.Estado"></label>
+        <select asp-for="cita.Estado" class="form-select">
+            @foreach (var est in estados)
+            {
+                <option value="@((int)est)">@est</option>
+            }
+        </select>
+        <span asp-validation-for="cita.Estado" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="cita.NotasInternas"></label>
+        <textarea asp-for="cita.NotasInternas" class="form-control" rows="2" placeholder="Notas para el equipo de la clínica (no visibles para el dueño)"></textarea>
+        <span asp-validation-for="cita.NotasInternas" class="text-danger"></span>
+    </div>
+
+    <div class="mf-tabla-acciones" style="margin-top:1rem;">
+        <button type="submit" class="btn btn-primary mf-btn-tactil">Guardar cita</button>
+        <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaCitas">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
