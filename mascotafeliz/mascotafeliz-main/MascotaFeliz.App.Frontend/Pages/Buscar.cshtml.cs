@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,6 +16,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// que coinciden con el término. La búsqueda es insensible a
     /// mayúsculas y acentos (es-CO).
     /// </summary>
+    [Authorize]
     public class BuscarModel : PageModel
     {
         private readonly IRepositorioMascota _repoMascota;
@@ -156,7 +158,8 @@ namespace MascotaFeliz.App.Frontend.Pages
             return new JsonResult(new { resultados });
         }
 
-        public class ResultadoBusqueda
+        [Authorize]
+    public class ResultadoBusqueda
         {
             public string Tipo { get; set; }
             public string Titulo { get; set; }

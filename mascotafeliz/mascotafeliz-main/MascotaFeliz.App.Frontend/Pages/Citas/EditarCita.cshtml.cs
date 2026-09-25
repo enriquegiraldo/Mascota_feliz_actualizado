@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Crear o editar una cita. Permite preseleccionar la mascota
     /// vía query string (desde el perfil de una mascota).
     /// </summary>
+    [Authorize]
     public class EditarCitaModel : PageModel
     {
         private readonly IRepositorioCita _repoCita;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Crear o editar una visita PyP. Permite preseleccionar la historia
     /// vía query string (desde el perfil de una mascota).
     /// </summary>
+    [Authorize]
     public class EditarVisitaPyPModel : PageModel
     {
         private readonly IRepositorioVisitaPyP _repoVisitaPyP;

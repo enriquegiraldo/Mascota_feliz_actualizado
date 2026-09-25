@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Detalle de una historia clínica: muestra la mascota asociada y la
     /// línea de tiempo de sus visitas PyP.
     /// </summary>
+    [Authorize]
     public class DetallesHistoriaModel : PageModel
     {
         private readonly IRepositorioHistoria _repoHistoria;

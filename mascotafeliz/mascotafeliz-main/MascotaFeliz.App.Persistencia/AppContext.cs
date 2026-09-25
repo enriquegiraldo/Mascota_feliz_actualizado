@@ -1,9 +1,14 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MascotaFeliz.App.Dominio;
 
 namespace MascotaFeliz.App.Persistencia
 {
-    public class AppContext : DbContext
+    /// <summary>
+    /// DbContext de la aplicación. Hereda de IdentityDbContext para incluir
+    /// las tablas de ASP.NET Core Identity en la misma base de datos.
+    /// </summary>
+    public class AppContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Dueno> Duenos { get; set; }
         public DbSet<Veterinario> Veterinarios { get; set; }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using MascotaFeliz.App.Frontend.Servicios;
 
 namespace MascotaFeliz.App.Frontend.Pages
 {
+    [Authorize]
     public class EditarMascotaModel : PageModel
     {
         private readonly IRepositorioMascota _repoMascota;

@@ -1,0 +1,51 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.Cuenta.LoginModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="mf-ficha" style="max-width:440px;margin:2rem auto;">
+    <div style="text-align:center;margin-bottom:1.5rem;">
+        <img src="~/img/logo.svg" alt="" width="64" height="64" style="margin:0 auto .5rem;" aria-hidden="true" />
+        <h1>Mascota Feliz</h1>
+        <p class="mf-muted">Panel interno de la clínica veterinaria</p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="mf-aviso" role="alert">
+            <span>@Model.ErrorMessage</span>
+        </div>
+    }
+
+    <form method="post" class="mf-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" class="form-control" autocomplete="email" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3 form-check">
+            <input asp-for="Input.RememberMe" class="form-check-input" />
+            <label asp-for="Input.RememberMe" class="form-check-label"></label>
+        </div>
+        <input type="hidden" asp-for="ReturnUrl" />
+        <button type="submit" class="btn btn-primary mf-btn-tactil" style="width:100%;">Iniciar sesión</button>
+    </form>
+
+    <div style="margin-top:1.5rem;text-align:center;">
+        <p class="mf-muted" style="font-size:.85rem;">
+            <strong>Usuario de prueba:</strong> admin@mascotafeliz.com<br />
+            <strong>Contraseña:</strong> Admin123!
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Listado de todas las visitas PyP con búsqueda por fecha/estado de ánimo
     /// y paginación.
     /// </summary>
+    [Authorize]
     public class ListaVisitasPyPModel : PageModel
     {
         private readonly IRepositorioVisitaPyP _repoVisitaPyP;

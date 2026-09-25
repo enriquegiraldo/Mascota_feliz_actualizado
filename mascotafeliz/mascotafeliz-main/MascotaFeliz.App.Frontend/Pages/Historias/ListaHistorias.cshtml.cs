@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Lista de historias clínicas. Cada historia se muestra con su mascota
     /// asociada, la fecha inicial y el número de visitas registradas.
     /// </summary>
+    [Authorize]
     public class ListaHistoriasModel : PageModel
     {
         private readonly IRepositorioHistoria _repoHistoria;

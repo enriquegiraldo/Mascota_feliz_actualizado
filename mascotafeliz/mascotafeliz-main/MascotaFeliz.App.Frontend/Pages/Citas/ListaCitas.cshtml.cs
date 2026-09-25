@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Lista de citas del panel interno, con búsqueda, filtro por estado
     /// y paginación.
     /// </summary>
+    [Authorize]
     public class ListaCitasModel : PageModel
     {
         private readonly IRepositorioCita _repoCita;

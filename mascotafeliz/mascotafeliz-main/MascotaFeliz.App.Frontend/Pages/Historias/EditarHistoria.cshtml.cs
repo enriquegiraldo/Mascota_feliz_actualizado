@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MascotaFeliz.App.Dominio;
@@ -9,6 +10,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Crear o editar una historia clínica. La historia es el contenedor
     /// de las visitas PyP de una mascota.
     /// </summary>
+    [Authorize]
     public class EditarHistoriaModel : PageModel
     {
         private readonly IRepositorioHistoria _repoHistoria;

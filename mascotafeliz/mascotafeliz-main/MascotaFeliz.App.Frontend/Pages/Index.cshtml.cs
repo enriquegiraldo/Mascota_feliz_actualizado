@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MascotaFeliz.App.Dominio;
 using MascotaFeliz.App.Persistencia;
@@ -8,6 +9,7 @@ using MascotaFeliz.App.Frontend.Servicios;
 
 namespace MascotaFeliz.App.Frontend.Pages
 {
+    [Authorize]
     /// <summary>
     /// Página de inicio del panel interno: muestra un resumen con conteos,
     /// distribución por especie (donut), recordatorios de vacunas y accesos rápidos.

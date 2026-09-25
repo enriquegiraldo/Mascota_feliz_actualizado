@@ -466,3 +466,33 @@ Stage Summary:
 - Estado: recordatorios visuales de vacunas implementados (tarjeta en Inicio con badges de severidad, fechas relativas, enlaces a perfiles). Campos ProximaVacuna/TipoProximaVacuna en formulario de visitas. Build 0/0, 60/60 tests.
 - Próximo paso: 3.7 (Identity + roles). Después 3.8 (sitio público), 3.9 (CI/CD).
 - Riesgos/pendientes: (1) El envío de recordatorios por email queda como mejora posterior (Giraldo pedirá confirmación). (2) El compilador Razor de .NET 10 es más estricto que .NET 9 — requiere generar HTML complejo en el code-behind con StringBuilder para evitar errores de parsing. (3) Memorial digital sigue parqueado.
+
+---
+Task ID: 19
+Agent: Z.ai Code (orquestador) — Fase 3.7 (Identity + roles)
+Task: Implementar ASP.NET Core Identity con roles Admin/Veterinario/Recepción. Panel protegido con [Authorize], sitio público sin login, semilla de Admin inicial.
+
+Work Log:
+- Giraldo confirmó "avanza con la 3.7".
+- Dominio: creado ApplicationUser (extiende IdentityUser con Nombres + Apellidos). Paquete Microsoft.Extensions.Identity.Stores 10.0.12 añadido al Dominio.
+- Persistencia: AppContext ahora hereda de IdentityDbContext<ApplicationUser> (incluye tablas de Identity en la misma BD SQL Server). Paquete Microsoft.AspNetCore.Identity.EntityFrameworkCore 10.0.12 añadido.
+- Frontend: paquetes Microsoft.AspNetCore.Identity.EntityFrameworkCore + Microsoft.AspNetCore.Identity.UI (10.0.12).
+- Program.cs:
+  - AddIdentity<ApplicationUser, IdentityRole> con configuración de contraseñas (min 8, mayúscula + dígito, sin especiales requeridos) y cookies (LoginPath=/Cuenta/Login, 8h expiración).
+  - UseAuthentication() añadido antes de UseAuthorization().
+  - SemillaIdentity.SembrarAsync: crea roles Admin/Veterinario/Recepcion + usuario Admin inicial (admin@mascotafeliz.com / Admin123!).
+  - El bloque using ahora es async (await SemillaIdentity).
+- Páginas de Cuenta:
+  - /Cuenta/Login: formulario de login con email+password+recordarme. Muestra credenciales de prueba. Redirige a ReturnUrl.
+  - /Cuenta/Logout: POST que cierra sesión y redirige a Login.
+  - /Cuenta/AccesoDenegado: página 403 con estilo.
+- _Layout.cshtml: si el usuario está autenticado, muestra su email + botón de cerrar sesión (form POST). CSS nuevo para .mf-nav-usuario*.
+- [Authorize] añadido a todas las páginas del panel (19 PageModels: Mascotas, Duenos, Veterinarios, Historias, VisitasPyP, Citas, Buscar, Index). Las páginas públicas (Error, NotFound, Privacy, Login, Logout, AccesoDenegado) NO tienen [Authorize].
+- Migración AddIdentity generada (crea tablas AspNetUsers, AspNetRoles, AspNetUserRoles, AspNetUserClaims, AspNetUserLogins, AspNetUserTokens, AspNetRoleClaims).
+- Paquetes añadidos: Microsoft.AspNetCore.Identity.EntityFrameworkCore 10.0.12 (Dominio + Persistencia + Frontend), Microsoft.AspNetCore.Identity.UI 10.0.12 (Frontend), Microsoft.Extensions.Identity.Stores 10.0.12 (Dominio).
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan.
+
+Stage Summary:
+- Estado: Identity con roles implementado. Panel protegido (requiere login). Usuario Admin inicial sembrado (admin@mascotafeliz.com / Admin123!). Páginas Login/Logout/AccesoDenegado. Build 0/0, 60/60 tests.
+- Próximo paso: 3.8 (sitio público: hero, servicios, equipo, CTA "Agendar cita", /Agendar para que dueños soliciten citas sin login). Después 3.9 (CI/CD GitHub Actions).
+- Riesgos/pendientes: (1) En dev las credenciales de Admin son visibles en la página de login — quitar en producción. (2) No hay gestión de usuarios (crear/editar/eliminar usuarios del personal) — se podría añadir como página de Admin. (3) Las páginas del sitio público (3.8) deben ser [AllowAnonymous] para que funcionen sin login. (4) El [Authorize] está en todos los PageModels pero no hay [Authorize(Roles=...)] granular aún — se puede añadir cuando Giraldo defina qué acciones requieren cada rol. (5) Memorial digital sigue parqueado.

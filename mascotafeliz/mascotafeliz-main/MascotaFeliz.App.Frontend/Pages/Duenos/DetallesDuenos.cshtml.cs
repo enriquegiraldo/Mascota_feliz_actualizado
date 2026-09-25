@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using MascotaFeliz.App.Persistencia;
 
 namespace MascotaFeliz.App.Frontend.Pages
 {
+    [Authorize]
     public class DetallesDuenosModel : PageModel
     {
         private readonly IRepositorioDueno _repoDueno;
