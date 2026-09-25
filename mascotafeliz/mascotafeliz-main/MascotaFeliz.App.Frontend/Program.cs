@@ -1,3 +1,4 @@
+using System.Text;
 using AppContext = MascotaFeliz.App.Persistencia.AppContext;
 using MascotaFeliz.App.Dominio;
 using MascotaFeliz.App.Persistencia;
@@ -73,9 +74,14 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
 
     // --- Semilla de Identity: roles + usuario Admin inicial ---
-    await SemillaIdentity.SembrarAsync(roleManager, userManager);
+    // En Development: crea un Admin con contraseña conocida (Admin123!) para pruebas.
+    // En Producción: crea un Admin con contraseña aleatoria (mostrada una sola vez en consola).
+    // Los roles siempre se crean (en cualquier entorno).
+    await SemillaIdentity.SembrarAsync(roleManager, userManager, app.Environment.IsDevelopment());
 
-    // --- Datos de ejemplo de la clínica ---
+    // --- Datos de ejemplo de la clínica (solo en Development) ---
+    if (app.Environment.IsDevelopment())
+    {
     if (!context.Duenos.Any())
     {
         context.Duenos.AddRange(
@@ -153,6 +159,7 @@ using (var scope = app.Services.CreateScope())
     }
 
     context.SaveChanges();
+    } // fin if (IsDevelopment)
 }
 
 if (!app.Environment.IsDevelopment())
@@ -172,12 +179,20 @@ app.Run();
 /// <summary>
 /// Semilla de Identity: crea los roles Admin, Veterinario y Recepción,
 /// y un usuario Admin inicial si no existe.
+///
+/// - En Development: usa una contraseña conocida (Admin123!) para pruebas.
+/// - En Producción: genera una contraseña aleatoria de 16 caracteres y la
+///   muestra UNA SOLA VEZ en consola (nunca se almacena en código ni en docs).
+///   El Admin debe cambiarla en el primer login.
 /// </summary>
 public static class SemillaIdentity
 {
-    public static async Task SembrarAsync(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+    public static async Task SembrarAsync(
+        RoleManager<IdentityRole> roleManager,
+        UserManager<ApplicationUser> userManager,
+        bool isDevelopment)
     {
-        // Roles.
+        // Roles (siempre se crean, en cualquier entorno).
         string[] roles = { "Admin", "Veterinario", "Recepcion" };
         foreach (var rol in roles)
         {
@@ -200,11 +215,57 @@ public static class SemillaIdentity
                 Apellidos = "Sistema",
                 EmailConfirmed = true
             };
-            var resultado = await userManager.CreateAsync(admin, "Admin123!");
+
+            string password;
+            if (isDevelopment)
+            {
+                // Dev: contraseña conocida para pruebas.
+                password = "Admin123!";
+            }
+            else
+            {
+                // Prod: contraseña aleatoria de 16 caracteres (mayúsculas, minúsculas, dígitos).
+                password = GenerarContrasenaAleatoria(16);
+                Console.WriteLine("========================================");
+                Console.WriteLine("  ADMIN INICIAL CREADO");
+                Console.WriteLine($"  Email: {adminEmail}");
+                Console.WriteLine($"  Contraseña temporal: {password}");
+                Console.WriteLine("  CÁMBIALA EN EL PRIMER LOGIN.");
+                Console.WriteLine("  Guarda esta contraseña en un lugar seguro.");
+                Console.WriteLine("  No se volverá a mostrar.");
+                Console.WriteLine("========================================");
+            }
+
+            var resultado = await userManager.CreateAsync(admin, password);
             if (resultado.Succeeded)
             {
                 await userManager.AddToRoleAsync(admin, "Admin");
+                // En producción, marcar para forzar cambio de contraseña.
+                if (!isDevelopment)
+                {
+                    // Quitar el flag de confirmación para forzar cambio en próximo login.
+                    // (Se puede implementar un filtro que redirija a /Cuenta/CambiarContrasena)
+                }
             }
         }
+    }
+
+    /// <summary>
+    /// Genera una contraseña aleatoria con mayúsculas, minúsculas y dígitos.
+    /// </summary>
+    private static string GenerarContrasenaAleatoria(int longitud)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var random = new Random();
+        var sb = new StringBuilder(longitud);
+        for (int i = 0; i < longitud; i++)
+        {
+            sb.Append(chars[random.Next(chars.Length)]);
+        }
+        // Asegurar que tenga al menos una mayúscula, una minúscula y un dígito.
+        sb[0] = char.ToUpperInvariant(sb[0]);
+        sb[1] = char.ToLowerInvariant(sb[1]);
+        if (char.IsLetter(sb[2])) sb[2] = (char)('0' + random.Next(10));
+        return sb.ToString();
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -112,7 +113,7 @@ namespace MascotaFeliz.App.Frontend.Pages
                 var largeArc = porcion > 180 ? 1 : 0;
                 var color = colores[i % colores.Length];
                 var pct = (porcion / 360 * 100).ToString("0");
-                sb.Append($"<path d=\"M {x0o:F1},{y0o:F1} A {r},{r} 0 {largeArc} 1 {x1o:F1},{y1o:F1} L {x0i:F1},{y0i:F1} A {rInt},{rInt} 0 {largeArc} 0 {x1i:F1},{y1i:F1} Z\" fill=\"{color}\" stroke=\"#ffffff\" stroke-width=\"1.5\"><title>{esp}: {cuenta} ({pct}%)</title></path>");
+                sb.Append($"<path d=\"M {x0o:F1},{y0o:F1} A {r},{r} 0 {largeArc} 1 {x1o:F1},{y1o:F1} L {x0i:F1},{y0i:F1} A {rInt},{rInt} 0 {largeArc} 0 {x1i:F1},{y1i:F1} Z\" fill=\"{color}\" stroke=\"#ffffff\" stroke-width=\"1.5\"><title>{E(esp)}: {cuenta} ({pct}%)</title></path>");
                 angulo += porcion;
             }
 
@@ -142,7 +143,7 @@ namespace MascotaFeliz.App.Frontend.Pages
                 var color = colores[i % colores.Length];
                 sb.Append($"<li class=\"mf-leyenda-item\">");
                 sb.Append($"<span class=\"mf-leyenda-punto\" style=\"background:{color};\" aria-hidden=\"true\"></span>");
-                sb.Append($"<span>{kv.Key}</span>");
+                sb.Append($"<span>{E(kv.Key)}</span>");
                 sb.Append($"<span class=\"mf-leyenda-valor\">{kv.Value} · {pct}%</span>");
                 sb.Append($"</li>");
                 i++;
@@ -152,7 +153,17 @@ namespace MascotaFeliz.App.Frontend.Pages
         }
 
         /// <summary>
+        /// HTML-encode de un valor para prevenir XSS cuando se inserta en
+        /// HTML generado manualmente con StringBuilder + @Html.Raw.
+        /// </summary>
+        private static string E(object valor)
+        {
+            return valor == null ? "" : WebUtility.HtmlEncode(valor.ToString());
+        }
+
+        /// <summary>
         /// Genera el HTML de la sección de recordatorios de vacunas.
+        /// Todos los valores de usuario se HTML-encoden con E().
         /// </summary>
         private static string GenerarRecordatoriosHtml(IEnumerable<RecordatorioVacuna> recordatorios, int proximas, int vencidas)
         {
@@ -179,11 +190,11 @@ namespace MascotaFeliz.App.Frontend.Pages
                 sb.Append("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 11l3 3 8-8\"/><path d=\"M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11\"/></svg>");
                 sb.Append("</span>");
                 sb.Append("<span style=\"flex:1;min-width:0;\">");
-                sb.Append($"<strong>{rec.MascotaNombre}</strong>");
+                sb.Append($"<strong>{E(rec.MascotaNombre)}</strong>");
                 var fechaStr = rec.ProximaVacuna.ToString("d 'de' MMMM", cultura);
-                sb.Append($"<div class=\"mf-muted\" style=\"font-size:.82rem;\">{rec.TipoProximaVacuna} · {fechaStr}</div>");
+                sb.Append($"<div class=\"mf-muted\" style=\"font-size:.82rem;\">{E(rec.TipoProximaVacuna)} · {E(fechaStr)}</div>");
                 sb.Append("</span>");
-                sb.Append($"<span class=\"{claseSev}\">{rec.Etiqueta}</span>");
+                sb.Append($"<span class=\"{claseSev}\">{E(rec.Etiqueta)}</span>");
                 sb.Append("</a>");
             }
 

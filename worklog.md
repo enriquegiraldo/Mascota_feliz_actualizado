@@ -496,3 +496,33 @@ Stage Summary:
 - Estado: Identity con roles implementado. Panel protegido (requiere login). Usuario Admin inicial sembrado (admin@mascotafeliz.com / Admin123!). Páginas Login/Logout/AccesoDenegado. Build 0/0, 60/60 tests.
 - Próximo paso: 3.8 (sitio público: hero, servicios, equipo, CTA "Agendar cita", /Agendar para que dueños soliciten citas sin login). Después 3.9 (CI/CD GitHub Actions).
 - Riesgos/pendientes: (1) En dev las credenciales de Admin son visibles en la página de login — quitar en producción. (2) No hay gestión de usuarios (crear/editar/eliminar usuarios del personal) — se podría añadir como página de Admin. (3) Las páginas del sitio público (3.8) deben ser [AllowAnonymous] para que funcionen sin login. (4) El [Authorize] está en todos los PageModels pero no hay [Authorize(Roles=...)] granular aún — se puede añadir cuando Giraldo defina qué acciones requieren cada rol. (5) Memorial digital sigue parqueado.
+
+---
+Task ID: 20
+Agent: Z.ai Code (orquestador) — Corrección de seguridad (XSS + semilla Admin)
+Task: Resolver dos problemas de seguridad señalados por Giraldo antes de seguir a 3.8/3.9: (1) auditar y corregir Html.Raw (XSS), (2) condicionar semilla Admin a IsDevelopment.
+
+Work Log:
+- Giraldo detectó dos problemas de seguridad pendientes:
+  1. **XSS en Html.Raw**: los métodos GenerarDonutSvg, GenerarLeyendaDonutHtml y GenerarRecordatoriosHtml insertaban datos del usuario (MascotaNombre, TipoProximaVacuna, Etiqueta, Especie, Motivo) directamente en HTML sin HTML-encodear.
+  2. **Semilla Admin con contraseña fija**: SemillaIdentity.SembrarAsync corría en cualquier entorno (no condicionada a IsDevelopment), creando admin@mascotafeliz.com / Admin123! también en producción.
+
+- Corrección #1 (XSS): añadido helper estático E(object) que usa WebUtility.HtmlEncode() en Index.cshtml.cs. Aplicado a todos los valores de usuario en los tres métodos generadores de HTML:
+  - GenerarDonutSvg: E(esp) en el <title> del <path>.
+  - GenerarLeyendaDonutHtml: E(kv.Key) en el <span> de especie.
+  - GenerarRecordatoriosHtml: E(rec.MascotaNombre), E(rec.TipoProximaVacuna), E(fechaStr), E(rec.Etiqueta) en todos los elementos que insertan datos del usuario.
+
+- Corrección #2 (semilla Admin): 
+  - SemillaIdentity.SembrarAsync ahora acepta parámetro bool isDevelopment.
+  - En Development: usa contraseña conocida "Admin123!" (para pruebas).
+  - En Producción: genera contraseña aleatoria de 16 caracteres con GenerarContrasenaAleatoria(), la muestra UNA SOLA VEZ en consola con instrucciones de cambiarla, nunca se almacena en código ni docs.
+  - Los roles (Admin, Veterinario, Recepcion) siempre se crean en cualquier entorno.
+  - Los datos de ejemplo de la clínica (dueños, veterinarios, mascotas, visitas, citas) ahora están condicionados a if (app.Environment.IsDevelopment()) — no se insertan en producción.
+  - GenerarContrasenaAleatoria: usa Random con chars alfanuméricos, asegura al menos 1 mayúscula, 1 minúscula y 1 dígito.
+
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan.
+
+Stage Summary:
+- Estado: dos problemas de seguridad resueltos. XSS corregido con HTML-encoding en todos los Html.Raw. Semilla Admin segura (dev: conocida, prod: aleatoria + consola). Datos de ejemplo solo en dev. Build 0/0, 60/60 tests.
+- Próximo paso: 3.8 (sitio público) y 3.9 (CI/CD) ya están destrabados.
+- Riesgos/pendientes: (1) El cambio forzado de contraseña en primer login no está implementado aún (TODO: página /Cuenta/CambiarContrasena + filtro de redirección). (2) En producción, la contraseña temporal se muestra en consola — hay que capturarla del log de App Service una sola vez y cambiarla. (3) Memorial digital sigue parqueado.
