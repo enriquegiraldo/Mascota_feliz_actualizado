@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MascotaFeliz.App.Dominio;
 using MascotaFeliz.App.Persistencia;
@@ -10,10 +11,9 @@ using MascotaFeliz.App.Frontend.Servicios;
 
 namespace MascotaFeliz.App.Frontend.Pages
 {
-    [Authorize]
     /// <summary>
-    /// Página de inicio del panel interno: muestra un resumen con conteos,
-    /// distribución por especie (donut), recordatorios de vacunas y accesos rápidos.
+    /// Página de inicio: si el usuario no está autenticado, redirige al sitio público.
+    /// Si está autenticado, muestra el panel interno.
     /// </summary>
     public class IndexModel : PageModel
     {
@@ -59,8 +59,14 @@ namespace MascotaFeliz.App.Frontend.Pages
             _servicioRecordatorios = servicioRecordatorios;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            // Si no está autenticado, redirigir al sitio público.
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Publico/Portada");
+            }
+
             var todas = _repoMascota.GetAllMascotas().ToList();
             TotalMascotas = todas.Count;
             TotalDuenos = _repoDueno.GetAllDuenos().Count();
@@ -80,6 +86,7 @@ namespace MascotaFeliz.App.Frontend.Pages
             VacunasProximas = _servicioRecordatorios.ContarProximas(30);
             VacunasVencidas = _servicioRecordatorios.ContarVencidas();
             RecordatoriosHtml = GenerarRecordatoriosHtml(Recordatorios, VacunasProximas, VacunasVencidas);
+            return Page();
         }
 
         /// <summary>

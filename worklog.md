@@ -526,3 +526,33 @@ Stage Summary:
 - Estado: dos problemas de seguridad resueltos. XSS corregido con HTML-encoding en todos los Html.Raw. Semilla Admin segura (dev: conocida, prod: aleatoria + consola). Datos de ejemplo solo en dev. Build 0/0, 60/60 tests.
 - Próximo paso: 3.8 (sitio público) y 3.9 (CI/CD) ya están destrabados.
 - Riesgos/pendientes: (1) El cambio forzado de contraseña en primer login no está implementado aún (TODO: página /Cuenta/CambiarContrasena + filtro de redirección). (2) En producción, la contraseña temporal se muestra en consola — hay que capturarla del log de App Service una sola vez y cambiarla. (3) Memorial digital sigue parqueado.
+
+---
+Task ID: 21
+Agent: Z.ai Code (orquestador) — Fase 3.8 (Sitio público)
+Task: Construir el sitio público para dueños: portada (hero, servicios, equipo, CTA), /Agendar (solicitud de cita sin login), botón flotante de WhatsApp, SEO/OG. Las páginas públicas son [AllowAnonymous].
+
+Work Log:
+- Giraldo confirmó "avanza a la 3.8".
+- _LayoutPublico.cshtml: layout propio para el sitio público con: navbar público (Inicio, Servicios, Equipo, Panel interno, Agendar cita), footer con dirección/horarios/contacto, botón flotante de WhatsApp (mensaje prellenado), robots index/follow (público, a diferencia del panel que es noindex), modo claro/oscuro automático. Todas las tipografías y tokens del tema "Verde Cálido".
+- Pages/Publico/_ViewStart.cshtml: usa _LayoutPublico por defecto en la carpeta Publico.
+- Pages/Publico/Portada.cshtml + .cs: landing page pública con:
+  - Hero: título "Tu mascota en buenas manos", subtítulo, CTAs (Agendar cita, Ver servicios), stats (mascotas atendidas, veterinarios, años de experiencia).
+  - Servicios: 6 tarjetas (Consultas y vacunación, Cirugía, Citas online, Historia clínica digital, Urgencias, Recordatorios de vacunas) con iconos SVG.
+  - Equipo: tarjetas con avatar, nombre y tarjeta profesional de los veterinarios. HTML generado en code-behind con WebUtility.HtmlEncode (XSS-safe).
+  - CTA final: "¿Listo para agendar la cita de tu mascota?" con botón ámbar sobre fondo verde esmeralda.
+- Pages/Publico/Agendar.cshtml + .cs: formulario público de solicitud de cita sin login:
+  - Recopila datos del dueño (nombre, apellido, teléfono, correo, dirección), mascota (nombre, especie, raza) y cita (veterinario, fecha/hora, motivo).
+  - Al enviar: busca o crea un Dueno por correo, crea una Mascota vinculada al dueño, crea una Cita con Estado=Pendiente. El clínica luego la confirma desde el panel.
+  - Página de éxito con confirmación ("te contactaremos por WhatsApp").
+  - Validación completa DataAnnotations + jQuery Validate.
+  - [AllowAnonymous] — accesible sin login.
+- Index.cshtml.cs: OnGet ahora redirige a /Publico/Portada si el usuario no está autenticado. Si está autenticado, muestra el panel interno.
+- Login.cshtml: añadido enlace "Ver sitio público →" para que los visitantes sin cuenta puedan ir al sitio público.
+- CSS: nuevos estilos .mf-hero-publico, .mf-servicios-grid, .mf-servicio-card, .mf-equipo-grid, .mf-equipo-card, .mf-cta-final, .mf-whatsapp-float, .mf-exito-agendar.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan.
+
+Stage Summary:
+- Estado: sitio público completo con portada (hero + servicios + equipo + CTA), /Agendar (solicitud de cita sin login que crea Dueno+Mascota+Cita Pendiente), botón flotante de WhatsApp, SEO/OG (robots index para público). Build 0/0, 60/60 tests.
+- Próximo paso: 3.9 (CI/CD GitHub Actions → App Service). Esta es la última sub-fase de la Fase 3.
+- Riesgos/pendientes: (1) El formulario /Agendar crea Dueño+Mascota+Cita sin login — conviene añadir reCAPTCHA o rate limiting en producción para prevenir spam. (2) No hay página de contacto/servicios separada (todo está en Portada con anchors). (3) El teléfono de WhatsApp (+57 320 888 9900) es de la semilla — Giraldo debe actualizarlo con el real. (4) Memorial digital sigue parqueado.

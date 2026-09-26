@@ -1,0 +1,124 @@
+@page
+@model MascotaFeliz.App.Frontend.Pages.Publico.AgendarModel
+@{
+    ViewData["Title"] = "Agendar cita";
+    ViewData["MetaDescripcion"] = "Solicita una cita en la clínica veterinaria Mascota Feliz. Completa el formulario y te confirmamos por WhatsApp.";
+    var exito = TempData["Exito"] as bool?;
+}
+
+<nav aria-label="Migas de pan" class="mf-migas">
+    <a asp-page="/Publico/Portada">Inicio</a>
+    <span aria-hidden="true">›</span>
+    <span aria-current="page">Agendar cita</span>
+</nav>
+
+@if (exito == true)
+{
+    <div class="mf-ficha mf-exito-agendar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0d7a5f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1rem;display:block;" aria-hidden="true">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <h1 style="text-align:center;">¡Solicitud enviada!</h1>
+        <p class="mf-muted" style="text-align:center;font-size:1.1rem;margin:1rem 0;">
+            Recibimos tu solicitud de cita. Te contactaremos por WhatsApp al teléfono que registraste para confirmar fecha y hora.
+        </p>
+        <div style="text-align:center;margin-top:1.5rem;">
+            <a asp-page="/Publico/Portada" class="btn btn-ghost mf-btn-tactil">Volver al inicio</a>
+            <a asp-page="/Publico/Agendar" class="btn btn-primary mf-btn-tactil">Agendar otra cita</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="mf-encabezado">
+        <div>
+            <h1>Agendar cita</h1>
+            <p class="mf-muted">Completa el formulario y te confirmamos por WhatsApp. Sin costo, sin compromiso.</p>
+        </div>
+    </div>
+
+    <form method="post" class="mf-ficha mf-form" style="max-width:680px;">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <h3 style="font-size:1.1rem;margin-bottom:.75rem;">Tus datos</h3>
+        <div class="mf-grid-2">
+            <div class="mb-3">
+                <label asp-for="Solicitud.NombreDueno"></label>
+                <input asp-for="Solicitud.NombreDueno" class="form-control" autocomplete="given-name" />
+                <span asp-validation-for="Solicitud.NombreDueno" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Solicitud.ApellidosDueno"></label>
+                <input asp-for="Solicitud.ApellidosDueno" class="form-control" autocomplete="family-name" />
+                <span asp-validation-for="Solicitud.ApellidosDueno" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mf-grid-2">
+            <div class="mb-3">
+                <label asp-for="Solicitud.TelefonoDueno"></label>
+                <input asp-for="Solicitud.TelefonoDueno" class="form-control" inputmode="tel" autocomplete="tel" placeholder="300 123 4567" />
+                <span asp-validation-for="Solicitud.TelefonoDueno" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Solicitud.CorreoDueno"></label>
+                <input asp-for="Solicitud.CorreoDueno" class="form-control" inputmode="email" autocomplete="email" placeholder="nombre@correo.com" />
+                <span asp-validation-for="Solicitud.CorreoDueno" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Solicitud.DireccionDueno"></label>
+            <input asp-for="Solicitud.DireccionDueno" class="form-control" autocomplete="street-address" />
+            <span asp-validation-for="Solicitud.DireccionDueno" class="text-danger"></span>
+        </div>
+
+        <h3 style="font-size:1.1rem;margin:1.5rem 0 .75rem;">Datos de tu mascota</h3>
+        <div class="mf-grid-2">
+            <div class="mb-3">
+                <label asp-for="Solicitud.NombreMascota"></label>
+                <input asp-for="Solicitud.NombreMascota" class="form-control" placeholder="Firulais, Michi…" />
+                <span asp-validation-for="Solicitud.NombreMascota" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Solicitud.EspecieMascota"></label>
+                <input asp-for="Solicitud.EspecieMascota" class="form-control" placeholder="Perro, Gato, Conejo…" />
+                <span asp-validation-for="Solicitud.EspecieMascota" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Solicitud.RazaMascota"></label>
+            <input asp-for="Solicitud.RazaMascota" class="form-control" placeholder="Labrador, Siamés… (opcional)" />
+            <span asp-validation-for="Solicitud.RazaMascota" class="text-danger"></span>
+        </div>
+
+        <h3 style="font-size:1.1rem;margin:1.5rem 0 .75rem;">Datos de la cita</h3>
+        <div class="mf-grid-2">
+            <div class="mb-3">
+                <label asp-for="Solicitud.VeterinarioId"></label>
+                <select asp-for="Solicitud.VeterinarioId" class="form-select">
+                    <option value="">— Selecciona un veterinario —</option>
+                    @foreach (var item in Model.VeterinariosOpciones)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="Solicitud.VeterinarioId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Solicitud.FechaHora"></label>
+                <input asp-for="Solicitud.FechaHora" class="form-control" type="datetime-local" />
+                <span asp-validation-for="Solicitud.FechaHora" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Solicitud.Motivo"></label>
+            <textarea asp-for="Solicitud.Motivo" class="form-control" rows="2" placeholder="Vacunación, control, consulta general…"></textarea>
+            <span asp-validation-for="Solicitud.Motivo" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mf-btn-tactil" style="width:100%;">Enviar solicitud</button>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

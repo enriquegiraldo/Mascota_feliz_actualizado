@@ -399,3 +399,57 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 @media (min-width: 576px) {
   .mf-form .mf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem; }
 }
+
+/* ---- Sitio público ---- */
+.mf-seccion-publico { padding: 3.5rem 0; }
+
+/* Hero público */
+.mf-hero-publico { background: linear-gradient(135deg, var(--mf-verde-claro2) 0%, var(--mf-arena) 100%); padding: 3rem 0 4rem; }
+[data-bs-theme="dark"] .mf-hero-publico { background: linear-gradient(135deg, var(--mf-verde-claro) 0%, var(--mf-arena) 100%); }
+.mf-hero-publico-contenido { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.mf-hero-publico-texto { flex: 1 1 400px; }
+.mf-hero-titulo { font-size: clamp(2rem, 1.5rem + 2.5vw, 3.2rem); font-weight: 700; line-height: 1.1; margin: .5rem 0; }
+.mf-hero-destacado { color: var(--mf-verde); }
+.mf-hero-subtitulo { font-size: 1.15rem; color: var(--mf-tinta-suave); max-width: 480px; margin-bottom: 1.5rem; }
+.mf-hero-cta { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.mf-hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.mf-hero-stat { display: flex; flex-direction: column; }
+.mf-hero-stat strong { font-family: var(--mf-fuente-titulo); font-size: 1.8rem; color: var(--mf-verde-osc); }
+[data-bs-theme="dark"] .mf-hero-stat strong { color: var(--mf-verde-claro); }
+.mf-hero-stat span { font-size: .82rem; color: var(--mf-gris); }
+.mf-hero-publico-visual { flex: 0 0 auto; }
+.mf-hero-circulo { width: 220px; height: 220px; border-radius: 50%; background: var(--mf-blanco); box-shadow: var(--mf-sombra-lg); display: flex; align-items: center; justify-content: center; }
+@media (max-width: 768px) { .mf-hero-publico-visual { display: none; } }
+
+/* Servicios */
+.mf-servicios-grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .mf-servicios-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 992px) { .mf-servicios-grid { grid-template-columns: repeat(3, 1fr); } }
+.mf-servicio-card { background: var(--mf-blanco); border: 1px solid var(--mf-gris-claro); border-radius: var(--mf-radio); padding: 1.5rem; text-align: center; transition: transform var(--mf-transicion), box-shadow var(--mf-transicion); }
+.mf-servicio-card:hover { transform: translateY(-3px); box-shadow: var(--mf-sombra); }
+.mf-servicio-ico { width: 56px; height: 56px; margin: 0 auto .75rem; background: var(--mf-verde-claro); border-radius: var(--mf-radio); display: flex; align-items: center; justify-content: center; color: var(--mf-verde); }
+.mf-servicio-card h3 { font-size: 1.05rem; margin-bottom: .35rem; }
+.mf-servicio-card p { font-size: .9rem; color: var(--mf-gris); margin: 0; }
+
+/* Equipo */
+.mf-seccion-equipo { background: var(--mf-arena); }
+.mf-equipo-grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .mf-equipo-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 992px) { .mf-equipo-grid { grid-template-columns: repeat(4, 1fr); } }
+.mf-equipo-card { background: var(--mf-blanco); border: 1px solid var(--mf-gris-claro); border-radius: var(--mf-radio); padding: 1.5rem; text-align: center; }
+.mf-equipo-avatar { width: 64px; height: 64px; margin: 0 auto .75rem; background: var(--mf-verde-claro); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--mf-verde); }
+.mf-equipo-card h3 { font-size: 1rem; margin-bottom: .2rem; }
+
+/* CTA final */
+.mf-cta-final { background: linear-gradient(135deg, var(--mf-verde) 0%, var(--mf-verde-osc) 100%); border-radius: var(--mf-radio); padding: 3rem 2rem; text-align: center; color: #fff; }
+.mf-cta-final h2 { color: #fff; font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); margin-bottom: .75rem; }
+.mf-cta-final p { opacity: .9; margin-bottom: 1.5rem; font-size: 1.05rem; }
+.mf-cta-final .btn-primary { background: var(--mf-ambar); border-color: var(--mf-ambar); }
+.mf-cta-final .btn-primary:hover { background: var(--mf-ambar-osc); border-color: var(--mf-ambar-osc); }
+
+/* Botón flotante de WhatsApp */
+.mf-whatsapp-float { position: fixed; right: 1.25rem; bottom: 1.25rem; width: 56px; height: 56px; border-radius: 50%; background: #25d366; color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: var(--mf-sombra-lg); z-index: 1050; transition: transform var(--mf-transicion); text-decoration: none; }
+.mf-whatsapp-float:hover { transform: scale(1.1); color: #fff; text-decoration: none; }
+
+/* Éxito agendar */
+.mf-exito-agendar { max-width: 620px; margin: 2rem auto; text-align: center; }
