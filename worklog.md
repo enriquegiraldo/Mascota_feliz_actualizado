@@ -636,3 +636,27 @@ Stage Summary:
 - Estado: autorización granular implementada según la matriz de Giraldo. Backend (atributos + handlers) y frontend (botones/enlaces ocultos) protegidos. 85/85 pruebas. Build 0/0.
 - El proyecto queda listo para el primer despliegue real a Azure.
 - Backlog: (1) DebeCambiarContrasena en primer login. (2) reCAPTCHA en /Agendar. (3) Rate limiting distribuido (Redis). (4) Memorial digital parqueado.
+
+---
+Task ID: 25
+Agent: Z.ai Code (orquestador) — Corrección IndexModel + verificación granular
+Task: (1) IndexModel: quitar [Authorize], poner [AllowAnonymous] con comentario explicativo. (2) Verificar smoke test del flujo de autenticación.
+
+Work Log:
+- Giraldo detectó que [Authorize] en IndexModel rompía el flujo de incógnito (redirigía a Login en vez de a la portada pública).
+- Corrección: IndexModel ahora tiene [AllowAnonymous] (no [Authorize]). OnGet hace el chequeo manual: si !User.Identity.IsAuthenticated → RedirectToPage("/Publico/Portada"); si autenticado → dashboard.
+- Añadido comentario XML explicativo en la clase: "IMPORTANTE: Esta página usa [AllowAnonymous] (no [Authorize]) a propósito, porque el middleware de Identity redirigiría a /Cuenta/Login antes de que OnGet pueda ejecutar la lógica manual de redirección al sitio público. NO 'corregir' esto añadiendo [Authorize] — rompería el flujo de incógnito."
+- Pruebas actualizadas: IndexModel removido de la Theory de páginas con [Authorize] sin roles. Nueva prueba específica: IndexModel_TieneAllowAnonymous_NoAuthorize (verifica [AllowAnonymous] presente y [Authorize] ausente).
+- Verificación estática (grep) de los 3 niveles de protección:
+  1. Backend — [Authorize(Roles=...)] en clases: EditarVeterinario=Admin, EditarHistoria=Admin+Vet, EditarVisitaPyP=Admin+Vet.
+  2. Backend — User.IsInRole("Admin") en handlers de eliminar: ListaMascotas, ListaDuenos, ListaCitas → redirigen a AccesoDenegado si no es Admin.
+  3. Frontend — botones/enlaces ocultos: 10 puntos en .cshtml con @if (User.IsInRole("Admin")) o @if (!User.IsInRole("Recepcion")).
+- Flujo de incógnito verificado: GET / → [AllowAnonymous] deja pasar → OnGet → !IsAuthenticated → RedirectToPage("/Publico/Portada"). Correcto.
+- Flujo autenticado verificado: GET / → OnGet → IsAuthenticated → carga dashboard (KPIs, donut, recordatorios). Correcto.
+- Flujo de eliminar como Recepción verificado: POST /Mascotas/ListaMascotas?handler=Eliminar → OnPostEliminar → User.IsInRole("Admin") = false → RedirectToPage("/Cuenta/AccesoDenegado"). Botón oculto en UI. Correcto.
+- Flujo de EditarVeterinario como Veterinario verificado: GET /Veterinarios/EditarVeterinario → [Authorize(Roles="Admin")] → Veterinario no tiene Admin → redirige a /Cuenta/AccesoDenegado. Enlace oculto en UI. Correcto.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 85/85 pasan.
+
+Stage Summary:
+- Estado: IndexModel corregido ([AllowAnonymous] + comentario explicativo). Autorización granular verificada en 3 niveles (backend atributos, backend handlers, frontend UI). 85/85 pruebas. Build 0/0.
+- El proyecto queda listo para el primer despliegue real a Azure.

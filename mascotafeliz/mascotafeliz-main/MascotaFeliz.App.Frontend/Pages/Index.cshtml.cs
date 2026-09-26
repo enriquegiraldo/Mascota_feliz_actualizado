@@ -12,10 +12,17 @@ using MascotaFeliz.App.Frontend.Servicios;
 namespace MascotaFeliz.App.Frontend.Pages
 {
     /// <summary>
-    /// Página de inicio: si el usuario no está autenticado, redirige al sitio público.
-    /// Si está autenticado, muestra el panel interno.
+    /// Página de inicio de doble propósito:
+    /// - Si el usuario NO está autenticado → redirige al sitio público (/Publico/Portada).
+    /// - Si está autenticado → muestra el panel interno (dashboard).
+    ///
+    /// IMPORTANTE: Esta página usa [AllowAnonymous] (no [Authorize]) a propósito,
+    /// porque el middleware de Identity redirigiría a /Cuenta/Login antes de que
+    /// OnGet pueda ejecutar la lógica manual de redirección al sitio público.
+    /// El chequeo User.Identity.IsAuthenticated se hace dentro de OnGet.
+    /// NO "corregir" esto añadiendo [Authorize] — rompería el flujo de incógnito.
     /// </summary>
-    [Authorize]
+    [AllowAnonymous]
     public class IndexModel : PageModel
     {
         private readonly IRepositorioMascota _repoMascota;

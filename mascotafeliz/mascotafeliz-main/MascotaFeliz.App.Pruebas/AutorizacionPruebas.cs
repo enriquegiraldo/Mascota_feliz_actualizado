@@ -23,7 +23,6 @@ namespace MascotaFeliz.App.Pruebas
         // --- Páginas accesibles para TODOS los roles (sin Roles=...) ---
 
         [Theory]
-        [InlineData(typeof(IndexModel))]
         [InlineData(typeof(ListaMascotasModel))]
         [InlineData(typeof(DetallesMascotasModel))]
         [InlineData(typeof(EditarMascotaModel))]
@@ -117,6 +116,20 @@ namespace MascotaFeliz.App.Pruebas
         {
             var allowAnon = GetAttr<AllowAnonymousAttribute>(typeof(AgendarModel));
             Assert.NotNull(allowAnon);
+        }
+
+        /// <summary>
+        /// IndexModel es de doble propósito: [AllowAnonymous] (no [Authorize])
+        /// porque hace redirección manual en OnGet.
+        /// </summary>
+        [Fact]
+        public void IndexModel_TieneAllowAnonymous_NoAuthorize()
+        {
+            var allowAnon = GetAttr<AllowAnonymousAttribute>(typeof(IndexModel));
+            Assert.NotNull(allowAnon);
+            // No debe tener [Authorize] (rompería el flujo de incógnito).
+            var auth = GetAttr<AuthorizeAttribute>(typeof(IndexModel));
+            Assert.Null(auth);
         }
     }
 }
