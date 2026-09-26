@@ -581,3 +581,23 @@ Stage Summary:
 - Estado: los 3 puntos bloqueantes están resueltos y confirmados. XSS corregido, semilla Admin segura, /Agendar con honeypot + rate limiting. Build 0/0, 60/60 tests.
 - Próximo paso: 3.9 (CI/CD GitHub Actions → App Service) — desbloqueado.
 - Riesgos/pendientes: (1) El rate limiting es en memoria (no persiste entre reinicios y no funciona en múltiples instancias). Para producción con múltiples instancias, migrar a IDistributedCache (Redis) o Azure Rate Limiting. (2) El honeypot es efectivo contra bots simples pero no contra bots sofisticados — reCAPTCHA queda como mejora posterior si se requiere. (3) Memorial digital sigue parqueado.
+
+---
+Task ID: 23
+Agent: Z.ai Code (orquestador) — Fase 3.9 (CI/CD GitHub Actions → App Service)
+Task: Crear pipeline de CI/CD con GitHub Actions que haga build, test, publish y deploy a Azure App Service. Credenciales como GitHub Secrets, nunca en código ni logs.
+
+Work Log:
+- Giraldo aprobó 3.9 con dos condiciones: (1) secrets como GitHub Secrets, nunca en el workflow ni logs; (2) anotar backlog: DebeCambiarContrasena en primer login.
+- Creado .github/workflows/ci-cd.yml con dos jobs:
+  - build-and-test: checkout → setup .NET 10 → restore → build Release → test (60 pruebas). Corre en push y PR.
+  - deploy: necesita build-and-test, solo en push (no PR). Publish → deploy a App Service con azure/webapps-deploy@v3.
+- Secrets: AZURE_PUBLISH_PROFILE (publish profile del App Service). No hay connection strings ni claves de Storage en el workflow — se configuran en App Service (Application settings: ConnectionStrings__MascotaFeliz, Storage__ConnectionString).
+- Creado docs/despliegue.md con: recursos Azure necesarios (App Service, SQL, Storage), configuración de App Service (Application settings), GitHub Secrets, pipeline, verificación del primer despliegue, notas.
+- Backlog anotado: DebeCambiarContrasena — flag en ApplicationUser que redirija a página de cambio antes del panel. Defensa en profundidad por si el log de consola con la contraseña temporal queda accesible. No bloquea 3.9.
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan.
+
+Stage Summary:
+- Estado: pipeline CI/CD creado (build → test → publish → deploy a Azure). docs/despliegue.md con instrucciones completas. Backlog de DebeCambiarContrasena anotado. Build 0/0, 60/60 tests.
+- Fase 3 COMPLETADA: todas las sub-fases (3.0 identidad visual, 3.1 .NET 10, 3.2 Bootstrap 5 + tema, 3.3 SQL Server, 3.4 Cita, 3.5 Fotos, 3.6 Recordatorios, 3.7 Identity, 3.8 Sitio público, 3.9 CI/CD) están terminadas.
+- Próximos pasos recomendados (backlog, no bloqueantes): (1) DebeCambiarContrasena en primer login. (2) Gestión de usuarios (CRUD de personal con roles). (3) [Authorize(Roles=...)] granular por acción. (4) reCAPTCHA en /Agendar si aumenta el tráfico. (5) Rate limiting distribuido (Redis) si se escala a múltiples instancias. (6) Autohospedar Bootstrap/Google Fonts con fontsource. (7) Validación de conflictos de horario en citas. (8) Memorial digital — parqueado (producto aparte).

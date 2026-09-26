@@ -1,0 +1,77 @@
+# CI/CD — Mascota Feliz
+# Pipeline: build + test + publish + deploy a Azure App Service (Linux, .NET 10).
+#
+# Secretes necesarios en GitHub (Settings → Secrets and variables → Actions):
+#   AZURE_PUBLISH_PROFILE  — Publish profile del App Service (descargar desde Azure Portal).
+#
+# Configuración de App Service (Settings → Configuration → Application settings):
+#   ConnectionStrings__MascotaFeliz  — Connection string de Azure SQL Database.
+#   Storage__ConnectionString         — Connection string de Azure Blob Storage.
+#
+# Estas credenciales NUNCA se escriben en este archivo ni se imprimen en los logs.
+# Se inyectan directamente en App Service desde Azure Portal.
+
+name: CI/CD Mascota Feliz
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'MascotaFeliz.App.Frontend/MascotaFeliz.App.Frontend.csproj'
+
+jobs:
+  # --- Job 1: Build + Test ---
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restaurar dependencias
+        run: dotnet restore MascotaFeliz.sln
+
+      - name: Compilar
+        run: dotnet build MascotaFeliz.sln --configuration Release --no-restore
+
+      - name: Ejecutar pruebas
+        run: dotnet test MascotaFeliz.sln --configuration Release --no-build --verbosity normal
+
+  # --- Job 2: Publish + Deploy (solo en push a main/master, no en PR) ---
+  deploy:
+    needs: build-and-test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restaurar dependencias
+        run: dotnet restore MascotaFeliz.sln
+
+      - name: Publicar (dotnet publish)
+        run: |
+          dotnet publish ${{ env.PROJECT_PATH }} \
+            --configuration Release \
+            --output ./publish \
+            --no-restore
+
+      - name: Deploy a Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'mascotafeliz-prod'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: ./publish
