@@ -40,6 +40,12 @@ else
     <form method="post" class="mf-ficha mf-form" style="max-width:680px;">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+        <!-- Honeypot: campo oculto que solo los bots llenan. No visible para usuarios reales. -->
+        <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+            <label>Website (no llenar)</label>
+            <input asp-for="Website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
         <h3 style="font-size:1.1rem;margin-bottom:.75rem;">Tus datos</h3>
         <div class="mf-grid-2">
             <div class="mb-3">

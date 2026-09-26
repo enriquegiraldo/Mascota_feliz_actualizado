@@ -556,3 +556,28 @@ Stage Summary:
 - Estado: sitio público completo con portada (hero + servicios + equipo + CTA), /Agendar (solicitud de cita sin login que crea Dueno+Mascota+Cita Pendiente), botón flotante de WhatsApp, SEO/OG (robots index para público). Build 0/0, 60/60 tests.
 - Próximo paso: 3.9 (CI/CD GitHub Actions → App Service). Esta es la última sub-fase de la Fase 3.
 - Riesgos/pendientes: (1) El formulario /Agendar crea Dueño+Mascota+Cita sin login — conviene añadir reCAPTCHA o rate limiting en producción para prevenir spam. (2) No hay página de contacto/servicios separada (todo está en Portada con anchors). (3) El teléfono de WhatsApp (+57 320 888 9900) es de la semilla — Giraldo debe actualizarlo con el real. (4) Memorial digital sigue parqueado.
+
+---
+Task ID: 22
+Agent: Z.ai Code (orquestador) — Confirmación de seguridad + honeypot/rate-limit en /Agendar
+Task: Resolver 3 puntos bloqueantes antes de 3.9: (1) confirmar audit Html.Raw, (2) confirmar SemillaIdentity condicionada, (3) implementar honeypot + rate limiting en /Agendar.
+
+Work Log:
+- Giraldo exigió confirmación puntual de 3 puntos antes de aprobar 3.9.
+- Punto 1 (Html.Raw audit): CONFIRMADO con grep. Los tres métodos generadores de HTML en Index.cshtml.cs usan E() (WebUtility.HtmlEncode) en todos los valores de usuario:
+  - GenerarDonutSvg: E(esp) en <title> del <path>.
+  - GenerarLeyendaDonutHtml: E(kv.Key) en <span> de especie.
+  - GenerarRecordatoriosHtml: E(rec.MascotaNombre), E(rec.TipoProximaVacuna), E(fechaStr), E(rec.Etiqueta).
+- Punto 2 (SemillaIdentity): CONFIRMADO con grep. SemillaIdentity.SembrarAsync recibe app.Environment.IsDevelopment():
+  - Dev: Admin123! (conocida).
+  - Prod: GenerarContrasenaAleatoria(16) + Console.WriteLine (una sola vez, nunca en código/docs).
+  - Datos de ejemplo (dueños, mascotas, citas) también condicionados a IsDevelopment().
+- Punto 3 (anti-abuso en /Agendar): IMPLEMENTADO:
+  - Honeypot: campo oculto "Website" (position:absolute, left:-9999px, tabindex=-1, aria-hidden). Si llega con contenido, es un bot → se finge éxito sin crear nada en la BD.
+  - Rate limiting en memoria por IP: máximo 3 solicitudes por minuto por IP. Diccionario estático _solicitudesPorIp con lock. Limpieza periódica de IPs antiguas (>5 min, cuando el diccionario supera 1000 entradas). Mensaje de error: "Has enviado demasiadas solicitudes. Espera un minuto e inténtalo de nuevo."
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 60/60 pasan.
+
+Stage Summary:
+- Estado: los 3 puntos bloqueantes están resueltos y confirmados. XSS corregido, semilla Admin segura, /Agendar con honeypot + rate limiting. Build 0/0, 60/60 tests.
+- Próximo paso: 3.9 (CI/CD GitHub Actions → App Service) — desbloqueado.
+- Riesgos/pendientes: (1) El rate limiting es en memoria (no persiste entre reinicios y no funciona en múltiples instancias). Para producción con múltiples instancias, migrar a IDistributedCache (Redis) o Azure Rate Limiting. (2) El honeypot es efectivo contra bots simples pero no contra bots sofisticados — reCAPTCHA queda como mejora posterior si se requiere. (3) Memorial digital sigue parqueado.

@@ -20,7 +20,19 @@ namespace MascotaFeliz.App.Frontend.Pages.Publico
         [BindProperty]
         public SolicitudCita Solicitud { get; set; }
 
+        /// <summary>
+        /// Campo honeypot: si llega con contenido, es un bot.
+        /// Es un campo oculto en el formulario que un usuario real nunca vería.
+        /// </summary>
+        [BindProperty]
+        public string Website { get; set; }
+
         public List<SelectListItem> VeterinariosOpciones { get; set; } = new List<SelectListItem>();
+
+        // Rate limiting simple en memoria por IP.
+        // Clave: IP, Valor: (timestamp última solicitud, contador).
+        private static readonly Dictionary<string, (DateTime Ultima, int Contador)> _solicitudesPorIp = new();
+        private const int MaxSolicitudesPorMinuto = 3;
 
         public AgendarModel(
             IRepositorioDueno repoDueno,
@@ -46,6 +58,57 @@ namespace MascotaFeliz.App.Frontend.Pages.Publico
         public IActionResult OnPost()
         {
             CargarSelectores();
+
+            // --- Honeypot: si el campo oculto "Website" tiene contenido, es un bot. ---
+            if (!string.IsNullOrWhiteSpace(Website))
+            {
+                // Pretender que todo está bien para no alertar al bot.
+                TempData["Exito"] = true;
+                return RedirectToPage("./Agendar");
+            }
+
+            // --- Rate limiting: máximo 3 solicitudes por IP por minuto. ---
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            var ahora = DateTime.UtcNow;
+            lock (_solicitudesPorIp)
+            {
+                if (_solicitudesPorIp.TryGetValue(ip, out var entry))
+                {
+                    if ((ahora - entry.Ultima).TotalMinutes < 1)
+                    {
+                        if (entry.Contador >= MaxSolicitudesPorMinuto)
+                        {
+                            ModelState.AddModelError(string.Empty, "Has enviado demasiadas solicitudes. Espera un minuto e inténtalo de nuevo.");
+                            return Page();
+                        }
+                        _solicitudesPorIp[ip] = (entry.Ultima, entry.Contador + 1);
+                    }
+                    else
+                    {
+                        _solicitudesPorIp[ip] = (ahora, 1);
+                    }
+                }
+                else
+                {
+                    _solicitudesPorIp[ip] = (ahora, 1);
+                }
+            }
+
+            // Limpieza periódica de IPs antiguas (evita que el diccionario crezca sin límite).
+            if (_solicitudesPorIp.Count > 1000)
+            {
+                lock (_solicitudesPorIp)
+                {
+                    var expiradas = _solicitudesPorIp
+                        .Where(kvp => (ahora - kvp.Value.Ultima).TotalMinutes > 5)
+                        .Select(kvp => kvp.Key)
+                        .ToList();
+                    foreach (var expirada in expiradas)
+                    {
+                        _solicitudesPorIp.Remove(expirada);
+                    }
+                }
+            }
 
             if (!ModelState.IsValid)
             {
