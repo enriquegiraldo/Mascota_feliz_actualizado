@@ -6,7 +6,7 @@ using MascotaFeliz.App.Persistencia;
 
 namespace MascotaFeliz.App.Frontend.Pages
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class EditarVeterinarioModel : PageModel
     {
         private readonly IRepositorioVeterinario _repoVeterinario;

@@ -69,11 +69,15 @@ else
                 <td>
                     <div class="mf-tabla-acciones">
                         <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesVeterinarios" asp-route-veterinarioId="@veterinario.Id">Detalle</a>
-                        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVeterinario" asp-route-veterinarioId="@veterinario.Id">Editar</a>
-                        <form method="post" asp-page-handler="Eliminar" asp-route-veterinarioId="@veterinario.Id"
+                        @if (User.IsInRole("Admin")) {
+<a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVeterinario" asp-route-veterinarioId="@veterinario.Id">Editar</a>
+}
+                        @if (User.IsInRole("Admin")) {
+<form method="post" asp-page-handler="Eliminar" asp-route-veterinarioId="@veterinario.Id"
                               data-mf-borrar="true" data-nombre="el veterinario @veterinario.Nombres @veterinario.Apellidos">
                             <button type="submit" class="btn btn-danger mf-btn-tactil" aria-label="Eliminar veterinario">Eliminar</button>
                         </form>
+}
                     </div>
                 </td>
             </tr>

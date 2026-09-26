@@ -72,10 +72,12 @@ else
                     <div class="mf-tabla-acciones">
                         <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesDuenos" asp-route-duenoId="@dueno.Id">Detalle</a>
                         <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarDueno" asp-route-duenoId="@dueno.Id">Editar</a>
-                        <form method="post" asp-page-handler="Eliminar" asp-route-duenoId="@dueno.Id"
+                        @if (User.IsInRole("Admin")) {
+<form method="post" asp-page-handler="Eliminar" asp-route-duenoId="@dueno.Id"
                               data-mf-borrar="true" data-nombre="el dueño @dueno.Nombres @dueno.Apellidos">
                             <button type="submit" class="btn btn-danger mf-btn-tactil" aria-label="Eliminar dueño">Eliminar</button>
                         </form>
+}
                     </div>
                 </td>
             </tr>

@@ -17,7 +17,9 @@
         <p class="mf-muted">Datos del profesional.</p>
     </div>
     <div class="mf-acciones">
-        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVeterinario" asp-route-veterinarioId="@Model.veterinario.Id">Editar</a>
+        @if (User.IsInRole("Admin")) {
+<a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVeterinario" asp-route-veterinarioId="@Model.veterinario.Id">Editar</a>
+}
         <a class="btn btn-ghost mf-btn-tactil" asp-page="./ListaVeterinarios">← Volver</a>
     </div>
 </div>

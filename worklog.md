@@ -601,3 +601,38 @@ Stage Summary:
 - Estado: pipeline CI/CD creado (build → test → publish → deploy a Azure). docs/despliegue.md con instrucciones completas. Backlog de DebeCambiarContrasena anotado. Build 0/0, 60/60 tests.
 - Fase 3 COMPLETADA: todas las sub-fases (3.0 identidad visual, 3.1 .NET 10, 3.2 Bootstrap 5 + tema, 3.3 SQL Server, 3.4 Cita, 3.5 Fotos, 3.6 Recordatorios, 3.7 Identity, 3.8 Sitio público, 3.9 CI/CD) están terminadas.
 - Próximos pasos recomendados (backlog, no bloqueantes): (1) DebeCambiarContrasena en primer login. (2) Gestión de usuarios (CRUD de personal con roles). (3) [Authorize(Roles=...)] granular por acción. (4) reCAPTCHA en /Agendar si aumenta el tráfico. (5) Rate limiting distribuido (Redis) si se escala a múltiples instancias. (6) Autohospedar Bootstrap/Google Fonts con fontsource. (7) Validación de conflictos de horario en citas. (8) Memorial digital — parqueado (producto aparte).
+
+---
+Task ID: 24
+Agent: Z.ai Code (orquestador) — Autorización granular (matriz de roles de Giraldo)
+Task: Reemplazar [Authorize] plano por [Authorize(Roles=...)] según la matriz de permisos. Separar eliminar de ver/editar con chequeo User.IsInRole("Admin") en handler. Ocultar botones en UI. Pruebas.
+
+Work Log:
+- Giraldo pidió autorización granular bloqueante antes de desplegar, con matriz específica.
+- Páginas con [Authorize] sin roles (todos los roles): Index, ListaMascotas, DetallesMascotas, EditarMascota, ListaDuenos, DetallesDuenos, EditarDueno, ListaCitas, DetallesCita, EditarCita, ListaVeterinarios, DetallesVeterinarios, ListaHistorias, DetallesHistoria, ListaVisitasPyP, DetallesVisitaPyP, Buscar (17 páginas).
+- EditarVeterinario: [Authorize(Roles = "Admin")] — solo Admin puede crear/editar/eliminar veterinarios.
+- EditarHistoria + EditarVisitaPyP: [Authorize(Roles = "Admin,Veterinario")] — Recepción no puede editar (solo lectura).
+- Handlers de eliminar con chequeo User.IsInRole("Admin") + redirección a AccesoDenegado:
+  - ListaMascotas.OnPostEliminar
+  - ListaDuenos.OnPostEliminar
+  - ListaCitas.OnPostEliminar
+  - (ListaVeterinarios ya estaba protegido a nivel de página con EditarVeterinario = Admin only; el handler OnPostEliminar hereda la restricción).
+  - (Historias/VisitasPyP: eliminar está en EditarHistoria/EditarVisitaPyP que ya son Admin+Vet only).
+- UI: botones y enlaces ocultados con @if (User.IsInRole("Admin")) o @if (!User.IsInRole("Recepcion")):
+  - Botones "Eliminar" en ListaMascotas, ListaDuenos, ListaCitas, ListaVeterinarios → solo Admin.
+  - Enlaces "Editar" en ListaVeterinarios y DetallesVeterinarios → solo Admin.
+  - Enlaces "Editar" en Historias y VisitasPyP → ocultos para Recepción.
+- Pruebas (AutorizacionPruebas, 25 tests):
+  - 17 [Theory] verificando que las páginas accesibles para todos tengan [Authorize] sin Roles.
+  - EditarVeterinario tiene Roles="Admin".
+  - EditarHistoria y EditarVisitaPyP tienen Roles="Admin,Veterinario".
+  - Handlers OnPostEliminar existen en Mascotas, Duenos, Citas.
+  - PortadaModel y AgendarModel tienen [AllowAnonymous].
+- Bug encontrado por las pruebas: IndexModel perdió [Authorize] cuando se añadió la redirección al sitio público. Corregido añadiéndolo de vuelta.
+- Paquete añadido: referencia al proyecto Frontend desde Pruebas (para ver los tipos con reflexión).
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 85/85 pasan (antes 60, +25 de autorización).
+
+Stage Summary:
+- Estado: autorización granular implementada según la matriz de Giraldo. Backend (atributos + handlers) y frontend (botones/enlaces ocultos) protegidos. 85/85 pruebas. Build 0/0.
+- El proyecto queda listo para el primer despliegue real a Azure.
+- Backlog: (1) DebeCambiarContrasena en primer login. (2) reCAPTCHA en /Agendar. (3) Rate limiting distribuido (Redis). (4) Memorial digital parqueado.

@@ -15,6 +15,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Página de inicio: si el usuario no está autenticado, redirige al sitio público.
     /// Si está autenticado, muestra el panel interno.
     /// </summary>
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IRepositorioMascota _repoMascota;

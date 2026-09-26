@@ -104,10 +104,12 @@ else
                     <div class="mf-tabla-acciones">
                         <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesMascotas" asp-route-mascotaId="@mascota.Id">Detalle</a>
                         <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarMascota" asp-route-mascotaId="@mascota.Id">Editar</a>
-                        <form method="post" asp-page-handler="Eliminar" asp-route-mascotaId="@mascota.Id"
+                        @if (User.IsInRole("Admin")) {
+<form method="post" asp-page-handler="Eliminar" asp-route-mascotaId="@mascota.Id"
                               data-mf-borrar="true" data-nombre="la mascota @mascota.Nombre">
                             <button type="submit" class="btn btn-danger mf-btn-tactil" aria-label="Eliminar mascota">Eliminar</button>
                         </form>
+}
                     </div>
                 </td>
             </tr>

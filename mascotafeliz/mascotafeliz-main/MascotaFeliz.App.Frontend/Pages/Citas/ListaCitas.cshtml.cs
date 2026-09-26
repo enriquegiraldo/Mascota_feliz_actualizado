@@ -65,6 +65,10 @@ namespace MascotaFeliz.App.Frontend.Pages
 
         public IActionResult OnPostEliminar(int citaId)
         {
+            if (!User.IsInRole("Admin"))
+            {
+                return RedirectToPage("/Cuenta/AccesoDenegado");
+            }
             try
             {
                 _repoCita.DeleteCita(citaId);

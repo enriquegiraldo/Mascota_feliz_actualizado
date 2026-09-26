@@ -64,7 +64,9 @@ else
                 <td>
                     <div class="mf-tabla-acciones">
                         <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesVisitaPyP" asp-route-visitaPyPId="@v.Id">Detalle</a>
-                        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVisitaPyP" asp-route-visitaPyPId="@v.Id">Editar</a>
+                        @if (!User.IsInRole("Recepcion")) {
+<a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVisitaPyP" asp-route-visitaPyPId="@v.Id">Editar</a>
+}
                     </div>
                 </td>
             </tr>

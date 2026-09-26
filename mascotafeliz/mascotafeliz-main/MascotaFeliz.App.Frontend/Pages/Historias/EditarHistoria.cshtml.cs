@@ -10,7 +10,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Crear o editar una historia clínica. La historia es el contenedor
     /// de las visitas PyP de una mascota.
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,Veterinario")]
     public class EditarHistoriaModel : PageModel
     {
         private readonly IRepositorioHistoria _repoHistoria;

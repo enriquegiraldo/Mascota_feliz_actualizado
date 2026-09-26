@@ -12,7 +12,9 @@
         <p class="mf-muted">@Model.visitaPyP.FechaVisita.ToString("d 'de' MMMM 'de' yyyy", cultura)</p>
     </div>
     <div class="mf-acciones">
-        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVisitaPyP" asp-route-visitaPyPId="@Model.visitaPyP.Id">Editar</a>
+        @if (!User.IsInRole("Recepcion")) {
+<a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarVisitaPyP" asp-route-visitaPyPId="@Model.visitaPyP.Id">Editar</a>
+}
         <a class="btn btn-ghost mf-btn-tactil" asp-page="/Historias/DetallesHistoria" asp-route-historiaId="@Model.visitaPyP.HistoriaId">← Historia</a>
     </div>
 </div>

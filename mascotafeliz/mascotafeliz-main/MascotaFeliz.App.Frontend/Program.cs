@@ -176,6 +176,9 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.Run();
 
+// Exponer Program parcialmente para pruebas de integración (WebApplicationFactory).
+public partial class Program { }
+
 /// <summary>
 /// Semilla de Identity: crea los roles Admin, Veterinario y Recepción,
 /// y un usuario Admin inicial si no existe.

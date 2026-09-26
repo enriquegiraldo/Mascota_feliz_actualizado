@@ -72,6 +72,11 @@ namespace MascotaFeliz.App.Frontend.Pages
 
         public IActionResult OnPostEliminar(int mascotaId)
         {
+            // Solo Admin puede eliminar mascotas.
+            if (!User.IsInRole("Admin"))
+            {
+                return RedirectToPage("/Cuenta/AccesoDenegado");
+            }
             try
             {
                 _repoMascota.DeleteMascota(mascotaId);

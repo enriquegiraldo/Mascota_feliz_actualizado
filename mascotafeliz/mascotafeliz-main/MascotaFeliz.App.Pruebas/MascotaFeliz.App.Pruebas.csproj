@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MascotaFeliz.App.Dominio\MascotaFeliz.App.Dominio.csproj" />
     <ProjectReference Include="..\MascotaFeliz.App.Persistencia\MascotaFeliz.App.Persistencia.csproj" />
+    <ProjectReference Include="..\MascotaFeliz.App.Frontend\MascotaFeliz.App.Frontend.csproj" />
   </ItemGroup>
 
 </Project>

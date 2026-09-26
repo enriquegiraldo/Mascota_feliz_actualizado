@@ -66,7 +66,9 @@ else
                 <td>
                     <div class="mf-tabla-acciones">
                         <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesHistoria" asp-route-historiaId="@historia.Id">Detalle</a>
-                        <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarHistoria" asp-route-historiaId="@historia.Id">Editar</a>
+                        @if (!User.IsInRole("Recepcion")) {
+<a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarHistoria" asp-route-historiaId="@historia.Id">Editar</a>
+}
                     </div>
                 </td>
             </tr>

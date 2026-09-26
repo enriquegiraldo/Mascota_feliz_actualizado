@@ -108,10 +108,12 @@ else
                     <div class="mf-tabla-acciones">
                         <a class="btn btn-ghost mf-btn-tactil" asp-page="./DetallesCita" asp-route-citaId="@cita.Id">Detalle</a>
                         <a class="btn btn-outline-primary mf-btn-tactil" asp-page="./EditarCita" asp-route-citaId="@cita.Id">Editar</a>
-                        <form method="post" asp-page-handler="Eliminar" asp-route-citaId="@cita.Id"
+                        @if (User.IsInRole("Admin")) {
+<form method="post" asp-page-handler="Eliminar" asp-route-citaId="@cita.Id"
                               data-mf-borrar="true" data-nombre="la cita del @cita.FechaHora.ToString("d 'de' MMMM", cultura)">
                             <button type="submit" class="btn btn-danger mf-btn-tactil" aria-label="Eliminar cita">Eliminar</button>
                         </form>
+}
                     </div>
                 </td>
             </tr>

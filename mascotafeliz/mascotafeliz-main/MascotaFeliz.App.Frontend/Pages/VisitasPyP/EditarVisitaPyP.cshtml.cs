@@ -13,7 +13,7 @@ namespace MascotaFeliz.App.Frontend.Pages
     /// Crear o editar una visita PyP. Permite preseleccionar la historia
     /// vía query string (desde el perfil de una mascota).
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Admin,Veterinario")]
     public class EditarVisitaPyPModel : PageModel
     {
         private readonly IRepositorioVisitaPyP _repoVisitaPyP;
