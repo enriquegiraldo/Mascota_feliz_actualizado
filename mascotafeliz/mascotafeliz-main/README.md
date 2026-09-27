@@ -1,6 +1,6 @@
-# 🐾 Mascota Feliz - Grupo 5
+# 🐾 Mascota Feliz
 
-Sistema de gestión para la clínica veterinaria **Mascota Feliz**, desarrollado con **ASP.NET Core Razor Pages** y **Entity Framework Core** sobre **SQLite**, siguiendo una arquitectura en capas (Dominio, Persistencia, Frontend, Consola).
+Sistema de gestión para la clínica veterinaria **Mascota Feliz**, desarrollado con **.NET 10 + ASP.NET Core Razor Pages + EF Core + SQL Server**, con **ASP.NET Core Identity** (roles Admin/Veterinario/Recepción), sitio público para dueños, panel interno para la clínica, y despliegue en **Azure App Service**.
 
 ---
 
@@ -13,91 +13,104 @@ Sistema de gestión para la clínica veterinaria **Mascota Feliz**, desarrollado
 5. [Ejecución en Modo Desarrollo](#ejecución-en-modo-desarrollo)
 6. [Compilar y Publicar](#compilar-y-publicar)
 7. [Base de Datos](#base-de-datos)
-8. [URLs y Navegación](#urls-y-navegación)
-9. [Contribuir](#contribuir)
-10. [Licencia](#licencia)
+8. [Autenticación y Roles](#autenticación-y-roles)
+9. [URLs y Navegación](#urls-y-navegación)
+10. [Pruebas](#pruebas)
+11. [CI/CD](#cicd)
+12. [Contribuir](#contribuir)
+13. [Licencia](#licencia)
 
 ---
 
 ## 🛠️ Tecnologías
 
-- **.NET 10.0 LTS** (SDK `10.0.401`) — migrado desde .NET 9 STS.
+- **.NET 10.0 LTS** (SDK `10.0.401`)
 - **ASP.NET Core Razor Pages** (Frontend)
-- **Entity Framework Core 10.0.12** (ORM) sobre **SQL Server** (LocalDB en dev, Azure SQL en prod).
-- **SQL Server LocalDB** (dev, Windows) / **Azure SQL Database** (prod).
-- **Bootstrap 5.3** (UI base por CDN) + **tema propio "Verde Cálido"** en `wwwroot/css/site.css` (esmeralda + ámbar, Inter + Fraunces).
-- **jQuery Validate** (validación en cliente) y **JS ligero** propio en `wwwroot/js/site.js`, `wwwroot/js/command-palette.js`.
-
-> **Fase 3 en curso:** 3.1 (.NET 10) y 3.2 (Bootstrap 5 + tema) completadas. 3.3 (SQL Server) completada. Pendiente: 3.4 (Citas), 3.5 (Fotos/Storage), 3.6 (Recordatorios), 3.7 (Identity), 3.8 (sitio público), 3.9 (CI/CD). Ver `docs/decisiones.md`.
+- **ASP.NET Core Identity** con roles (`Admin`, `Veterinario`, `Recepción`)
+- **Entity Framework Core 10.0.12** (ORM) sobre **SQL Server**
+- **SQL Server LocalDB** (dev, Windows) / **Azure SQL Database** (prod)
+- **Azure Blob Storage** para fotos de mascota (dev: carpeta `wwwroot/uploads`)
+- **Bootstrap 5.3** + **tema propio "Verde Cálido"** (esmeralda `#0d7a5f` + ámbar `#f59e0b`)
+- **Tipografías:** Inter (UI) + Fraunces (titulares)
+- **Modo claro/oscuro** automático (`prefers-color-scheme`)
+- **Búsqueda global** (Command Palette con `Ctrl/Cmd+K`)
+- **GitHub Actions** (CI/CD → Azure App Service)
 
 ---
 
 ## 📁 Estructura del Proyecto
 
 ```
-MascotaFelizGrupo5/
-├── MascotaFeliz.sln                          ← Archivo de solución
+MascotaFeliz/
+├── MascotaFeliz.sln                              ← Archivo de solución
 │
-├── MascotaFeliz.App.Dominio/                 ← 🎯 Capa de Dominio (entidades)
+├── MascotaFeliz.App.Dominio/                     ← 🎯 Entidades y enumeraciones
 │   ├── Dueno.cs
 │   ├── Veterinario.cs
 │   ├── Mascota.cs
 │   ├── Historia.cs
 │   ├── VisitaPyP.cs
+│   ├── Cita.cs
+│   ├── EstadoCita.cs                            ← Enum (Pendiente/Confirmada/Cancelada/Atendida)
+│   ├── ApplicationUser.cs                        ← Usuario de Identity (con Nombres/Apellidos)
 │   └── MascotaFeliz.App.Dominio.csproj
 │
-├── MascotaFeliz.App.Persistencia/            ← 🗄️ Capa de Persistencia
-│   ├── AppContext.cs                         ← DbContext de EF Core
-│   ├── IRepositorioDueno.cs                  ← Interfaces
-│   ├── IRepositorioVeterinario.cs
-│   ├── IRepositorioMascota.cs
-│   ├── IRepositorioHistoria.cs
-│   ├── IRepositorioVisitaPyP.cs
-│   ├── RepositorioDueno.cs                   ← Implementaciones
-│   ├── RepositorioVeterinario.cs
-│   ├── RepositorioMascota.cs
-│   ├── RepositorioHistoria.cs
-│   ├── RepositorioVisitaPyP.cs
+├── MascotaFeliz.App.Persistencia/                ← 🗄️ DbContext, repositorios, migraciones
+│   ├── AppContext.cs                             ← IdentityDbContext<ApplicationUser>
+│   ├── Normalizador.cs                           ← Búsqueda insensible a acentos (es-CO)
+│   ├── Migraciones/                              ← Migraciones EF Core
+│   ├── IRepositorio*.cs + Repositorio*.cs        ← 6 repositorios
 │   └── MascotaFeliz.App.Persistencia.csproj
 │
-├── MascotaFeliz.App.Frontend/                ← 🌐 Capa de Presentación (Web)
-│   ├── Program.cs                            ← Punto de entrada, DI, seed data
-│   ├── appsettings.json
-│   ├── appsettings.Development.json
+├── MascotaFeliz.App.Frontend/                    ← 🌐 Panel interno + Sitio público
+│   ├── Program.cs                                ← DI, Identity, seed data, migraciones
+│   ├── appsettings.json / .Development / .Production
 │   ├── Pages/
-│   │   ├── Index.cshtml / Index.cshtml.cs    ← Página de inicio
-│   │   ├── Privacy.cshtml / Privacy.cshtml.cs
-│   │   ├── NotFound.cshtml / NotFound.cshtml.cs
-│   │   ├── _ViewStart.cshtml
-│   │   ├── _ViewImports.cshtml
+│   │   ├── Index.cshtml                          ← Doble propósito: público (redirect) / panel
+│   │   ├── Buscar.cshtml                         ← Endpoint JSON de búsqueda global (Cmd+K)
+│   │   ├── Cuenta/                               ← Login, Logout, AccesoDenegado
+│   │   ├── Mascotas/                             ← CRUD + perfil + gráfico de peso + foto
+│   │   ├── Duenos/                               ← CRUD + mascotas asociadas
+│   │   ├── Veterinarios/                         ← CRUD + pacientes atendidos
+│   │   ├── Historias/                             ← Lista, detalle, editar
+│   │   ├── VisitasPyP/                           ← CRUD + recordatorios de vacunas
+│   │   ├── Citas/                                ← CRUD + estados + filtros
+│   │   ├── Publico/                              ← Portada + Agendar (sin login)
+│   │   ├── Error.cshtml / NotFound.cshtml / Privacy.cshtml
 │   │   ├── Shared/
-│   │   │   ├── _Layout.cshtml                ← Layout principal (menú, navbar, footer pegado)
-│   │   │   └── _ValidationScriptsPartial.cshtml
-│   │   ├── Duenos/                           ← CRUD Dueños (buscar, eliminar, paginar, validar)
-│   │   ├── Veterinarios/                     ← CRUD Veterinarios (buscar, eliminar, paginar, validar)
-│   │   ├── Mascotas/                         ← CRUD Mascotas (selectores dueño/vet, perfil con línea de tiempo)
-│   │   ├── Historias/                        ← Lista, detalle y editar historias clínicas
-│   │   ├── VisitasPyP/                       ← CRUD Visitas de PyP (signos vitales + recomendaciones)
-│   │   ├── Error.cshtml                      ← Página de errores (UseExceptionHandler)
-│   │   ├── NotFound.cshtml                   ← 404 con estilo
-│   │   └── Privacy.cshtml                    ← Política de privacidad (es-CO)
-│   ├── wwwroot/                              ← 🎨 Recursos estáticos propios (NUEVO)
-│   │   ├── css/site.css                      ← Tokens + tema "Cálida clínica"
-│   │   ├── js/site.js                        ← Confirmar borrado, toasts, nav activa
-│   │   └── img/logo.svg, favicon.svg         ← Identidad propia (SVG, licencia libre)
+│   │   │   ├── _Layout.cshtml                    ← Layout panel interno
+│   │   │   ├── _LayoutPublico.cshtml             ← Layout sitio público
+│   │   │   ├── _CommandPalette.cshtml            ← Dialog de búsqueda global
+│   │   │   ├── _ValidationScriptsPartial.cshtml
+│   │   │   └── Components/TarjetasMascotas/      ← ViewComponent reutilizable
+│   ├── ViewComponents/                           ← TarjetasMascotasViewComponent
+│   ├── Servicios/                                ← IServicioFotos, IServicioRecordatorios
+│   ├── wwwroot/
+│   │   ├── css/site.css                          ← Tema "Verde Cálido" (tokens + componentes)
+│   │   ├── js/site.js                            ← Toasts, confirmar borrado, nav activa
+│   │   ├── js/command-palette.js                 ← Búsqueda global (Ctrl+K)
+│   │   ├── img/logo.svg, favicon.svg             ← Estetoscopio + corazón ámbar (SVG)
+│   │   └── uploads/mascotas/                     ← Fotos subidas en dev (gitignored)
+│   ├── .github/workflows/ci-cd.yml               ← Pipeline GitHub Actions
 │   └── MascotaFeliz.App.Frontend.csproj
 │
-├── MascotaFeliz.App.Consola/                 ← 💻 Proyecto de Consola (pruebas)
-│   ├── Program.cs
-│   └── MascotaFeliz.App.Consola.csproj
+├── MascotaFeliz.App.Consola/                     ← 💻 Proyecto de Consola (pruebas rápidas)
 │
-├── MascotaFeliz.App.Pruebas/                 ← 🧪 Proyecto de Pruebas (xUnit)
-│   ├── ContextoPruebas.cs                   ← Helper SQLite en memoria
-│   ├── RepositorioMascotaPruebas.cs
-│   ├── RepositorioDuenoPruebas.cs
-│   ├── RepositorioVeterinarioPruebas.cs
-│   ├── RepositorioHistoriaVisitaPruebas.cs
-│   └── MascotaFeliz.App.Pruebas.csproj
+├── MascotaFeliz.App.Pruebas/                     ← 🧪 Pruebas xUnit (85 tests)
+│   ├── ContextoPruebas.cs                       ← Helper SQLite en memoria
+│   ├── RepositorioMascotaPruebas.cs              ← 15 tests
+│   ├── RepositorioDuenoPruebas.cs                ← 8 tests
+│   ├── RepositorioVeterinarioPruebas.cs          ← 5 tests
+│   ├── RepositorioHistoriaVisitaPruebas.cs       ← 7 tests
+│   ├── RepositorioCitaPruebas.cs                 ← 11 tests
+│   ├── NormalizadorPruebas.cs                    ← 13 tests (accent-insensitive)
+│   └── AutorizacionPruebas.cs                    ← 25 tests (matriz de roles)
+│
+├── docs/
+│   ├── decisiones.md                             ← Decisiones de diseño y producto
+│   ├── investigacion-ui.md                       ← Investigación de UI/UX (Fase 1)
+│   ├── propuesta-visual.md                       ← 3 direcciones visuales propuestas
+│   └── despliegue.md                             ← Guía de despliegue en Azure
 │
 └── README.md
 ```
@@ -106,42 +119,47 @@ MascotaFelizGrupo5/
 
 ## ✅ Requisitos Previos
 
-- **.NET 10.0 SDK** (LTS) o superior
-  - Verificar instalación:
-    ```bash
-    dotnet --version
-    ```
-  - Descargar: <https://dotnet.microsoft.com/es-es/download>
+- **.NET 10.0 SDK** (LTS)
+  - Verificar: `dotnet --version`
+  - Descargar: <https://dotnet.microsoft.com/download>
+- **SQL Server LocalDB** (viene con Visual Studio o SQL Server Express)
+  - Para producción: Azure SQL Database
+- **EF Core Tools** (opcional, para migraciones):
+  ```bash
+  dotnet tool install --global dotnet-ef --version 10.0.12
+  ```
 
 ---
 
 ## 🚀 Primeros Pasos
 
-### 1. Clonar / Acceder al repositorio
-
 ```bash
-cd "C:\Users\Santiago Sofia\Downloads\MascotaFelizGrupo5"
-```
+# 1. Clonar el repositorio
+git clone <url-del-repo>
+cd MascotaFeliz
 
-### 2. Restaurar paquetes NuGet
-
-```bash
+# 2. Restaurar dependencias
 dotnet restore
-```
 
-### 3. Compilar la solución
-
-```bash
+# 3. Compilar (debe dar 0 errores, 0 warnings)
 dotnet build
+
+# 4. Ejecutar pruebas (85 tests)
+dotnet test
+
+# 5. Ejecutar la app
+$env:ASPNETCORE_ENVIRONMENT = "Development"
+dotnet run --project MascotaFeliz.App.Frontend
 ```
+
+Al primer arranque, la app aplica las migraciones EF automáticamente (`Database.Migrate()`) y siembra:
+- Roles: `Admin`, `Veterinario`, `Recepción`
+- Usuario Admin: `admin@mascotafeliz.com` / `Admin123!` (solo en Development)
+- Datos de ejemplo: 3 dueños, 3 veterinarios, 4 mascotas, 3 historias, 3 visitas PyP, 4 citas
 
 ---
 
 ## 👨‍💻 Ejecución en Modo Desarrollo
-
-### Opción A: Con Hot Reload (recomendada)
-
-Cada cambio en `.cs` o `.cshtml` se aplica **sin reiniciar** el servidor.
 
 ```powershell
 # PowerShell
@@ -149,153 +167,140 @@ $env:ASPNETCORE_ENVIRONMENT = "Development"
 dotnet watch run --project MascotaFeliz.App.Frontend
 ```
 
-```bat
-:: CMD (símbolo del sistema)
-set ASPNETCORE_ENVIRONMENT=Development
-dotnet watch run --project MascotaFeliz.App.Frontend
-```
-
-### Opción B: Sin Hot Reload
-
-```powershell
-$env:ASPNETCORE_ENVIRONMENT = "Development"
-dotnet run --project MascotaFeliz.App.Frontend
-```
-
-> ⚠️ **Importante:** `ASPNETCORE_ENVIRONMENT=Development` activa:
->
-> - Páginas de error detalladas
-> - Recarga automática de archivos estáticos
-> - Mensajes de logging más verbosos
-
----
-
-## 📦 Compilar y Publicar
-
-### Compilar en modo Release
-
-```bash
-dotnet build -c Release
-```
-
-### Publicar para producción
-
-```bash
-dotnet publish MascotaFeliz.App.Frontend -c Release -o ./publish
-```
-
-El contenido listo para deploy queda en la carpeta `publish/`.
+> La app escucha en `http://localhost:5000`. Sin login, `/` redirige al sitio público.
 
 ---
 
 ## 🗄️ Base de Datos
 
-El proyecto usa **SQL Server** (LocalDB en desarrollo, Azure SQL Database en producción). La migración EF Core se aplica automáticamente al iniciar (`Database.Migrate()` en `Program.cs`).
-
-### Entornos
-
 | Entorno | Motor | Connection string |
 |---------|-------|-------------------|
-| Desarrollo (Windows) | SQL Server LocalDB | `appsettings.Development.json` — `Server=(localdb)\MSSQLLocalDB;Database=MascotaFelizDev;...` |
-| Producción (Azure) | Azure SQL Database (Basic) | Configuración de App Service (no en appsettings versionado) |
+| Desarrollo (Windows) | SQL Server LocalDB | `appsettings.Development.json` |
+| Producción (Azure) | Azure SQL Database (Basic) | Configuración de App Service |
 
-### Migraciones
-
-La migración inicial está en `MascotaFeliz.App.Persistencia/Migraciones/`. Para crear una nueva:
+Las migraciones se aplican automáticamente al iniciar (`Database.Migrate()`). Para crear migraciones nuevas:
 
 ```bash
 dotnet ef migrations add <Nombre> --project MascotaFeliz.App.Persistencia --startup-project MascotaFeliz.App.Frontend --output-dir Migraciones
-dotnet ef database update --project MascotaFeliz.App.Persistencia --startup-project MascotaFeliz.App.Frontend
 ```
 
-### Cadena de conexión
+**Migraciones existentes:** `Inicial`, `AddCita`, `AddFotoMascota`, `AddProximaVacuna`, `AddIdentity`.
 
-Se lee de la configuración (`ConnectionStrings:MascotaFeliz`) en `Program.cs`:
+---
 
-```csharp
-builder.Services.AddDbContext<AppContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MascotaFeliz")));
-```
+## 🔐 Autenticación y Roles
 
-### Datos de ejemplo (Seed Data)
+### Usuario de prueba (Development)
+- **Email:** `admin@mascotafeliz.com`
+- **Contraseña:** `Admin123!`
+- **Rol:** Admin
 
-Al iniciar la aplicación por primera vez, se insertan automáticamente registros de prueba:
+### Matriz de permisos
 
-- 3 **Dueños** (Juan Pérez, María Gómez, Carlos Rodríguez)
-- 3 **Veterinarios** (Dr. Andrés, Dra. Laura, Dr. Jaime)
-- 3 **Historias Clínicas**
-- 4 **Mascotas** (Firulais, Susi, Michi, Rocky)
-- 3 **Visitas PyP** (2 para Firulais, 1 para Michi) con signos vitales y recomendaciones
+| Módulo | Admin | Veterinario | Recepción |
+|--------|:-----:|:-----------:|:---------:|
+| Dashboard, buscar, mascotas/dueños/citas (ver/editar) | ✅ | ✅ | ✅ |
+| Eliminar mascotas, dueños, citas | ✅ | ❌ | ❌ |
+| Veterinarios (crear/editar/eliminar) | ✅ | ❌ | ❌ |
+| Historias/VisitasPyP (editar) | ✅ | ✅ | ❌ (solo lectura) |
+| Sitio público (/Publico/*) | Sin login | Sin login | Sin login |
 
-> Para reiniciar la base de datos, **borra** el archivo `MascotaFeliz.db` y vuelve a ejecutar la app.
-
-### Migraciones (opcional)
-
-Si necesitas generar migraciones formalmente:
-
-```bash
-# Crear migración inicial
-dotnet ef migrations add InitialCreate --project MascotaFeliz.App.Persistencia --startup-project MascotaFeliz.App.Frontend
-
-# Aplicar migraciones
-dotnet ef database update --project MascotaFeliz.App.Persistencia --startup-project MascotaFeliz.App.Frontend
-```
+### Seguridad
+- Honeypot + rate limiting (3/min por IP) en `/Publico/Agendar`.
+- HTML-encoding (`WebUtility.HtmlEncode`) en todo HTML generado manualmente con `@Html.Raw`.
+- En producción, el Admin inicial usa contraseña aleatoria (mostrada una sola vez en consola).
 
 ---
 
 ## 🌐 URLs y Navegación
 
-| Ruta                                                 | Descripción                |
-| ---------------------------------------------------- | -------------------------- |
-| `http://localhost:5000/`                             | Página de inicio           |
-| `/Duenos/ListaDuenos`                                | Listado de dueños          |
-| `/Duenos/DetallesDuenos?duenoId=1`                   | Detalles de un dueño       |
-| `/Duenos/EditarDueno`                                | Crear/Editar dueño         |
-| `/Veterinarios/ListaVeterinarios`                    | Listado de veterinarios    |
-| `/Veterinarios/DetallesVeterinarios?veterinarioId=1` | Detalles de un veterinario |
-| `/Veterinarios/EditarVeterinario`                    | Crear/Editar veterinario   |
-| `/Mascotas/ListaMascotas`                            | Listado de mascotas        |
-| `/Mascotas/DetallesMascotas?mascotaId=1`             | Detalles de una mascota    |
-| `/Mascotas/EditarMascota`                            | Crear/Editar mascota       |
-| `/Privacy`                                           | Política de privacidad     |
-| `/NotFound`                                          | Página 404 con estilo      |
-| `/Error`                                             | Página de errores (handler)|
-| `/Historias/ListaHistorias`                          | Listado de historias clínicas |
-| `/Historias/DetallesHistoria?historiaId=1`           | Detalle de historia + línea de tiempo |
-| `/Historias/EditarHistoria`                          | Crear historia clínica      |
-| `/Historias/EditarHistoria?historiaId=1`             | Editar / eliminar historia  |
-| `/VisitasPyP/ListaVisitasPyP`                        | Listado de visitas PyP     |
-| `/VisitasPyP/DetallesVisitaPyP?visitaPyPId=1`        | Detalle de una visita      |
-| `/VisitasPyP/EditarVisitaPyP?historiaId=1`           | Crear visita para una historia |
+### Sitio público (sin login)
 
-> Por defecto el servidor escucha en **HTTP (5000)**. Para HTTPS (5001):
->
-> ```bash
-> dotnet dev-certs https --trust
-> ```
+| Ruta | Descripción |
+|------|-------------|
+| `/Publico/Portada` | Portada (hero, servicios, equipo, CTA) |
+| `/Publico/Agendar` | Solicitar cita online (crea Dueño + Mascota + Cita Pendiente) |
+| `/Privacy` | Política de privacidad |
+
+### Panel interno (requiere login)
+
+| Ruta | Descripción |
+|------|-------------|
+| `/` | Dashboard (KPIs, donut, recordatorios de vacunas) |
+| `/Cuenta/Login` | Iniciar sesión |
+| `/Cuenta/Logout` | Cerrar sesión |
+| `/Mascotas/ListaMascotas` | Mascotas (buscar, filtrar por especie, ordenar, paginar, CSV) |
+| `/Mascotas/DetallesMascotas?mascotaId=1` | Perfil (foto, datos, dueño, vet, gráfico de peso, línea de tiempo) |
+| `/Mascotas/EditarMascota` | Crear/editar (con subida de foto) |
+| `/Duenos/ListaDuenos` | Dueños |
+| `/Duenos/DetallesDuenos?duenoId=1` | Detalle + mascotas asociadas |
+| `/Veterinarios/ListaVeterinarios` | Veterinarios |
+| `/Veterinarios/DetallesVeterinarios?veterinarioId=1` | Detalle + pacientes |
+| `/Historias/ListaHistorias` | Historias clínicas |
+| `/Historias/DetallesHistoria?historiaId=1` | Detalle + línea de tiempo de visitas |
+| `/VisitasPyP/ListaVisitasPyP` | Visitas PyP |
+| `/VisitasPyP/EditarVisitaPyP` | Crear/editar visita (signos vitales + próxima vacuna) |
+| `/Citas/ListaCitas` | Citas (buscar, filtrar por estado, paginar) |
+| `/Citas/EditarCita` | Crear/editar cita |
+| `/Buscar?q=fir` | Búsqueda global JSON (mascotas, dueños, vets, citas) |
+| `/NotFound` | 404 |
+| `/Error` | Error handler |
+
+> `Ctrl/Cmd+K` abre el Command Palette de búsqueda global.
+
+---
+
+## 🧪 Pruebas
+
+```bash
+dotnet test    # 85 pruebas
+```
+
+| Archivo | Tests | Cubre |
+|---------|-------|-------|
+| `RepositorioMascotaPruebas.cs` | 15 | CRUD, relaciones, búsqueda, especies, foto |
+| `RepositorioDuenoPruebas.cs` | 8 | CRUD, búsqueda accent-insensitive |
+| `RepositorioVeterinarioPruebas.cs` | 5 | CRUD, búsqueda |
+| `RepositorioHistoriaVisitaPruebas.cs` | 7 | Historia + visitas, UpdateVisitaPyP |
+| `RepositorioCitaPruebas.cs` | 11 | CRUD, filtros, estados, accent-insensitive |
+| `NormalizadorPruebas.cs` | 13 | Normalización de acentos (López/LOPEZ/gomez) |
+| `AutorizacionPruebas.cs` | 25 | Matriz de roles (atributos + handlers) |
+
+---
+
+## 🔄 CI/CD
+
+El pipeline `.github/workflows/ci-cd.yml` se ejecuta en cada push a `main`:
+
+1. **Build**: `dotnet build --configuration Release`
+2. **Test**: `dotnet test` (85 pruebas)
+3. **Publish**: `dotnet publish`
+4. **Deploy**: Azure App Service (`mascotafeliz-prod`)
+
+Los pull requests ejecutan solo build + test.
+
+### Secrets necesarios (GitHub → Settings → Secrets)
+- `AZURE_PUBLISH_PROFILE`: publish profile del App Service.
+
+### Configuración de App Service (Azure Portal → Configuration)
+- `ConnectionStrings__MascotaFeliz`: connection string de Azure SQL.
+- `Storage__ConnectionString`: connection string de Blob Storage.
+
+Ver `docs/despliegue.md` para la guía completa.
 
 ---
 
 ## 👥 Contribuir
 
 1. Haz los cambios en una rama nueva.
-2. Asegúrate de que `dotnet build` compile sin errores.
-3. Ejecuta `dotnet test` para verificar que las pruebas xUnit pasen.
-4. Verifica que las páginas CRUD funcionen correctamente.
-5. No elimines datos de ejemplo a menos que se indique.
-
-### Pruebas (xUnit)
-
-El proyecto `MascotaFeliz.App.Pruebas` contiene pruebas unitarias de la capa de
-Persistencia usando SQLite en memoria (`DataSource=:memory:`). Cubren CRUD,
-relaciones, búsqueda case-insensitive y la política de borrado.
-
-```bash
-dotnet test
-```
+2. `dotnet build` → 0 errores, 0 warnings.
+3. `dotnet test` → 0 pruebas fallidas.
+4. Verifica que las páginas funcionen.
+5. Si añades lógica en Persistencia, incluye pruebas xUnit.
+6. No pongas credenciales en el código ni en el workflow.
 
 ---
 
 ## 📝 Licencia
 
-Proyecto académico - Grupo 5 / Clínica Veterinaria Mascota Feliz.
+Proyecto académico — Clínica Veterinaria Mascota Feliz.

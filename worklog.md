@@ -660,3 +660,36 @@ Work Log:
 Stage Summary:
 - Estado: IndexModel corregido ([AllowAnonymous] + comentario explicativo). Autorización granular verificada en 3 niveles (backend atributos, backend handlers, frontend UI). 85/85 pruebas. Build 0/0.
 - El proyecto queda listo para el primer despliegue real a Azure.
+
+---
+Task ID: 26
+Agent: Z.ai Code (orquestador) — Actualización completa de AGENTE.md y README.md
+Task: Actualizar ambos archivos con todo lo implementado hasta el momento (Fases 0-3 completas).
+
+Work Log:
+- Giraldo pidió actualizar AGENTE.md y README.md con todo lo respectivo hasta el momento.
+- AGENTE.md reescrito completo (219 líneas):
+  - Reglas generales actualizadas: 15 reglas (era 10) — añadidas Html.Raw/XSS, SemillaIdentity, autorización granular, memorial digital parqueado.
+  - Matriz de autorización completa (tabla).
+  - Stack tecnológico actualizado (.NET 10, EF Core 10.0.12, Identity, Bootstrap 5.3, Blob Storage, modo claro/oscuro).
+  - Cómo agregar entidad actualizado (migraciones EF, [Authorize(Roles=...)], pruebas).
+  - Tabla de localización expandida (ApplicationUser, Cita, Normalizador, Servicios, ViewComponents, Publico, Cuenta, CI/CD).
+  - Comandos frecuentes actualizados (dotnet-ef, migraciones).
+  - Problemas comunes actualizados (LocalDB en Linux, Razor .NET 10 bugs).
+  - Checklist actualizado (migraciones, [Authorize(Roles)], botones ocultos, E() encoding, sin credenciales).
+  - Sanity check actualizado (sitio público, login, Admin123!, Cmd+K, botones ocultos por rol).
+- README.md reescrito completo (302 líneas):
+  - Descripción actualizada (Identity, sitio público, Azure).
+  - Tecnologías completas (.NET 10, Identity, SQL Server, Blob Storage, Bootstrap 5.3, Inter+Fraunces, modo oscuro, Cmd+K, GitHub Actions).
+  - Estructura del proyecto expandida (6 entidades, ApplicationUser, Servicios, ViewComponents, Publico, Cuenta, Migraciones, CI/CD, docs/).
+  - Requisitos previos (SDK 10, LocalDB, dotnet-ef).
+  - Primeros pasos (migraciones automáticas, seed data con roles y Admin).
+  - Base de datos (entornos, migraciones existentes: Inicial, AddCita, AddFotoMascota, AddProximaVacuna, AddIdentity).
+  - Autenticación y roles (credenciales dev, matriz de permisos, seguridad honeypot + XSS).
+  - URLs y navegación (sitio público + panel interno, 25 rutas).
+  - Pruebas (85 tests: 7 archivos, 6 repositorios + normalizador + autorización).
+  - CI/CD (pipeline, secrets, App Service config).
+- `dotnet build` → 0 errores, 0 warnings. `dotnet test` → 85/85 pasan.
+
+Stage Summary:
+- Estado: AGENTE.md y README.md actualizados completamente con todo lo implementado (Fases 0-3, 26 tareas). 85/85 pruebas. Build 0/0.
